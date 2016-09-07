@@ -1,0 +1,144 @@
+//Author Tim Dobeck
+
+import javax.swing.*;
+import javax.swing.event.MouseInputListener;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.util.Scanner;
+import java.awt.Color;
+import java.awt.Dimension;
+
+public class CheckerBoard extends JPanel implements MouseInputListener
+{
+	public static int GridButtonWidth = 100;
+	public static int GridButtonHeight = 50;
+	private static int MaxWidth = 1200;
+	private static int MaxHeight = 1100;
+	public static int ExtraWallSpace = 10;
+	public Rectangle2D.Double GridButton1 = new Rectangle2D.Double((MaxWidth-100)-ExtraWallSpace, ExtraWallSpace, GridButtonWidth, GridButtonHeight);
+	public Rectangle2D.Double GridButton2 = new Rectangle2D.Double((MaxWidth-100)-ExtraWallSpace, GridButtonHeight+10+ExtraWallSpace, GridButtonWidth, GridButtonHeight);
+	public Rectangle2D.Double GridButton3 = new Rectangle2D.Double((MaxWidth-100)-ExtraWallSpace, (GridButtonHeight*2)+20+ExtraWallSpace, GridButtonWidth, GridButtonHeight);
+
+	
+	public CheckerBoard(int width, int height)
+	{
+		setPreferredSize(new Dimension(width, height));
+
+	}
+	
+	static int grabInput()
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Please enter a number. This number is the size of the board.");
+		int input = sc.nextInt();
+
+		// Return the response
+		return input;
+	}
+
+	public void paint(Graphics g)
+	{
+
+		int row;
+		int col;
+		int x;
+		int y;
+		int input;
+
+		input = grabInput();
+
+		for ( row = 0;  row < input;  row++ )
+		{
+			for ( col = 0;  col < input;  col++)
+			{
+				x = col * (input/input); 
+				y = row * (input/input); 
+				if ( (row % 2) == (col % 2) )
+				{
+					g.setColor(Color.WHITE);
+				}
+				else
+				{
+					g.setColor(Color.BLACK);
+				}
+				g.fillRect(x+ExtraWallSpace, y+ExtraWallSpace, (input/input), (input/input));
+			}
+		}
+
+		//Grid #1
+		g.setColor(Color.blue);
+		g.fillRect((MaxWidth-100)-ExtraWallSpace, 0+ExtraWallSpace, GridButtonWidth, GridButtonHeight);
+		//g.fill(GridButton1);
+		g.setColor(Color.black);
+		g.drawString("Grid #1", (MaxWidth-GridButtonWidth/2)-ExtraWallSpace, (GridButtonHeight/2)+ExtraWallSpace);
+
+		//Grid #2
+		g.setColor(Color.red);
+		g.fillRect((MaxWidth-100)-ExtraWallSpace, GridButtonHeight+10+ExtraWallSpace, GridButtonWidth, GridButtonHeight);
+		//g.fill(GridButton2);
+		g.setColor(Color.black);
+		g.drawString("Grid #2", (MaxWidth-GridButtonWidth/2)-ExtraWallSpace, (GridButtonHeight*2)+ExtraWallSpace);
+
+		//Grid #3
+		g.setColor(Color.green);
+		g.fillRect((MaxWidth-100)-ExtraWallSpace, (GridButtonHeight*2)+20+ExtraWallSpace, GridButtonWidth, GridButtonHeight);
+		//g.fill(GridButton3);
+		g.setColor(Color.black);
+		g.drawString("Grid #3", (MaxWidth-GridButtonWidth/2)-ExtraWallSpace, (GridButtonHeight*3)+ExtraWallSpace);
+
+	}
+
+	public static void main(String args[]) {
+
+		CheckerBoard check = new CheckerBoard(MaxWidth, MaxHeight);
+		
+		JFrame frame = new JFrame();   // the program itself
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(check);  
+		frame.pack(); //size it based on panel size
+		frame.setVisible(true); 
+
+	}
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		if (GridButton1.contains(arg0.getPoint()))
+		{
+			grabInput();
+		}
+	}
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+}
