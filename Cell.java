@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Point;
 
 public class Cell {
 	private int x, y;
@@ -24,4 +25,17 @@ public class Cell {
 		return size;
 	}
 	
+	public boolean containz(Point p) {
+		return (p.getX()>this.x && p.getX()<=this.x+this.size && p.getY()>this.y && p.getY()<=this.y+this.size);
+	}
+	
+	public void flipColor() {
+		if (c == Color.BLACK) {
+			c = Color.WHITE;
+		}
+		else {
+			c = Color.BLACK;
+		}
+	}
 }
+
