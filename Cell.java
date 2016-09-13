@@ -1,32 +1,18 @@
-import java.awt.Color;
-import java.awt.Point;
+package v4;
 
-public class Cell {
-	private int x, y;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
+
+public class Cell extends Rectangle2D.Double {
 	private double size;
 	private Color c;
 	
-	public Cell(int x, int y, double size, Color c) {
-		this.x = x;
-		this.y = y;
-		this.size = size;
+	public Cell(double x, double y, double size, Color c) {
+		//a lot of these parameters actually belong to Rectangle2D.Double, so we call the super class
+		super(x,y,size,size);
 		this.c = c;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public double getSize() {
-		return size;
-	}
-	
-	public boolean containz(Point p) {
-		return (p.getX()>this.x && p.getX()<=this.x+this.size && p.getY()>this.y && p.getY()<=this.y+this.size);
 	}
 	
 	public void flipColor() {
@@ -37,5 +23,19 @@ public class Cell {
 			c = Color.BLACK;
 		}
 	}
-}
+	
+	public Color getColor() {
+		return c;
+	}
+	
+	public void setColor(Color newColor) {
+		c = newColor;
+	}
 
+	public void draw(Graphics2D g) {
+		g.setColor(c);
+		g.fill(this);
+		g.fillRect((int)x, (int)y, (int)size, (int)size);
+	}
+	
+}
