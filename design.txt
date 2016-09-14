@@ -1,0 +1,23 @@
+Driver class:
+
+
+Board class:
+  int width, height, size;
+  Cell[][] cells;
+  
+  constructor(int width, int height, double size):
+    sets JPanel window size based on width and height
+    sets instance variables
+    fills cells based on size
+    
+
+Cell class: extends Rectangle2D.Double
+  double size;
+  Color c;
+  
+  constructor(int x, int y, int size, int):
+    gives x, y, w, h to constructor
+    sets instance variables
+    
+  draw(Graphics g):
+    sets fill color from c and draws a filled rectangle
