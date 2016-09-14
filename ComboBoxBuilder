@@ -1,0 +1,28 @@
+import java.awt.event.ActionEvent;
+
+import javax.swing.*;
+
+public class BasicNoEditComboBox  extends JComboBox<String>{
+	
+	public static JComboBox<String> NEComboBox(String[] tempString){
+		// Insert Code Here
+		//Making a basic ComboBox that holds and array of strings
+		//If want something special need to use a renderer
+		
+		
+		JComboBox<String> colorList = new JComboBox<>(tempString);
+		//colorList = tempString;
+		colorList.setSelectedIndex(0);
+		colorList.addActionListener(null);
+		colorList.addActionListener(colorList);
+		return colorList;
+		//Code below 
+		//colorList.addActionListner(this);
+	}
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		
+	}
+	
+}
