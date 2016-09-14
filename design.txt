@@ -21,3 +21,27 @@ Cell class: extends Rectangle2D.Double
     
   draw(Graphics g):
     sets fill color from c and draws a filled rectangle
+
+Window Class:
+  BottomRow()
+    ResizeButton(){choose new graph dimenstions}
+    RecordButton(){record sesstion}
+    StartSwarm(){begins change cycles}
+    StopSwarm(){stops change cycles}
+    SpeedSlider(){determines the rate of how often the cycle runs in a second}
+    Labels(){Shows infromation about the size of the board}
+  
+  LayerSelect()
+    LayerOne()
+      Buttons()
+      DropDownList()
+    LayerTwo()
+      Buttons()
+      DropDownList()
+      RadioButtonList()
+    LayerThree()
+      Buttons()
+      DropDownList()
+      RadioButtonList()
+  
+    
