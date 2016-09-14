@@ -1,15 +1,32 @@
 Driver class:
+  Board board;
+  
+  main():
+    sets up the board; we've assumed an 800x800 board for now
+    current, creates a Scanner that prompts the user for the size() variable.
 
 
-Board class:
+Board class: extends JPanel, implements MouseListener
   int width, height, size;
   Cell[][] cells;
+  int EXTRA_BOARD_SPACE; //this is going to go later, when we have a better framework
+  //for handling borders and other
+  //objects in our board space
   
   constructor(int width, int height, double size):
     sets JPanel window size based on width and height
     sets instance variables
-    fills cells based on size
+    creates cells based on size
+    sets the cell color to either black or white at random, for now
     
+  paintComponent():
+    not sure what all this does
+  
+  mousePressed(event arg0):
+    flips the color at the point clicked
+    this is tentative and hinges on decisions to be made about what can be done at Level 4
+    repaint();
+
 
 Cell class: extends Rectangle2D.Double
   double size;
@@ -21,6 +38,8 @@ Cell class: extends Rectangle2D.Double
     
   draw(Graphics g):
     sets fill color from c and draws a filled rectangle
+
+
 
 Window Class:
   BottomRow()
