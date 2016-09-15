@@ -1,3 +1,5 @@
+//Tim Dobeck's slightly modified code to include random state for board
+
 package v5;
 
 import java.util.Scanner;
