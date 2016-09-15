@@ -1,4 +1,5 @@
-package v4;
+//Tim Dobeck's slightly modified code to include random state for board
+package v5;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,8 +14,9 @@ public class Board extends JPanel implements MouseInputListener {
 	private Cell[][] cells;
 	private int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
+	private Color c;
 	
-	public Board(int width, int height, int size) {
+	public Board(int width, int height, int size, int typeBoard) {
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		//HOW DID I FORGET THIS EARLIER
@@ -25,10 +27,35 @@ public class Board extends JPanel implements MouseInputListener {
 		//and by the number of cells.
 		int cellSize = (width-2*EXTRA_BOARD_SPACE)/size;
 		
+		
 		cells = new Cell[size][size];
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
-				cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, (row%2 == col%2 ? Color.BLACK : Color.WHITE));
+				if (typeBoard==0)
+				{
+					int rand = (int) (Math.random()*2);
+					if (rand == 0)
+					{
+						c = Color.black;
+					}
+					else
+					{
+						c = Color.white;
+					}
+					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
+				}
+				else if (typeBoard==1)
+				{
+					if (row%2 == col%2)
+					{
+						c = Color.black;
+					}
+					else
+					{
+						c = Color.white;
+					}
+					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
+				}
 			}
 		}
 		
