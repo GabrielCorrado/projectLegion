@@ -1,5 +1,3 @@
-package v4;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -23,12 +21,15 @@ public class Board extends JPanel implements MouseInputListener {
 		//set the graphical dimensions of the cells themselves
 		//the cells are always square, but the space they take up is constrained by the width and height of the board
 		//and by the number of cells.
+		//note that since this is an int, it rounds (down, in particular). so we will never see
+		//those ugly 
 		int cellSize = (width-2*EXTRA_BOARD_SPACE)/size;
 		
 		cells = new Cell[size][size];
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
-				cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, (row%2 == col%2 ? Color.BLACK : Color.WHITE));
+				//cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, (row%3 == col%3 ? Color.BLACK : Color.WHITE));
+				cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, (Math.random() < 0.3 ? Color.BLACK : Color.WHITE));
 			}
 		}
 		
@@ -68,12 +69,24 @@ public class Board extends JPanel implements MouseInputListener {
 				//if three of your neighbors are alive, you come alive or stay alive,
 				//or if two of your neighbors are alive and you're alive, you stay alive,
 				//otherwise you die
-				if (tally == 3 || (tally == 2 && cells[row][col].getColor() == Color.BLACK)) {
-					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.BLACK);
+//				if (tally == 3 || (tally == 2 && cells[row][col].getColor() == Color.BLACK)) {
+//					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.BLACK);
+//					result[row][col] = Color.BLACK;
+//				}
+//				else {
+//					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.WHITE);
+//					result[row][col] = Color.WHITE;
+//				}
+				
+				//alternatively, and this is appropriate to the checkerboard example:
+				//if one or two or three or four of your neighbors are alive, and you're alive, you stay alive,
+				//otherwise you die
+				
+				//okay, this rule is just unbelievably cool
+				if ((tally > 2 && tally < 5) || (tally < 5 && cells[row][col].getColor() == Color.BLACK)) {
 					result[row][col] = Color.BLACK;
 				}
 				else {
-					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.WHITE);
 					result[row][col] = Color.WHITE;
 				}
 			}
@@ -220,6 +233,8 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
+		step();
+		repaint();
 	}
 
 	@Override
