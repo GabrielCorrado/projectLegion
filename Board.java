@@ -11,6 +11,7 @@ public class Board extends JPanel implements MouseInputListener {
 	private Cell[][] cells;
 	private int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
+	private Agent[] agents;
 	
 	public Board(int width, int height, int size) {
 		//set preferred graphical dimensions of the board
@@ -24,6 +25,8 @@ public class Board extends JPanel implements MouseInputListener {
 		//note that since this is an int, it rounds (down, in particular). so we will never see
 		//those ugly 
 		int cellSize = (width-2*EXTRA_BOARD_SPACE)/size;
+		//set the swarm agent size
+		int agentSize = (int)(0.7*cellSize);
 		
 		cells = new Cell[size][size];
 		for (int row = 0; row < cells.length; row++) {
@@ -31,6 +34,13 @@ public class Board extends JPanel implements MouseInputListener {
 				//cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, (row%3 == col%3 ? Color.BLACK : Color.WHITE));
 				cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, (Math.random() < 0.3 ? Color.BLACK : Color.WHITE));
 			}
+		}
+		
+		//generate the swarm; kirsch suggested, say, 30 agents, so we're trying 10 right now
+		agents = new Agent[10];
+		for (int i = 0; i < agents.length; i++) {
+			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
+			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Vector(1, (int)(Math.random()*5)));
 		}
 		
 		this.addMouseListener(this);
@@ -49,58 +59,74 @@ public class Board extends JPanel implements MouseInputListener {
 				
 			}
 		}
+		
+		for (int i = 0; i < agents.length; i++) {
+			agents[i].draw(g);
+		}
 	}
 	
 	public void step() {
-		//initialize temp array of colors
-		Color[][] result = new Color[size][size];
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
-				int tally = 0;
-				//check how many neighbors are alive
-				for (Cell n : getNeighbors(cells, row, col)) {
-					//the array may have nulls in it ;)
-					if (n != null) {
-						if (n.getColor() == Color.BLACK) {
-							tally++;
-						}
-					}
-				}
-				//if three of your neighbors are alive, you come alive or stay alive,
-				//or if two of your neighbors are alive and you're alive, you stay alive,
-				//otherwise you die
-//				if (tally == 3 || (tally == 2 && cells[row][col].getColor() == Color.BLACK)) {
-//					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.BLACK);
-//					result[row][col] = Color.BLACK;
-//				}
-//				else {
-//					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.WHITE);
-//					result[row][col] = Color.WHITE;
-//				}
-				
-				//alternatively, and this is appropriate to the checkerboard example:
-				//if one or two or three or four of your neighbors are alive, and you're alive, you stay alive,
-				//otherwise you die
-				
-				//okay, this rule is just unbelievably cool
-				if ((tally > 2 && tally < 5) || (tally < 5 && cells[row][col].getColor() == Color.BLACK)) {
-					result[row][col] = Color.BLACK;
-				}
-				else {
-					result[row][col] = Color.WHITE;
-				}
-			}
-		}
+		//this is our new, improved step method, because the cells have no step method of their own.
 		
-		//populate the old array with the results of the temp array
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
-				cells[row][col].setColor(result[row][col]);
-			}
+		for (int i = 0; i < agents.length; i++) {
+			//move the agents at distance d along their vectors; i dunno how the fuck to do this
+			
+			//
 		}
 	}
 	
+//	public void step() {
+//		//initialize temp array of colors
+//		Color[][] result = new Color[size][size];
+//		for (int row = 0; row < cells.length; row++) {
+//			for (int col = 0; col < cells[row].length; col++) {
+//				int tally = 0;
+//				//check how many neighbors are alive
+//				for (Cell n : getNeighbors(cells, row, col)) {
+//					//the array may have nulls in it ;)
+//					if (n != null) {
+//						if (n.getColor() == Color.BLACK) {
+//							tally++;
+//						}
+//					}
+//				}
+//				//if three of your neighbors are alive, you come alive or stay alive,
+//				//or if two of your neighbors are alive and you're alive, you stay alive,
+//				//otherwise you die
+////				if (tally == 3 || (tally == 2 && cells[row][col].getColor() == Color.BLACK)) {
+////					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.BLACK);
+////					result[row][col] = Color.BLACK;
+////				}
+////				else {
+////					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.WHITE);
+////					result[row][col] = Color.WHITE;
+////				}
+//				
+//				//alternatively, and this is appropriate to the checkerboard example:
+//				//if one or two or three or four of your neighbors are alive, and you're alive, you stay alive,
+//				//otherwise you die
+//				
+//				//okay, this rule is just unbelievably cool
+//				if ((tally > 2 && tally < 5) || (tally < 5 && cells[row][col].getColor() == Color.BLACK)) {
+//					result[row][col] = Color.BLACK;
+//				}
+//				else {
+//					result[row][col] = Color.WHITE;
+//				}
+//			}
+//		}
+//		
+//		//populate the old array with the results of the temp array
+//		for (int row = 0; row < cells.length; row++) {
+//			for (int col = 0; col < cells[row].length; col++) {
+//				cells[row][col].setColor(result[row][col]);
+//			}
+//		}
+//	}
+	
 	public Cell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
+		//PSA: NULL CELLS EXIST. THANK YOU.
+		
 		//each cell only has 8 neighbors! for now at least.... :(
 		Cell[] neighbors = new Cell[8];
 		//this is pretty cool
@@ -220,8 +246,10 @@ public class Board extends JPanel implements MouseInputListener {
 //				}
 //			}
 //		}
-		step();
-		repaint();
+		
+		//This was a temporary thing
+		//step();
+		//repaint();
 	}
 
 	@Override
@@ -233,8 +261,10 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		step();
-		repaint();
+		
+		//This was a temporary thing
+		//step();
+		//repaint();
 	}
 
 	@Override
