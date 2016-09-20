@@ -11,10 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 public class Board extends JPanel implements MouseInputListener {
-	private Cell[][] cells;
+	public Cell[][] cells;
+	private Cell[][] cells2;
 	private int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
 	private Color c;
+	public Color polarity;
 	
 	public Board(int width, int height, int size, int typeBoard) {
 		//set preferred graphical dimensions of the board
@@ -29,6 +31,7 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		
 		cells = new Cell[size][size];
+		cells2 = new Cell[size][size];
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
 				if (typeBoard==0)
@@ -56,14 +59,55 @@ public class Board extends JPanel implements MouseInputListener {
 					}
 					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
 				}
+				else
+				{
+					if(polarity ==Color.red)
+					{
+						if(cells[row][col].getColor() == Color.BLACK)
+						{
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.red);
+						}
+						else
+						{
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.blue);
+						}
+					}
+					else
+					{
+						if(cells[row][col].getColor() == Color.WHITE)
+						{
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+						}
+						else
+						{
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+						}
+					
+				}
 			}
+
 		}
+		
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		
+		}
+		if (cells[0][0].getColor() == Color.BLACK)
+		{
+			polarity = Color.red;
+		}
+	    else
+		{
+			polarity = Color.blue;
+		}
+		System.out.println(polarity);
 	}
 	
+	private Object cells(int i, int j) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	protected void paintComponent(Graphics arg0) {
 		super.paintComponent(arg0);
 		
