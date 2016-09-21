@@ -16,7 +16,6 @@ public class Driver {
 			Scanner sc = new Scanner(System.in);
 			System.out.print("Enter the number for the size of the board: ");
 			int input = sc.nextInt();
-			int input2 = input;
 			System.out.println("Please indicate if you wish to start with a checkerboard by typing \"1\" or start randomly by typing \"0\": ");
 			int typeBoard = sc.nextInt();
 	
@@ -24,19 +23,20 @@ public class Driver {
 
 			sc.close();
 			
-			Board board = new Board(800, 800, input, typeBoard);
+			Board board = new Board(800, 800, input, typeBoard, null);
 			JFrame frame = new JFrame();
-			//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.add(board);
 			frame.pack();
 			frame.setVisible(true);
 			
-			Board board2 = new Board(800, 800, input2, 2);
+			Board board2 = new Board(800, 800, input, typeBoard, board);
 			JFrame frame2 = new JFrame();
 			frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame2.add(board2);
 			frame2.pack();
 			frame2.setVisible(true);
+
 			
 		
 
