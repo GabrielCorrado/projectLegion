@@ -4,24 +4,19 @@ import java.awt.Color;
 import java.awt.Point;
 
 
-public class Cell_2 
+public class Cell_2 extends GenCell 
 {
-	private int x, y;
-	private double size;
-	private Color c;
+	
 	
 	public Cell_2(int x, int y, double size, Color c)
 	{
-		this.x = x;
-		this.y = y;
-		this.size = size;
-		this.c = c;
+		super(x,y,size,c);
 	}
-	public int getX()
+	public double getX()
 	{
 		return x;
 	}
-	public int getY()
+	public double getY()
 	{
 		return y;
 	}

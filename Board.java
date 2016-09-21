@@ -13,6 +13,7 @@ import javax.swing.event.MouseInputListener;
 public class Board extends JPanel implements MouseInputListener {
 	public Cell[][] cells;
 	public Cell_2[][] cells2;
+	public GenCell[][] display;
 	private int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
 	private Color c;
@@ -25,7 +26,7 @@ public class Board extends JPanel implements MouseInputListener {
 		setPreferredSize(new Dimension(width, height));
 		//HOW DID I FORGET THIS EARLIER
 		this.size = size;
-
+		display = new GenCell[size][size];
 		//set the graphical dimensions of the cells themselves
 		//the cells are always square, but the space they take up is constrained by the width and height of the board
 		//and by the number of cells.
@@ -143,33 +144,25 @@ public class Board extends JPanel implements MouseInputListener {
 
 	}
 
-	private Object cells(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private Object cells2(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	protected void paintComponent(Graphics arg0) {
 		super.paintComponent(arg0);
 
 		Graphics2D g = (Graphics2D)arg0;
-		Graphics2D g2 = (Graphics2D)arg0;
+		//Graphics2D g2 = (Graphics2D)arg0;
 
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
+		for (int row = 0; row < size; row++) {
+			for (int col = 0; col <size; col++) {
 				if (BoardPassedIn==false)
 				{
-					cells[row][col].draw(g);
+					display[row][col] = cells[row][col];
 				}
 				else
 				{
-					cells2[row][col].draw(g2);
+					display[row][col] = cells2[row][col];
 				}
 
-
+				display[row][col].draw(g);
 			}
 		}
 		/*for (int row = 0; row < cells2.length; row++) {
