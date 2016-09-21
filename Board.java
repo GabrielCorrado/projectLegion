@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
@@ -16,14 +17,13 @@ public class Board extends JPanel implements MouseInputListener {
 	public Board(int width, int height, int size) {
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
-		//HOW DID I FORGET THIS EARLIER
 		this.size = size;
 		
 		//set the graphical dimensions of the cells themselves
 		//the cells are always square, but the space they take up is constrained by the width and height of the board
 		//and by the number of cells.
 		//note that since this is an int, it rounds (down, in particular). so we will never see
-		//those ugly 
+		//those ugly irregularly sized cells
 		int cellSize = (width-2*EXTRA_BOARD_SPACE)/size;
 		//set the swarm agent size
 		int agentSize = (int)(0.7*cellSize);
@@ -40,7 +40,7 @@ public class Board extends JPanel implements MouseInputListener {
 		agents = new Agent[10];
 		for (int i = 0; i < agents.length; i++) {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
-			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Vector(1, (int)(Math.random()*5)));
+			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5));
 		}
 		
 		this.addMouseListener(this);
@@ -69,9 +69,9 @@ public class Board extends JPanel implements MouseInputListener {
 		//this is our new, improved step method, because the cells have no step method of their own.
 		
 		for (int i = 0; i < agents.length; i++) {
-			//move the agents at distance d along their vectors; i dunno how the fuck to do this
-			
-			//
+			//move the agents according to their vectors; i dunno how the eff to do this
+			//will this work???
+			agents[i].step();
 		}
 	}
 	
@@ -248,8 +248,8 @@ public class Board extends JPanel implements MouseInputListener {
 //		}
 		
 		//This was a temporary thing
-		//step();
-		//repaint();
+		step();
+		repaint();
 	}
 
 	@Override
@@ -263,8 +263,8 @@ public class Board extends JPanel implements MouseInputListener {
 		// TODO Auto-generated method stub
 		
 		//This was a temporary thing
-		//step();
-		//repaint();
+		step();
+		repaint();
 	}
 
 	@Override
