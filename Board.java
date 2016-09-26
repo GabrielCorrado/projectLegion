@@ -37,7 +37,9 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 		
 		//generate the swarm; kirsch suggested, say, 30 agents, so we're trying 10 right now
-		agents = new Agent[10];
+		//we've tried moving the swarm agents every frame with mousedragged... it can handle at least 500 with no
+		//visible slowdown.
+		agents = new Agent[500];
 		for (int i = 0; i < agents.length; i++) {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
 			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5));
@@ -217,6 +219,25 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
+
+		//for each agent, have the agent decide randomly whether to flip its cell's color
+		for (Agent agent : agents) {
+			if (Math.random() < 0.3) {
+				//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
+				//which cell each agent is in each time they move, in fact this could be determined using each agent's
+				//x and y rather than searching all the cells... but this should be runnable for now
+				for (int row = 0; row < cells.length; row++) {
+					for (int col = 0; col < cells[row].length; col++) {
+						if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
+							cells[row][col].flipColor();
+						}
+					}
+				}
+			}
+		}
+		
+		step();
+		repaint();
 		
 	}
 
@@ -247,9 +268,12 @@ public class Board extends JPanel implements MouseInputListener {
 //			}
 //		}
 		
-		//This was a temporary thing
-		step();
-		repaint();
+		//This is a temporary thing
+		//step();
+		//repaint();
+		
+		
+		
 	}
 
 	@Override
@@ -261,8 +285,24 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
-		//This was a temporary thing
+
+		//for each agent, have the agent decide randomly whether to flip its cell's color
+		for (Agent agent : agents) {
+			if (Math.random() < 0.05) {
+				//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
+				//which cell each agent is in each time they move, in fact this could be determined using each agent's
+				//x and y rather than searching all the cells... but this should be runnable for now
+				for (int row = 0; row < cells.length; row++) {
+					for (int col = 0; col < cells[row].length; col++) {
+						if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
+							cells[row][col].flipColor();
+						}
+					}
+				}
+			}
+		}
+
+		//This is a temporary thing
 		step();
 		repaint();
 	}
