@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
 public class Cell extends GenCell {
 	
 	public Cell(double x, double y, double size, Color c) {
-		//a lot of these parameters actually belong to Rectangle2D.Double, so we call the super class
+		//a lot of these parameters actually belong to Rectangle2D.Double, so we call in the super class GenCell
 		super(x,y,size,c);
 	}
 	

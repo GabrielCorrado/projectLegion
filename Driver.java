@@ -1,4 +1,5 @@
-//Tim Dobeck's slightly modified code to include random state for board
+//Tim Dobeck and Zak Gray, level 1 and 2
+//9/25/16
 
 package v5;
 

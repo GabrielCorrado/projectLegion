@@ -71,48 +71,64 @@ public class Board extends JPanel implements MouseInputListener {
 			this.addMouseMotionListener(this);
 		}
 	
-	    //layer 2 method
-		layer2();
+		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
+		if(cells[0][0].getColor()==Color.BLACK)
+		{
+			polarity = Color.RED;
+		}
+		else
+		{
+			polarity = Color.BLUE;
+		}
+		
+		//layer 2 initial construction
+		layer2(polarity);
 	
 
 }
 
-protected void layer2()
+protected void layer2(Color polarity)
 {
-	if(cells[0][0].getColor()==Color.BLACK)
-	{
-		polarity = Color.RED;
-	}
-	else
-	{
-		polarity = Color.BLUE;
-	}
-	cells2 = new Cell_2[size*2][size];
+	
+	cells2 = new Cell_2[size][size];
+	
+	
 	for (int row = 0; row < cells.length; row++) {
 		for (int col = 0; col < cells[row].length; col++) {
 
 			if(polarity == Color.RED)
+				//if the top left is black
 			{
 				if(cells[row][col].getColor() == Color.BLACK)
+					//if the layer 1 cell is black
 				{
 					if(col%2 == row%2)
+						//if its in a spot that should be black
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							//then you are the same polarity as cell[0][0]
 					}
 					else
+						//if its in a spot that SHOULDN'T be black
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							//then you are in the opposite polarity than cells[0][0]
 					}
 				}
 				else
+					//if the layer 1 cell is white
 				{
 					if(col%2 == row%2)
+						//if its in a spot that SHOULDN'T be 
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							// then its in the opposite polarity than cells[0]
 					}
 					else
+						//if its in a spot that should be white
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							//then its in the same polarity as cells[0][0]
 					}
 				}
 			}
@@ -122,26 +138,25 @@ protected void layer2()
 				{
 					if(col%2 == row%2)
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 					}
 					else
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 					}
 				}
 				else
 				{
 					if(col%2 == row%2)
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 					}
 					else
 					{
-						cells2[row+size][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+						cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 					}
 				}
 			}
-
 		}
 	}
 }
@@ -161,7 +176,7 @@ protected void paintComponent(Graphics arg0) {
 			}
 			else
 			{
-				display[row][col] = cells2[row][col];
+				display[row][col] = cells2[row-size][col];
 			}
 			display[row][col].draw(g);
 		}
@@ -210,7 +225,7 @@ public void step() {
 			cells[row][col].setColor(result[row][col]);
 		}
 	}
-	layer2();
+	layer2(polarity);
 }
 
 public Cell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
