@@ -23,20 +23,13 @@ public class Driver {
 
 			sc.close();
 			
-			Board board = new Board(800, 800, input, typeBoard, null);
+			Board board = new Board(1800, 800, input, typeBoard);
 			JFrame frame = new JFrame();
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.add(board);
 			frame.pack();
 			frame.setVisible(true);
 			
-			Board board2 = new Board(800, 800, input, typeBoard, board);
-			JFrame frame2 = new JFrame();
-			frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame2.add(board2);
-			frame2.pack();
-			frame2.setVisible(true);
-
 			
 		
 
