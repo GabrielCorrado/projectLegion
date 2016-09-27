@@ -1,0 +1,193 @@
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import java.awt.BorderLayout;
+import javax.swing.JTabbedPane;
+import javax.swing.JSplitPane;
+import java.awt.FlowLayout;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import java.awt.Button;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JSlider;
+import javax.swing.JButton;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+
+public class ProjectLegion {
+
+	static int HEIGHT = 864;
+	static int WIDTH = 1536;
+	static int BOARDSIZE = 800;
+	private JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ProjectLegion window = new ProjectLegion();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public ProjectLegion() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, WIDTH, HEIGHT);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		JMenuItem mntmOpen = new JMenuItem("Open");
+		mnFile.add(mntmOpen);
+		
+		JMenuItem mntmClose = new JMenuItem("Close");
+		mnFile.add(mntmClose);
+		
+		JMenu mnEdit = new JMenu("Edit");
+		menuBar.add(mnEdit);
+		
+		JMenuItem mntmNew = new JMenuItem("New");
+		mnEdit.add(mntmNew);
+		frame.getContentPane().setLayout(null);
+				
+		JPanel board = new JPanel();
+		board.setBackground(Color.WHITE);
+		board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
+		//System.out.print((HEIGHT-BOARDSIZE)/8);
+		frame.getContentPane().add(board);
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(818, 10, 700, 600);
+		frame.getContentPane().add(tabbedPane);
+		
+		JPanel tabLayer1 = new JPanel();
+		tabLayer1.setBackground(new Color(211, 211, 211));
+		tabbedPane.addTab("Layer 1", null, tabLayer1, null);
+		tabLayer1.setLayout(null);
+		
+		JButton btnChangeBoard = new JButton("New Board Size");
+		btnChangeBoard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnChangeBoard.setBounds(10, 11, 125, 35);
+		tabLayer1.add(btnChangeBoard);
+		
+		JPanel tabLayer2 = new JPanel();
+		tabLayer2.setBackground(new Color(211, 211, 211));
+		tabbedPane.addTab("Layer 2", null, tabLayer2, null);
+		
+		JPanel tabLayer3 = new JPanel();
+		tabLayer3.setBackground(new Color(211, 211, 211));
+		tabbedPane.addTab("Layer 3", null, tabLayer3, null);
+		
+		JLabel lblBoardSize = new JLabel("Board Size:");
+		lblBoardSize.setBounds(820, 621, 74, 14);
+		frame.getContentPane().add(lblBoardSize);
+		
+		JLabel lblBoardSizeInt = new JLabel("Int");
+		lblBoardSizeInt.setBounds(910, 621, 46, 14);
+		frame.getContentPane().add(lblBoardSizeInt);
+		
+		JLabel lblSwarmCount = new JLabel("Swarm Count:");
+		lblSwarmCount.setBounds(820, 653, 100, 14);
+		frame.getContentPane().add(lblSwarmCount);
+		
+		JLabel lblSwarmCountInt = new JLabel("Int");
+		lblSwarmCountInt.setBounds(910, 653, 46, 14);
+		frame.getContentPane().add(lblSwarmCountInt);
+		
+		JLabel lblSwarmRate = new JLabel("Swarm Rate:");
+		lblSwarmRate.setBounds(820, 687, 90, 14);
+		frame.getContentPane().add(lblSwarmRate);
+		
+		JSlider sliderSwarmSpeed = new JSlider();
+		sliderSwarmSpeed.setBounds(950, 683, 450, 24);
+		frame.getContentPane().add(sliderSwarmSpeed);
+		
+		JLabel lblSlow = new JLabel("Slow");
+		lblSlow.setBounds(910, 687, 46, 14);
+		frame.getContentPane().add(lblSlow);
+		
+		JLabel lblFast = new JLabel("Fast");
+		lblFast.setBounds(1417, 687, 46, 14);
+		frame.getContentPane().add(lblFast);
+		
+		JButton btnStopSwarm = new JButton("Stop Swarm");
+		btnStopSwarm.setBackground(new Color(255, 51, 51));
+		btnStopSwarm.setBounds(1030, 726, 125, 23);
+		frame.getContentPane().add(btnStopSwarm);
+		
+		JButton btnStartSwarm = new JButton("Start Swarm");
+		btnStartSwarm.setBackground(new Color(0, 255, 0));
+		btnStartSwarm.setBounds(895, 726, 125, 23);
+		frame.getContentPane().add(btnStartSwarm);
+		
+		JButton btnRecord = new JButton("Record");
+		btnRecord.setBackground(new Color(102, 255, 153));
+		btnRecord.setBounds(895, 767, 125, 23);
+		frame.getContentPane().add(btnRecord);
+		
+		JButton btnStopRecord = new JButton("Stop Record");
+		btnStopRecord.setBackground(new Color(255, 102, 102));
+		btnStopRecord.setBounds(1030, 767, 125, 23);
+		frame.getContentPane().add(btnStopRecord);
+		
+		JButton btnSaveRec = new JButton("Save Rec.");
+		btnSaveRec.setBackground(new Color(204, 51, 255));
+		btnSaveRec.setBounds(1203, 767, 125, 23);
+		frame.getContentPane().add(btnSaveRec);
+		
+		JButton btnRestart = new JButton("Restart");
+		btnRestart.setBackground(new Color(51, 204, 255));
+		btnRestart.setBounds(1203, 726, 125, 23);
+		frame.getContentPane().add(btnRestart);
+		
+		JButton btnNewSwarm = new JButton("New Swarm");
+		btnNewSwarm.setBackground(new Color(51, 102, 255));
+		btnNewSwarm.setBounds(1338, 726, 125, 23);
+		frame.getContentPane().add(btnNewSwarm);
+		
+		JButton btnNewScreenSave = new JButton("Screen Shot");
+		btnNewScreenSave.setBackground(new Color(204, 51, 255));
+		btnNewScreenSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnNewScreenSave.setBounds(1338, 767, 125, 23);
+		frame.getContentPane().add(btnNewScreenSave);
+		
+		
+	}
+}
