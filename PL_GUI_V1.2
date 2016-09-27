@@ -23,6 +23,10 @@ import java.awt.GridLayout;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JRadioButton;
 
 public class ProjectLegion {
 
@@ -101,12 +105,116 @@ public class ProjectLegion {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnChangeBoard.setBounds(10, 11, 125, 35);
+		btnChangeBoard.setBounds(10, 529, 125, 35);
 		tabLayer1.add(btnChangeBoard);
+		
+		JLabel lblNumStartingWhite = new JLabel("Initial White Cells:");
+		lblNumStartingWhite.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumStartingWhite.setBounds(10, 11, 125, 35);
+		tabLayer1.add(lblNumStartingWhite);
+		
+		JLabel lblIntWhiteCells = new JLabel("IntWhiteCells");
+		lblIntWhiteCells.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIntWhiteCells.setBounds(145, 11, 125, 35);
+		tabLayer1.add(lblIntWhiteCells);
+		
+		JLabel lblNumStartingBlack = new JLabel("Initial Black Cells:");
+		lblNumStartingBlack.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumStartingBlack.setBounds(10, 79, 125, 35);
+		tabLayer1.add(lblNumStartingBlack);
+		
+		JLabel lblIntblackCells = new JLabel("IntBlackCells");
+		lblIntblackCells.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIntblackCells.setBounds(145, 79, 125, 35);
+		tabLayer1.add(lblIntblackCells);
 		
 		JPanel tabLayer2 = new JPanel();
 		tabLayer2.setBackground(new Color(211, 211, 211));
 		tabbedPane.addTab("Layer 2", null, tabLayer2, null);
+		tabLayer2.setLayout(null);
+		
+		JLabel lblPrimaryPolarityColor = new JLabel("Primary Polarity Color");
+		lblPrimaryPolarityColor.setBounds(25, 25, 125, 14);
+		tabLayer2.add(lblPrimaryPolarityColor);
+		
+		JComboBox comboPrimary = new JComboBox();
+		comboPrimary.setModel(new DefaultComboBoxModel(new String[] {"BLUE", "RED", "GREEN", "CYAN", "BLACK", "WHITE"}));
+		comboPrimary.setBounds(25, 50, 125, 22);
+		String[] tempString = {"BLUE","RED","GREEN","CYAN","WHITE","BLACK"};
+		tabLayer2.add(comboPrimary);
+		
+		JLabel lblSecondaryPolarityColor = new JLabel("Secondary Polarity Color");
+		lblSecondaryPolarityColor.setBounds(238, 25, 125, 14);
+		tabLayer2.add(lblSecondaryPolarityColor);
+		
+		JComboBox comboSecondary = new JComboBox();
+		comboSecondary.setModel(new DefaultComboBoxModel(new String[] {"RED", "BLUE", "GREEN", "CYAN", "BLACK", "WHITE"}));
+		comboSecondary.setBounds(238, 50, 125, 22);
+		tabLayer2.add(comboSecondary);
+		
+		JLabel lblTertiaryPolarityColor = new JLabel("Tertiary Polarity Color");
+		lblTertiaryPolarityColor.setBounds(450, 25, 125, 14);
+		tabLayer2.add(lblTertiaryPolarityColor);
+		
+		JComboBox comboTertiary = new JComboBox();
+		comboTertiary.setModel(new DefaultComboBoxModel(new String[] {"null", "BLUE", "RED", "GREEN", "CYAN", "BLACK", "WHITE"}));
+		comboTertiary.setBounds(450, 50, 125, 22);
+		tabLayer2.add(comboTertiary);
+		
+		JLabel lblReginalStability = new JLabel("Reginal Stability");
+		lblReginalStability.setBounds(25, 200, 125, 14);
+		tabLayer2.add(lblReginalStability);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5"}));
+		comboBox.setBounds(25, 225, 125, 22);
+		tabLayer2.add(comboBox);
+		
+		JRadioButton radioButton = new JRadioButton("0_0");
+		radioButton.setSelected(true);
+		radioButton.setBounds(238, 300, 50, 50);
+		tabLayer2.add(radioButton);
+		
+		JRadioButton radioButton_1 = new JRadioButton("0_1");
+		radioButton_1.setBounds(288, 301, 50, 50);
+		tabLayer2.add(radioButton_1);
+		
+		JRadioButton radioButton_2 = new JRadioButton("0_2");
+		radioButton_2.setSelected(true);
+		radioButton_2.setBounds(338, 301, 50, 50);
+		tabLayer2.add(radioButton_2);
+		
+		JRadioButton radioButton_3 = new JRadioButton("1_0");
+		radioButton_3.setBounds(238, 350, 50, 50);
+		tabLayer2.add(radioButton_3);
+		
+		JRadioButton radioButton_4 = new JRadioButton("1_1");
+		radioButton_4.setSelected(true);
+		radioButton_4.setBounds(288, 350, 50, 50);
+		tabLayer2.add(radioButton_4);
+		
+		JRadioButton radioButton_5 = new JRadioButton("1_2");
+		radioButton_5.setBounds(338, 350, 50, 50);
+		tabLayer2.add(radioButton_5);
+		
+		JRadioButton radioButton_6 = new JRadioButton("2_0");
+		radioButton_6.setSelected(true);
+		radioButton_6.setBounds(238, 400, 50, 50);
+		tabLayer2.add(radioButton_6);
+		
+		JRadioButton radioButton_7 = new JRadioButton("2_1");
+		radioButton_7.setBounds(288, 400, 50, 50);
+		tabLayer2.add(radioButton_7);
+		
+		JRadioButton radioButton_8 = new JRadioButton("2_2");
+		radioButton_8.setSelected(true);
+		radioButton_8.setBounds(338, 400, 50, 50);
+		tabLayer2.add(radioButton_8);
+		
+		JLabel lblPolarity = new JLabel("Polarity");
+		lblPolarity.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPolarity.setBounds(238, 261, 150, 14);
+		tabLayer2.add(lblPolarity);
 		
 		JPanel tabLayer3 = new JPanel();
 		tabLayer3.setBackground(new Color(211, 211, 211));
