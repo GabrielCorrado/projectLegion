@@ -1,17 +1,19 @@
+import java.awt.Color;
 
 public class NullCell extends GenCell {
 	private static NullCell nullCell;
 	
-	private NullCell() {
+	private NullCell(double x, double y, int size, Color c) {
 		//does nothing
+		super(x,y,size,c);
 	}
 	
 	public static NullCell getNullCell() {
 		if (nullCell == null) {
-			nullCell = new NullCell();
+			nullCell = new NullCell(0,0,0,null);
 		}
 		return nullCell;
 	}
 	
-	//everything that a cell extending gencell would do, does nothing following this
+	//any method that would be called by a gencell will be here and do nothing
 }
