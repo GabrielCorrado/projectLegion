@@ -85,7 +85,7 @@ public class Board extends JPanel implements MouseInputListener {
 		layer2(polarity);
 	
 
-}
+	}
 
 	protected void layer2(Color polarity)
 	{
