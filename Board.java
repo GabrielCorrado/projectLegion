@@ -67,9 +67,10 @@ public class Board extends JPanel implements MouseInputListener {
 
 			}
 
-			this.addMouseListener(this);
-			this.addMouseMotionListener(this);
 		}
+		
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 	
 		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
 		if(cells[0][0].getColor()==Color.BLACK)
