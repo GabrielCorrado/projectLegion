@@ -18,6 +18,10 @@ public class GenCell extends Rectangle2D.Double{
 		this.c = c;
 	}
 	
+	public GenCell() {
+		//does nothing; just exists for NullCell to work
+	}
+	
 	public void draw(Graphics2D g) {
 		g.setColor(c);
 		g.fill(this);
