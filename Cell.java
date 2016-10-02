@@ -1,9 +1,4 @@
-package v5;
-
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.Rectangle2D;
 
 public class Cell extends GenCell {
 	
@@ -28,5 +23,4 @@ public class Cell extends GenCell {
 	public void setColor(Color newColor) {
 		c = newColor;
 	}
-
 }

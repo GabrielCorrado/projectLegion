@@ -1,8 +1,3 @@
-//Tim Dobeck and Zak Gray, level 1 and 2
-//9/25/16
-
-package v5;
-
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -11,7 +6,6 @@ public class Driver {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
 		try
 		{
 			//this is based on Tim's code

@@ -1,10 +1,8 @@
-package v5;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
-public class GenCell extends Rectangle2D.Double{
+public class GenCell extends Rectangle2D.Double {
 	protected double x, y;
 	protected double size;
 	protected Color c;
@@ -16,6 +14,10 @@ public class GenCell extends Rectangle2D.Double{
 		this.y = y;
 		this.size = size;
 		this.c = c;
+	}
+	
+	public GenCell() {
+		//does nothing; just exists for NullCell to work
 	}
 	
 	public void draw(Graphics2D g) {
