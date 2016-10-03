@@ -234,6 +234,9 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 		layer2(polarity);
+		for (Agent agent : agents) {
+			agent.step();
+		}
 	}
 	
 	public Cell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
@@ -372,7 +375,7 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		//for each agent, have the agent decide randomly whether to flip its cell's color
 		for (Agent agent : agents) {
-			if (Math.random() < 0.05) {
+			if (Math.random() < 0.1) {
 				//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
 				//which cell each agent is in each time they move, in fact this could be determined using each agent's
 				//x and y rather than searching all the cells... but this should be runnable for now
