@@ -234,6 +234,8 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 		layer2(polarity);
+		
+		//move the agents too!
 		for (Agent agent : agents) {
 			agent.step();
 		}
