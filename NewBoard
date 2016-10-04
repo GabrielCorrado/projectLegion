@@ -81,6 +81,12 @@ public class Board extends JPanel implements MouseInputListener {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
 			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
 			
+			//agent.x < EXTRA_BOARD_SPACE   AKA left border
+			//agent.y < EXTRA_BOARD_SPACE   AKA top border
+			//agent.x > EXTRA_BOARD_SPACE+(size*2*cellSize)   AKA right border
+			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
+			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
+			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
 			if (agents[i].x < EXTRA_BOARD_SPACE || agents[i].y < EXTRA_BOARD_SPACE || agents[i].x+agentSize > EXTRA_BOARD_SPACE+(size*2*cellSize) || agents[i].y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
 			{
 				agents[i].agentPastBoard = true;
