@@ -1,1 +1,28 @@
+These are current criticisms from the first code walkthrough with the Clinic Team.
 
+Broad criticisms:
+1. All of the code should be commented better. It is frequently unclear what the code is supposed to do. Certain sections, like the layer2() method in Board, are not commented at all. In particular, USE JAVADOCS NOTATION on all of the methods.
+2. The formatting is occasionally inconsistent; we can fix this by doing select all and then ctrl+I in Eclipse before sending code.
+3. All of our classes are not implementing the SerializableUID thing. Eclipse will auto-write that, so at some point do that for each of the classes.
+
+Specific criticisms:
+Packages:
+1. Separate the code into a couple of different packages. Jacob specifically suggested a Cells package where all of our cell classes would go.
+2. Rename a couple of these classes: Cell, Cell_2, and GenCell are all bad names.
+Agent:
+1. The name is not descriptive enough and it's not clear enough what they do.
+2. We should try writing separate constructors, e.g. one to initialize them with random positions and velocities on the board. This gets all of that messy stuff out of the Board class and into Agent.
+Board:
+1. Revise the getNeighbours() method.
+2. There are a number of poorly named variables, particularly size. Dr. Palmer hates size. :( He suggests numOfCells.
+3. There are at least two cases, tally and rand, in which variables get reinitialized inside of a loop, which is very wasteful.
+4. Have board center the layer in the given space rather than drawing along the top right. This is so trivial I'm not even putting the code here.
+5. During initialization of e.g. checkerboards, you can draw them one row at a time instead of one cell at a time.
+Driver:
+1. Have our try/catch only work for 0 or 1.
+2. Have the try/catch send a more specific exception as well.
+3. Put it in a while loop so it can take a new value if the user inputs a bad value the previous time.
+GenCell:
+1. They suggested making GenCell an abstract class. We're not sure we want to do that.
+NullCell:
+1. Comment that it is a singleton.
