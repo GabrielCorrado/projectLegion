@@ -19,6 +19,7 @@ public class Board extends JPanel implements MouseInputListener {
 	private int cellSize;
 	private int agentSize;
 	private Agent[] agents;
+	private Color agentColor = Color.green;
 	
 	public Board(int width, int height, int size, int typeBoard) {
 		//set preferred graphical dimensions of the board
@@ -74,7 +75,7 @@ public class Board extends JPanel implements MouseInputListener {
 		agents = new Agent[500];
 		for (int i = 0; i < agents.length; i++) {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
-			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5));
+			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
 		
 			//agent.x < EXTRA_BOARD_SPACE   AKA left border
 			//agent.y < EXTRA_BOARD_SPACE   AKA top border
