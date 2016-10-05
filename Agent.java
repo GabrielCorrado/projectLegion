@@ -6,18 +6,25 @@ import java.awt.geom.Point2D;
 public class Agent extends Ellipse2D.Double {
 	private int size;
 	private Point2D velocity;
+	private Color color;
+	public boolean agentPastBoard = false;
 	
-	public Agent(int x, int y, int size, Point2D v) {
+	public Agent(int x, int y, int size, Point2D v, Color color) {
 		super(x, y, size, size);
 		this.velocity = v;
+		this.color = color;
 	}
 	
 	public void draw(Graphics2D g) {
-		g.setColor(Color.GREEN);
+		g.setColor(color);
 		g.fill(this);
 		g.fillOval((int)x, (int)y, size, size);
 	}
 
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
 	public int getSize() {
 		return size;
 	}
