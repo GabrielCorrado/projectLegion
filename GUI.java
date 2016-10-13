@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JSplitPane;
 import java.awt.FlowLayout;
+import java.awt.Frame;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -31,13 +33,15 @@ import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JToggleButton;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 public class GUI {
 
 	static int HEIGHT = 864;
 	static int WIDTH = 1536;
 	static int BOARDSIZE = 800;
-	private JFrame frame;
+	private JFrame frmProjectLegion;
 	private JTextField textField_NumAgents;
 	private JTextField textField_NumAgentChanges;
 	private JTextField textField_AgentCloseness;
@@ -52,7 +56,7 @@ public class GUI {
 			public void run() {
 				try {
 					GUI window = new GUI();
-					window.frame.setVisible(true);
+					window.frmProjectLegion.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -71,13 +75,13 @@ public class GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, WIDTH, HEIGHT);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmProjectLegion = new JFrame();
+		frmProjectLegion.setBounds(100, 100, WIDTH, HEIGHT);
+		frmProjectLegion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Makes the top menu bar that has file and edit
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+		frmProjectLegion.setJMenuBar(menuBar);
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
@@ -93,11 +97,11 @@ public class GUI {
 		
 		JMenuItem mntmNew = new JMenuItem("New");
 		mnEdit.add(mntmNew);
-		frame.getContentPane().setLayout(null);
+		frmProjectLegion.getContentPane().setLayout(null);
 				
 		//************************************************************ This makes the 800 by 800 JPanel that will be where the board goes every time it is painted. 
-		/*JPanel board = new JPanel();
-		board.setBackground(Color.WHITE);
+		//JPanel board = new JPanel();
+		/*board.setBackground(Color.WHITE);
 		board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
 		//System.out.print((HEIGHT-BOARDSIZE)/8);
 		frame.getContentPane().add(board);*/
@@ -105,7 +109,7 @@ public class GUI {
 		//This is where the tabs for the layer options go.
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(818, 10, 700, 600);
-		frame.getContentPane().add(tabbedPane);
+		frmProjectLegion.getContentPane().add(tabbedPane);
 		
 		//************************************************************ TAB 1 ************************************************************ 
 		JPanel tabLayer1 = new JPanel();
@@ -348,72 +352,72 @@ public class GUI {
 		//************************************************************ Just shows information
 		JLabel lblBoardSizeGlobal = new JLabel("Board Size:");
 		lblBoardSizeGlobal.setBounds(820, 621, 74, 14);
-		frame.getContentPane().add(lblBoardSizeGlobal);
+		frmProjectLegion.getContentPane().add(lblBoardSizeGlobal);
 		
 		JLabel lblBoardSizeInt = new JLabel("Int");
 		lblBoardSizeInt.setBounds(910, 621, 46, 14);
-		frame.getContentPane().add(lblBoardSizeInt);
+		frmProjectLegion.getContentPane().add(lblBoardSizeInt);
 		
 		JLabel lblSwarmCount = new JLabel("Swarm Count:");
 		lblSwarmCount.setBounds(1014, 621, 100, 14);
-		frame.getContentPane().add(lblSwarmCount);
+		frmProjectLegion.getContentPane().add(lblSwarmCount);
 		
 		JLabel lblSwarmCountInt = new JLabel("Int");
 		lblSwarmCountInt.setBounds(1109, 621, 46, 14);
-		frame.getContentPane().add(lblSwarmCountInt);
+		frmProjectLegion.getContentPane().add(lblSwarmCountInt);
 		
 		JLabel lblSwarmRate = new JLabel("Swarm Rate:");
 		lblSwarmRate.setBounds(820, 646, 90, 14);
-		frame.getContentPane().add(lblSwarmRate);
+		frmProjectLegion.getContentPane().add(lblSwarmRate);
 		
 		//************************************************************ Slider for the user to change how fast the board will step
 		JSlider sliderSwarmSpeed = new JSlider();
 		sliderSwarmSpeed.setBounds(953, 646, 450, 24);
-		frame.getContentPane().add(sliderSwarmSpeed);
+		frmProjectLegion.getContentPane().add(sliderSwarmSpeed);
 		
 		JLabel lblSlow = new JLabel("Slow");
 		lblSlow.setBounds(910, 646, 46, 14);
-		frame.getContentPane().add(lblSlow);
+		frmProjectLegion.getContentPane().add(lblSlow);
 		
 		JLabel lblFast = new JLabel("Fast");
 		lblFast.setBounds(1417, 646, 46, 14);
-		frame.getContentPane().add(lblFast);
+		frmProjectLegion.getContentPane().add(lblFast);
 		
 		//************************************************************ Buttons that start stop and do other things that they are clearly labeled for.
 		JButton btnStopSwarm = new JButton("Stop Swarm");
 		btnStopSwarm.setBackground(new Color(255, 51, 51));
 		btnStopSwarm.setBounds(1030, 726, 125, 23);
-		frame.getContentPane().add(btnStopSwarm);
+		frmProjectLegion.getContentPane().add(btnStopSwarm);
 		
 		JButton btnStartSwarm = new JButton("Start Swarm");
 		btnStartSwarm.setBackground(new Color(0, 255, 0));
 		btnStartSwarm.setBounds(895, 726, 125, 23);
-		frame.getContentPane().add(btnStartSwarm);
+		frmProjectLegion.getContentPane().add(btnStartSwarm);
 		
 		JButton btnRecord = new JButton("Record");
 		btnRecord.setBackground(new Color(102, 255, 153));
 		btnRecord.setBounds(895, 767, 125, 23);
-		frame.getContentPane().add(btnRecord);
+		frmProjectLegion.getContentPane().add(btnRecord);
 		
 		JButton btnStopRecord = new JButton("Stop Record");
 		btnStopRecord.setBackground(new Color(255, 102, 102));
 		btnStopRecord.setBounds(1030, 767, 125, 23);
-		frame.getContentPane().add(btnStopRecord);
+		frmProjectLegion.getContentPane().add(btnStopRecord);
 		
 		JButton btnSaveRec = new JButton("Save Rec.");
 		btnSaveRec.setBackground(new Color(204, 51, 255));
 		btnSaveRec.setBounds(1203, 767, 125, 23);
-		frame.getContentPane().add(btnSaveRec);
+		frmProjectLegion.getContentPane().add(btnSaveRec);
 		
 		JButton btnRestart = new JButton("Restart");
 		btnRestart.setBackground(new Color(51, 204, 255));
 		btnRestart.setBounds(1203, 726, 125, 23);
-		frame.getContentPane().add(btnRestart);
+		frmProjectLegion.getContentPane().add(btnRestart);
 		
 		JButton btnNewRandomSwarm = new JButton("New Swarm");
 		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
 		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
-		frame.getContentPane().add(btnNewRandomSwarm);
+		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
 		
 		JButton btnNewScreenSave = new JButton("Screen Shot");
 		btnNewScreenSave.setBackground(new Color(204, 51, 255));
@@ -422,15 +426,15 @@ public class GUI {
 			}
 		});
 		btnNewScreenSave.setBounds(1338, 767, 125, 23);
-		frame.getContentPane().add(btnNewScreenSave);
+		frmProjectLegion.getContentPane().add(btnNewScreenSave);
 		
 		JLabel lblSlowCycless = new JLabel("1/2 Cycle/s");
 		lblSlowCycless.setBounds(910, 671, 100, 14);
-		frame.getContentPane().add(lblSlowCycless);
+		frmProjectLegion.getContentPane().add(lblSlowCycless);
 		
 		JLabel lblFastCycless = new JLabel("5 Cycles/s");
 		lblFastCycless.setBounds(1417, 671, 100, 14);
-		frame.getContentPane().add(lblFastCycless);
+		frmProjectLegion.getContentPane().add(lblFastCycless);
 		
 		JButton btnInitializeBoard = new JButton("Initialize Board");
 		btnInitializeBoard.addMouseListener(new MouseAdapter() {
@@ -440,7 +444,7 @@ public class GUI {
 				Board board = new Board(800,800,10,0);
 				board.setBackground(Color.WHITE);
 				board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
-				frame.getContentPane().add(board);
+				frmProjectLegion.getContentPane().add(board);
 				board.step(); 
 			}
 		});
@@ -450,7 +454,7 @@ public class GUI {
 			}
 		});
 		btnInitializeBoard.setBounds(1203, 681, 125, 24);
-		frame.getContentPane().add(btnInitializeBoard);
+		frmProjectLegion.getContentPane().add(btnInitializeBoard);
 		
 		
 	}
