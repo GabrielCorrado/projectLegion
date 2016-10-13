@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
+@SuppressWarnings("serial")
 public class GenCell extends Rectangle2D.Double {
 	protected double x, y;
 	protected double size;
@@ -34,3 +35,4 @@ public class GenCell extends Rectangle2D.Double {
 		g.fill(this);
 		g.fillRect((int)x, (int)y, (int)size, (int)size);
 	}
+}

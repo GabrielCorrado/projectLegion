@@ -26,11 +26,11 @@ public class Board extends JPanel implements MouseInputListener {
 		setPreferredSize(new Dimension(width, height));
 		//HOW DID I FORGET THIS EARLIER
 		this.size = size;
-		display = new GenCell[size*2][size];
+		display = new GenCell[size][size];
 		//set the graphical dimensions of the cells themselves
 		//the cells are always square, but the space they take up is constrained by the width and height of the board
 		//and by the number of cells.
-		cellSize = ((width/2)-2*EXTRA_BOARD_SPACE)/size; //board space in the middle?
+		cellSize = ((width)-2*EXTRA_BOARD_SPACE)/size; //board space in the middle?
 		agentSize = (int)(cellSize*0.7);
 		//gap between the two changes depending on if the size is 100 vs 5
 		
@@ -79,11 +79,11 @@ public class Board extends JPanel implements MouseInputListener {
 		
 			//agent.x < EXTRA_BOARD_SPACE   AKA left border
 			//agent.y < EXTRA_BOARD_SPACE   AKA top border
-			//agent.x > EXTRA_BOARD_SPACE+(size*2*cellSize)   AKA right border
+			//agent.x > EXTRA_BOARD_SPACE+(size*cellSize)   AKA right border
 			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
 			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
 			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
-			if (agents[i].x < EXTRA_BOARD_SPACE || agents[i].y < EXTRA_BOARD_SPACE || agents[i].x+agentSize > EXTRA_BOARD_SPACE+(size*2*cellSize) || agents[i].y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+			if (agents[i].x < EXTRA_BOARD_SPACE || agents[i].y < EXTRA_BOARD_SPACE || agents[i].x+agentSize > EXTRA_BOARD_SPACE+(size*cellSize) || agents[i].y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
 			{
 				agents[i].agentPastBoard = true;
 				agents[i].setColor(new Color(0,1,0,0));
@@ -108,7 +108,7 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 		
 		//layer 2 initial construction
-		layer2(polarity);
+		//layer2(polarity);
 		
 	}
 	
@@ -191,16 +191,9 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		Graphics2D g = (Graphics2D)arg0;
 		//draw boards
-		for (int row = 0; row < size*2; row++) {
+		for (int row = 0; row < size; row++) {
 			for (int col = 0; col <size; col++) {
-				if (row<size)
-				{
-					display[row][col] = cells[row][col];
-				}
-				else
-				{
-					display[row][col] = cells2[row-size][col];
-				}
+				display[row][col] = cells[row][col];
 				display[row][col].draw(g);
 			}
 		}
@@ -421,11 +414,11 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 			//agent.x < EXTRA_BOARD_SPACE   AKA left border
 			//agent.y < EXTRA_BOARD_SPACE   AKA top border
-			//agent.x > EXTRA_BOARD_SPACE+(size*2*cellSize)   AKA right border
+			//agent.x > EXTRA_BOARD_SPACE+(size*cellSize)   AKA right border
 			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
 			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
 			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
-			if (agent.x < EXTRA_BOARD_SPACE || agent.y < EXTRA_BOARD_SPACE || agent.x+agentSize > EXTRA_BOARD_SPACE+(size*2*cellSize) || agent.y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+			if (agent.x < EXTRA_BOARD_SPACE || agent.y < EXTRA_BOARD_SPACE || agent.x+agentSize > EXTRA_BOARD_SPACE+(size*cellSize) || agent.y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
 			{
 				agent.agentPastBoard = true;
 				agent.setColor(new Color(0,1,0,0));

@@ -20,9 +20,9 @@ import javax.swing.JSlider;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
+//import com.jgoodies.forms.layout.FormLayout;
+//import com.jgoodies.forms.layout.ColumnSpec;
+//import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -32,7 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JToggleButton;
 
-public class ProjectLegion {
+public class GUI {
 
 	static int HEIGHT = 864;
 	static int WIDTH = 1536;
@@ -51,7 +51,7 @@ public class ProjectLegion {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProjectLegion window = new ProjectLegion();
+					GUI window = new GUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +63,7 @@ public class ProjectLegion {
 	/**
 	 * Create the application.
 	 */
-	public ProjectLegion() {
+	public GUI() {
 		initialize();
 	}
 
@@ -435,14 +435,14 @@ public class ProjectLegion {
 		JButton btnInitializeBoard = new JButton("Initialize Board");
 		btnInitializeBoard.addMouseListener(new MouseAdapter() {
 			//************************************************************This code works with board, cell, gencell classes in order to have a basic board print on the JFrame UI
-			/*@Override
+			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				Board board = new Board(800,800,10,0);
 				board.setBackground(Color.WHITE);
 				board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
 				frame.getContentPane().add(board);
-				board.Step(); 
-			}*/
+				board.step(); 
+			}
 		});
 		btnInitializeBoard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
