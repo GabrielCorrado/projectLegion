@@ -76,6 +76,7 @@ public class GUI {
 	 */
 	private void initialize() {
 		frmProjectLegion = new JFrame();
+		frmProjectLegion.setTitle("Project Legion");
 		frmProjectLegion.setBounds(100, 100, WIDTH, HEIGHT);
 		frmProjectLegion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -345,8 +346,25 @@ public class GUI {
 		tabLayer3.add(btnUpdatePStrength);
 		
 		JToggleButton tglbtnViewAgents = new JToggleButton("View Agents");
+		tglbtnViewAgents.setSelected(true);
 		tglbtnViewAgents.setBounds(10, 495, 187, 69);
 		tabLayer3.add(tglbtnViewAgents);
+		
+		JButton btnSetPhrmnTrail = new JButton("Set Phrmn Trail");
+		btnSetPhrmnTrail.setBounds(10, 272, 187, 30);
+		tabLayer3.add(btnSetPhrmnTrail);
+		
+		JButton btnRemovePhrmnTrail = new JButton("Remove Phrmn Trail");
+		btnRemovePhrmnTrail.setBounds(10, 316, 187, 30);
+		tabLayer3.add(btnRemovePhrmnTrail);
+		
+		JButton btnSetPhrmnZone = new JButton("Set Phrmn Zone");
+		btnSetPhrmnZone.setBounds(215, 272, 187, 30);
+		tabLayer3.add(btnSetPhrmnZone);
+		
+		JButton btnRemovePhrmnZone = new JButton("Remove Phrmn Zone");
+		btnRemovePhrmnZone.setBounds(215, 316, 187, 30);
+		tabLayer3.add(btnRemovePhrmnZone);
 		
 		//************************************************************ Global Zone Buttons + Slider ************************************************************ 
 		//************************************************************ Just shows information
@@ -415,10 +433,17 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(btnRestart);
 		
 		JButton btnNewRandomSwarm = new JButton("New Swarm");
+		btnNewRandomSwarm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NewBoardWindow newBoardWindow = new NewBoardWindow();
+				newBoardWindow.setVisible(true);
+			}
+		});
 		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
 		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
 		
+		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
 		btnNewScreenSave.setBackground(new Color(204, 51, 255));
 		btnNewScreenSave.addActionListener(new ActionListener() {
