@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+@SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {
 	public Cell[][] cells;
 	public Cell_2[][] cells2;

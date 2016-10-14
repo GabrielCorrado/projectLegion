@@ -9,6 +9,7 @@
 
 import java.awt.Color;
 
+@SuppressWarnings("serial")
 public class Cell extends GenCell {
 	
 	//constructor

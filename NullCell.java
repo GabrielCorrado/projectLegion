@@ -3,6 +3,7 @@
  * 					 This border will be populated with Null cells. If the cells go beyond the normal board, then they will disappear and be have null coordinates.
  */
 
+@SuppressWarnings("serial")
 public class NullCell extends GenCell {
 	private static NullCell nullCell;
 	

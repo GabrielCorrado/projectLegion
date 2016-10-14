@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Point;
 
 
+@SuppressWarnings("serial")
 public class Cell_2 extends GenCell  //GenCell holds the Rectangle2D
 {
 	//constructor

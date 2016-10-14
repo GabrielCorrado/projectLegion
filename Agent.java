@@ -14,6 +14,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
+@SuppressWarnings("serial")
 public class Agent extends Ellipse2D.Double {
 	private int size;
 	private Point2D velocity;	//adds direction to our agents
