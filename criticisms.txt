@@ -3,7 +3,7 @@ These are current criticisms from the first code walkthrough with the Clinic Tea
 Broad criticisms:
 1. All of the code should be commented better. It is frequently unclear what the code is supposed to do. Certain sections, like the layer2() method in Board, are not commented at all. In particular, USE JAVADOCS NOTATION on all of the methods.
 2. The formatting is occasionally inconsistent; we can fix this by doing select all and then ctrl+I in Eclipse before sending code.
-3. All of our classes are not implementing the SerializableUID thing. Eclipse will auto-write that, so at some point do that for each of the classes.
+3. All of our classes are not implementing the SerializableUID thing. Eclipse will auto-write that, so at some point do that for each of the classes. --ADDRESSED. We have decided to suppress the warnings since we don't think there is reason to serialize our classes.
 
 Specific criticisms:
 Packages:
@@ -19,8 +19,8 @@ Board:
 4. Have board center the layer in the given space rather than drawing along the top right. This is so trivial I'm not even putting the code here.
 5. During initialization of e.g. checkerboards, you can draw them one row at a time instead of one cell at a time.
 Driver:
-1. Have our try/catch only work for 0 or 1.
-2. Have the try/catch send a more specific exception as well.
+1. Have our try/catch only work for 0 or 1. --ADDRESSED. This has been completely rewritten and works as suggestedn ow.
+2. Have the try/catch send a more specific exception as well. --ADDRESSED. This has been completely rewritten and uses IllegalArgumentException now.
 3. Put it in a while loop so it can take a new value if the user inputs a bad value the previous time.
 GenCell:
 1. They suggested making GenCell an abstract class. We're not sure we want to do that.
