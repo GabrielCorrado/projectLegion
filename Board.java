@@ -275,6 +275,8 @@ public class Board extends JPanel implements MouseInputListener {
 		for (Agent agent : agents) {
 			agent.step();
 		}
+		repaint();
+		System.out.println("Repaint from step");
 	}
 	
 	public Cell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
