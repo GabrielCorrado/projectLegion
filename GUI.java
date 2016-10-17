@@ -431,7 +431,9 @@ public class GUI {
 		btnRestart.setBackground(new Color(51, 204, 255));
 		btnRestart.setBounds(1203, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRestart);
-		
+/*		
+ * needs to be looked into
+ * 
 		JButton btnNewRandomSwarm = new JButton("New Swarm");
 		btnNewRandomSwarm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -439,10 +441,11 @@ public class GUI {
 				newBoardWindow.setVisible(true);
 			}
 		});
+
 		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
 		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
-		
+*/
 		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
 		btnNewScreenSave.setBackground(new Color(204, 51, 255));

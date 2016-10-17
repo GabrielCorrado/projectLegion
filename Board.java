@@ -8,10 +8,14 @@ import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import Cells.Cell;
+import Cells.GenCell;
+import Cells.NullCell;
+
 @SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {
 	public Cell[][] cells;
-	public Cell_2[][] cells2;
+	public Cell[][] cells2;
 	public GenCell[][] display;
 	private int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
@@ -21,6 +25,7 @@ public class Board extends JPanel implements MouseInputListener {
 	private int agentSize;
 	private Agent[] agents;
 	private Color agentColor = Color.green;
+	public int layer2Draw = 1;
 	
 	public Board(int width, int height, int size, int typeBoard) {
 		//set preferred graphical dimensions of the board
@@ -116,7 +121,7 @@ public class Board extends JPanel implements MouseInputListener {
 	protected void layer2(Color polarity)
 	{
 
-		cells2 = new Cell_2[size][size];
+		cells2 = new Cell[size][size];
 
 
 		for (int row = 0; row < cells.length; row++) {
@@ -131,13 +136,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that should be black
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 							//then you are the same polarity as cell[0][0]
 						}
 						else
 							//if its in a spot that SHOULDN'T be black
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 							//then you are in the opposite polarity than cells[0][0]
 						}
 					}
@@ -147,13 +152,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that SHOULDN'T be 
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 							// then its in the opposite polarity than cells[0]
 						}
 						else
 							//if its in a spot that should be white
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 							//then its in the same polarity as cells[0][0]
 						}
 					}
@@ -164,22 +169,22 @@ public class Board extends JPanel implements MouseInputListener {
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 						}
 						else
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 						}
 					}
 					else
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 						}
 						else
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 						}
 					}
 				}
@@ -192,10 +197,23 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		Graphics2D g = (Graphics2D)arg0;
 		//draw boards
-		for (int row = 0; row < size; row++) {
-			for (int col = 0; col <size; col++) {
-				display[row][col] = cells[row][col];
-				display[row][col].draw(g);
+		
+		if (layer2Draw == 1)
+		{
+			for (int row = 0; row < size; row++) {
+				for (int col = 0; col <size; col++) {
+					display[row][col] = cells[row][col];
+					display[row][col].draw(g);
+				}
+			}
+		}
+		else//layer2Draw == 2
+		{
+			for (int row = 0; row < size; row++) {
+				for (int col = 0; col <size; col++) {
+					display[row][col] = cells2[row][col];
+					display[row][col].draw(g);
+				}
 			}
 		}
 		//draw agents
@@ -210,12 +228,6 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 			agents[i].draw(g);
 		}
-		
-//		for (int row = 0; row < cells2.length; row++) {
-//			for (int col = 0; col < cells2[row].length; col++) {
-//				cells2[row][col].draw(g2);
-//			}
-//		}
 		
 		for (int i = 0; i < agents.length; i++) {
 			agents[i].draw(g);
