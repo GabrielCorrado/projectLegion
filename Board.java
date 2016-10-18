@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
@@ -17,7 +19,7 @@ public class Board extends JPanel implements MouseInputListener {
 	public Cell[][] cells;
 	public Cell[][] cells2;
 	public GenCell[][] display;
-	private int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
+	public int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
 	private Color c;
 	public Color polarity;
@@ -25,9 +27,11 @@ public class Board extends JPanel implements MouseInputListener {
 	private int agentSize;
 	private Agent[] agents;
 	private Color agentColor = Color.green;
-	public int layer2Draw = 1;
+	private int tempL2D;
+	private int agentRate = 50;
+
 	
-	public Board(int width, int height, int size, int typeBoard) {
+	public Board(int width, int height, int size, int typeBoard, int numAgents) {
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		//HOW DID I FORGET THIS EARLIER
@@ -78,10 +82,10 @@ public class Board extends JPanel implements MouseInputListener {
 		//generate the swarm; kirsch suggested, say, 30 agents, so we're trying 10 right now
 		//we've tried moving the swarm agents every frame with mousedragged... it can handle at least 500 with no
 		//visible slowdown.
-		agents = new Agent[500];
+		agents = new Agent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
-			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
+			agents[i] = new Agent((int)(Math.random()*(width-EXTRA_BOARD_SPACE)), (int)(Math.random()*(width-EXTRA_BOARD_SPACE)), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
 		
 			//agent.x < EXTRA_BOARD_SPACE   AKA left border
 			//agent.y < EXTRA_BOARD_SPACE   AKA top border
@@ -89,14 +93,33 @@ public class Board extends JPanel implements MouseInputListener {
 			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
 			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
 			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
-			if (agents[i].x < EXTRA_BOARD_SPACE || agents[i].y < EXTRA_BOARD_SPACE || agents[i].x+agentSize > EXTRA_BOARD_SPACE+(size*cellSize) || agents[i].y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+			if (agents[i].x < EXTRA_BOARD_SPACE)  
 			{
 				agents[i].agentPastBoard = true;
-				agents[i].setColor(new Color(0,1,0,0));
+				agents[i].x = EXTRA_BOARD_SPACE + agents[i].x;
+				agents[i].agentPastBoard = false;
+			}
+			if ( agents[i].y < EXTRA_BOARD_SPACE)
+			{
+				agents[i].agentPastBoard = true;
+				agents[i].y = EXTRA_BOARD_SPACE + agents[i].y;
+				agents[i].agentPastBoard = false;
+			}
+			if (agents[i].x+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+			{
+				agents[i].agentPastBoard = true;
+				agents[i].x =  EXTRA_BOARD_SPACE+(size*cellSize) - agents[i].x;
+				agents[i].agentPastBoard = false;
+			}
+			if (agents[i].y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+			{
+				agents[i].agentPastBoard = true;
+				agents[i].y = EXTRA_BOARD_SPACE+(size*cellSize) - agents[i].y;
+				agents[i].agentPastBoard = false;
 			}
 			else
 			{
-				agents[i].setColor(Color.green);
+				agents[i].agentPastBoard = false;
 			}
 		}
 		
@@ -114,16 +137,24 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 		
 		//layer 2 initial construction
-		//layer2(polarity);
+		layer2(polarity);
 		
+		Timer t = new Timer( );
+		t.scheduleAtFixedRate(new TimerTask() {
+
+		    @Override
+		    public void run() {
+		      step();
+		      repaint();
+
+		    }
+		}, 0,agentRate);
 	}
 	
 	protected void layer2(Color polarity)
 	{
 
 		cells2 = new Cell[size][size];
-
-
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
 
@@ -136,13 +167,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that should be black
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 							//then you are the same polarity as cell[0][0]
 						}
 						else
 							//if its in a spot that SHOULDN'T be black
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 							//then you are in the opposite polarity than cells[0][0]
 						}
 					}
@@ -152,13 +183,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that SHOULDN'T be 
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 							// then its in the opposite polarity than cells[0]
 						}
 						else
 							//if its in a spot that should be white
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 							//then its in the same polarity as cells[0][0]
 						}
 					}
@@ -169,22 +200,22 @@ public class Board extends JPanel implements MouseInputListener {
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 						}
 						else
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 						}
 					}
 					else
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
 						}
 						else
 						{
-							cells2[row][col] = new Cell(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
 						}
 					}
 				}
@@ -198,7 +229,7 @@ public class Board extends JPanel implements MouseInputListener {
 		Graphics2D g = (Graphics2D)arg0;
 		//draw boards
 		
-		if (layer2Draw == 1)
+		if (GUI.layer2Draw == 1)
 		{
 			for (int row = 0; row < size; row++) {
 				for (int col = 0; col <size; col++) {
@@ -206,8 +237,9 @@ public class Board extends JPanel implements MouseInputListener {
 					display[row][col].draw(g);
 				}
 			}
+			tempL2D = 1;
 		}
-		else//layer2Draw == 2
+		else if(GUI.layer2Draw == 2)
 		{
 			for (int row = 0; row < size; row++) {
 				for (int col = 0; col <size; col++) {
@@ -215,6 +247,12 @@ public class Board extends JPanel implements MouseInputListener {
 					display[row][col].draw(g);
 				}
 			}
+			tempL2D = 2;
+		}
+		else
+		{
+			GUI.layer2Draw = tempL2D;
+			repaint();
 		}
 		//draw agents
 		for (int i = 0; i < agents.length; i++) {
@@ -235,48 +273,57 @@ public class Board extends JPanel implements MouseInputListener {
 	}
 	
 	public void step() {
-		//initialize temp array of colors
-		Color[][] result = new Color[size][size];
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
-				int tally = 0;
-				//check how many neighbors are alive
-				for (Cell n : getNeighbors(cells, row, col)) {
-					//the array may have nulls in it ;)
-					if (n != null) {
-						if (n.getColor() == Color.BLACK) {
-							tally++;
+		//for each agent, have the agent decide randomly whether to flip its cell's color
+				for (Agent agent : agents) {
+					if (Math.random() < 0.1) {
+						//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
+						//which cell each agent is in each time they move, in fact this could be determined using each agent's
+						//x and y rather than searching all the cells... but this should be runnable for now
+						for (int row = 0; row < cells.length; row++) {
+							for (int col = 0; col < cells[row].length; col++) {
+								if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
+									cells[row][col].flipColor();
+									cells2[row][col].flipColor();
+								}
+							}
 						}
 					}
+					//agent.x < EXTRA_BOARD_SPACE   AKA left border
+					//agent.y < EXTRA_BOARD_SPACE   AKA top border
+					//agent.x > EXTRA_BOARD_SPACE+(size*cellSize)   AKA right border
+					//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
+					//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
+					//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
+					if (agent.x < EXTRA_BOARD_SPACE)  
+					{
+						agent.agentPastBoard = true;
+						agent.x = EXTRA_BOARD_SPACE + agent.x;
+						agent.agentPastBoard = false;
+					}
+					if ( agent.y < EXTRA_BOARD_SPACE)
+					{
+						agent.agentPastBoard = true;
+						agent.y = EXTRA_BOARD_SPACE + agent.y;
+						agent.agentPastBoard = false;
+					}
+					if (agent.x+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+					{
+						agent.agentPastBoard = true;
+						agent.x = EXTRA_BOARD_SPACE+(size*cellSize) - agent.x;
+						agent.agentPastBoard = false;
+					}
+					if (agent.y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
+					{
+						agent.agentPastBoard = true;
+						agent.y = EXTRA_BOARD_SPACE+(size*cellSize) - agent.y;
+						agent.agentPastBoard = false;
+					}
+					else
+					{
+						agent.agentPastBoard = false;
+					}
+						agent.step();
 				}
-				//if three of your neighbors are alive, you come alive or stay alive,
-				//or if two of your neighbors are alive and you're alive, you stay alive,
-				//otherwise you die
-				if (tally == 3 || (tally == 2 && cells[row][col].getColor() == Color.BLACK)) {
-					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.BLACK);
-					result[row][col] = Color.BLACK;
-				}
-				else {
-					//result[row][col] = new Cell(cells[row][col].getX(), cells[row][col].getY(), cells[row][col].getWidth(), Color.WHITE);
-					result[row][col] = Color.WHITE;
-				}
-			}
-		}
-		
-		//populate the old array with the results of the temp array
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
-				cells[row][col].setColor(result[row][col]);
-			}
-		}
-		layer2(polarity);
-		
-		//move the agents too!
-		for (Agent agent : agents) {
-			agent.step();
-		}
-		repaint();
-		System.out.println("Repaint from step");
 	}
 	
 	public Cell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
@@ -388,19 +435,7 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		//i commented this out for now so you can test the step procedure by clicking
-		//the behavior is boring atm because checkerboard is a bad starting pattern (almost everything
-		//has four neighbors, so everything dies immediately, except the border cells, which all
-		//spring alive)
-//		for (int row = 0; row < cells.length; row++) {
-//			for (int col = 0; col < cells[row].length; col++) {
-//				if (cells[row][col].contains(arg0.getPoint())) {
-//					cells[row][col].flipColor();
-//				}
-//			}
-//		}
-		step();
-		repaint();
+		
 	}
 
 	@Override
@@ -412,47 +447,16 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
-		//for each agent, have the agent decide randomly whether to flip its cell's color
-		for (Agent agent : agents) {
-			if (Math.random() < 0.1) {
-				//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
-				//which cell each agent is in each time they move, in fact this could be determined using each agent's
-				//x and y rather than searching all the cells... but this should be runnable for now
-				for (int row = 0; row < cells.length; row++) {
-					for (int col = 0; col < cells[row].length; col++) {
-						if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
-							cells[row][col].flipColor();
-						}
-					}
-				}
-			}
-			//agent.x < EXTRA_BOARD_SPACE   AKA left border
-			//agent.y < EXTRA_BOARD_SPACE   AKA top border
-			//agent.x > EXTRA_BOARD_SPACE+(size*cellSize)   AKA right border
-			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
-			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
-			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
-			if (agent.x < EXTRA_BOARD_SPACE || agent.y < EXTRA_BOARD_SPACE || agent.x+agentSize > EXTRA_BOARD_SPACE+(size*cellSize) || agent.y+agentSize > EXTRA_BOARD_SPACE+(size*cellSize))
-			{
-				agent.agentPastBoard = true;
-				agent.setColor(new Color(0,1,0,0));
-			}
-			else
-			{
-				agent.agentPastBoard = false;
-				agent.setColor(Color.green);
-			}
-		}
 
-		//This is a temporary thing
-		step();
-		repaint();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void setAgentRate(int rate)
+	{
+		agentRate = rate;
 	}
 }

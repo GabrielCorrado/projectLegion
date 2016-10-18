@@ -12,6 +12,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import java.awt.Button;
@@ -44,12 +46,15 @@ public class GUI {
 	static int HEIGHT = 864;
 	static int WIDTH = 1536;
 	static int BOARDSIZE = 800;
-	private JFrame frmProjectLegion;
+	public JFrame frmProjectLegion;
 	private JTextField textField_NumAgents;
 	private JTextField textField_NumAgentChanges;
 	private JTextField textField_AgentCloseness;
 	private JTextField textField_PheromoneStrength;
 	private JTextField textField_BoardSize;
+	
+	public static int layer2Draw = 1;
+	public static Board board;
 	/**
 	 * Launch the application.
 	 */
@@ -103,27 +108,29 @@ public class GUI {
 		frmProjectLegion.getContentPane().setLayout(null);
 				
 		//************************************************************ This makes the 800 by 800 JPanel that will be where the board goes every time it is painted. 
-		JPanel board = new JPanel();
+		JPanel boardInGUI = new JPanel();
 		JFrame frame = new JFrame();
-		board.setBackground(Color.WHITE);
-		board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
+		boardInGUI.setBackground(Color.WHITE);
+		boardInGUI.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
 		//System.out.print((HEIGHT-BOARDSIZE)/8);
-		frame.getContentPane().add(board);
+		frame.getContentPane().add(boardInGUI);
 
 		//This is where the tabs for the layer options go.
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(818, 10, 700, 600);
+		
+		ChangeListener changeListener = new ChangeListener(){
+			public void stateChanged(ChangeEvent changeEvent) {
+				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+				int index = sourceTabbedPane.getSelectedIndex();
+				layer2Draw = index + 1;
+			}
+		};
+		tabbedPane.addChangeListener(changeListener);
 		frmProjectLegion.getContentPane().add(tabbedPane);
 		
 		//************************************************************ TAB 1 ************************************************************ 
 		JPanel tabLayer1 = new JPanel();
-		tabLayer1.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				//This should trigger when ever the tab is made
-				//Board.layer2Draw = 1;
-			}
-		});
 		tabLayer1.setBackground(new Color(211, 211, 211));
 		tabbedPane.addTab("Layer 1", null, tabLayer1, null);
 		tabLayer1.setLayout(null);
@@ -133,6 +140,7 @@ public class GUI {
 		btnChangeBoardSize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//Button gains actions here
+				//board.size = Integer.parseInt(textField_BoardSize.getText());
 			}
 		});
 		btnChangeBoardSize.setBounds(286, 157, 125, 35);
@@ -173,12 +181,6 @@ public class GUI {
 		
 		//************************************************************ TAB 2 ************************************************************ 
 		JPanel tabLayer2 = new JPanel();
-		tabLayer2.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				//This code will run when layer two is selected.
-			}
-		});
 		tabLayer2.setBackground(new Color(211, 211, 211));
 		tabbedPane.addTab("Layer 2", null, tabLayer2, null);
 		tabLayer2.setLayout(null);
@@ -406,8 +408,18 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(lblSwarmRate);
 		
 		//************************************************************ Slider for the user to change how fast the board will step
-		JSlider sliderSwarmSpeed = new JSlider();
+		JSlider sliderSwarmSpeed = new JSlider(0,100,50);
 		sliderSwarmSpeed.setBounds(953, 646, 450, 24);
+		sliderSwarmSpeed.setMajorTickSpacing( 5 );
+		sliderSwarmSpeed.setPaintLabels( true );
+		
+		sliderSwarmSpeed.addChangeListener(new ChangeListener() {
+            @Override public void stateChanged(ChangeEvent e) {
+                JSlider src = (JSlider) e.getSource();
+                if (!src.getValueIsAdjusting()) return;
+                board.setAgentRate(src.getValue());
+            }
+        });
 		frmProjectLegion.getContentPane().add(sliderSwarmSpeed);
 		
 		JLabel lblSlow = new JLabel("Slow");
@@ -450,12 +462,6 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(btnRestart);
 		
 		JButton btnNewRandomSwarm = new JButton("New Swarm");
-		btnNewRandomSwarm.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NewBoardWindow newBoardWindow = new NewBoardWindow();
-				newBoardWindow.setVisible(true);
-			}
-		});
 		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
 		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
@@ -479,37 +485,22 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(lblFastCycless);
 		
 		JButton btnInitializeBoard = new JButton("Initialize Board");
-		btnInitializeBoard.addMouseListener(new MouseAdapter() {
-			
 			//************************************************************This code works with board, cell, gencell classes in order to have a basic board print on the JFrame UI
 			//Comment out after here
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
-				Board board = new Board(800,800,10,0);
-				board.setBackground(Color.WHITE);
-				board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
-				//displayPanel.add();
-				//frame.pack();
-				frame.setVisible(true);
-				frame.getContentPane().add(board);
-				board.step();
-				frmProjectLegion.getContentPane().add(board);
-			//Comment out before here
-			}
+			btnInitializeBoard.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
+					newBoardWindow.setVisible(true);
+				}
 			});
 		btnInitializeBoard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
+			public void actionPerformed(ActionEvent arg0) {	
 			}
 		});
 		btnInitializeBoard.setBounds(1203, 681, 125, 24);
 		frmProjectLegion.getContentPane().add(btnInitializeBoard);
 		
-		JPanel displayPanel = new JPanel();
-		displayPanel.setBounds(10, 10, 800, 800);
-		displayPanel.setBackground(Color.WHITE);
-		frmProjectLegion.getContentPane().add(displayPanel);
+		
 		
 		
 	}
