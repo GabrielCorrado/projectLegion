@@ -29,6 +29,7 @@ public class Board extends JPanel implements MouseInputListener {
 	private Color agentColor = Color.green;
 	private int tempL2D;
 	private int agentRate = 50;
+	private int delay = 0;
 
 	
 	public Board(int width, int height, int size, int typeBoard, int numAgents) {
@@ -138,17 +139,7 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		//layer 2 initial construction
 		layer2(polarity);
-		
-		Timer t = new Timer( );
-		t.scheduleAtFixedRate(new TimerTask() {
-
-		    @Override
-		    public void run() {
-		      step();
-		      repaint();
-
-		    }
-		}, 0,agentRate);
+		StartTimer();
 	}
 	
 	protected void layer2(Color polarity)
@@ -221,6 +212,23 @@ public class Board extends JPanel implements MouseInputListener {
 				}
 			}
 		}
+	}
+	
+	private void StartTimer()
+	{
+		Timer t = new Timer( );
+		t.scheduleAtFixedRate(new TimerTask() {
+
+		    @Override
+		    public void run() {
+		      step();
+		      repaint();
+		      System.out.println(agentRate);
+	          t.cancel(); // cancel time
+	          StartTimer();
+
+		    }
+		}, 100-agentRate,10);
 	}
 	
 	protected void paintComponent(Graphics arg0) {

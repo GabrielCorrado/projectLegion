@@ -416,7 +416,6 @@ public class GUI {
 		sliderSwarmSpeed.addChangeListener(new ChangeListener() {
             @Override public void stateChanged(ChangeEvent e) {
                 JSlider src = (JSlider) e.getSource();
-                if (!src.getValueIsAdjusting()) return;
                 board.setAgentRate(src.getValue());
             }
         });
