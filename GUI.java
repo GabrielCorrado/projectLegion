@@ -22,6 +22,7 @@ import javax.swing.JSlider;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+//These are not used 
 //import com.jgoodies.forms.layout.FormLayout;
 //import com.jgoodies.forms.layout.ColumnSpec;
 //import com.jgoodies.forms.layout.RowSpec;
@@ -35,6 +36,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JToggleButton;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class GUI {
 
@@ -47,7 +50,6 @@ public class GUI {
 	private JTextField textField_AgentCloseness;
 	private JTextField textField_PheromoneStrength;
 	private JTextField textField_BoardSize;
-
 	/**
 	 * Launch the application.
 	 */
@@ -101,11 +103,12 @@ public class GUI {
 		frmProjectLegion.getContentPane().setLayout(null);
 				
 		//************************************************************ This makes the 800 by 800 JPanel that will be where the board goes every time it is painted. 
-		//JPanel board = new JPanel();
-		/*board.setBackground(Color.WHITE);
+		JPanel board = new JPanel();
+		JFrame frame = new JFrame();
+		board.setBackground(Color.WHITE);
 		board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
 		//System.out.print((HEIGHT-BOARDSIZE)/8);
-		frame.getContentPane().add(board);*/
+		frame.getContentPane().add(board);
 
 		//This is where the tabs for the layer options go.
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -114,6 +117,13 @@ public class GUI {
 		
 		//************************************************************ TAB 1 ************************************************************ 
 		JPanel tabLayer1 = new JPanel();
+		tabLayer1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				//This should trigger when ever the tab is made
+				//Board.layer2Draw = 1;
+			}
+		});
 		tabLayer1.setBackground(new Color(211, 211, 211));
 		tabbedPane.addTab("Layer 1", null, tabLayer1, null);
 		tabLayer1.setLayout(null);
@@ -122,6 +132,7 @@ public class GUI {
 		JButton btnChangeBoardSize = new JButton("Update Size");
 		btnChangeBoardSize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//Button gains actions here
 			}
 		});
 		btnChangeBoardSize.setBounds(286, 157, 125, 35);
@@ -162,6 +173,12 @@ public class GUI {
 		
 		//************************************************************ TAB 2 ************************************************************ 
 		JPanel tabLayer2 = new JPanel();
+		tabLayer2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				//This code will run when layer two is selected.
+			}
+		});
 		tabLayer2.setBackground(new Color(211, 211, 211));
 		tabbedPane.addTab("Layer 2", null, tabLayer2, null);
 		tabLayer2.setLayout(null);
@@ -431,9 +448,7 @@ public class GUI {
 		btnRestart.setBackground(new Color(51, 204, 255));
 		btnRestart.setBounds(1203, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRestart);
-/*		
- * needs to be looked into
- * 
+		
 		JButton btnNewRandomSwarm = new JButton("New Swarm");
 		btnNewRandomSwarm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -441,11 +456,10 @@ public class GUI {
 				newBoardWindow.setVisible(true);
 			}
 		});
-
 		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
 		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
-*/
+		
 		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
 		btnNewScreenSave.setBackground(new Color(204, 51, 255));
@@ -466,16 +480,24 @@ public class GUI {
 		
 		JButton btnInitializeBoard = new JButton("Initialize Board");
 		btnInitializeBoard.addMouseListener(new MouseAdapter() {
+			
 			//************************************************************This code works with board, cell, gencell classes in order to have a basic board print on the JFrame UI
+			//Comment out after here
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
 				Board board = new Board(800,800,10,0);
 				board.setBackground(Color.WHITE);
 				board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
+				//displayPanel.add();
+				//frame.pack();
+				frame.setVisible(true);
+				frame.getContentPane().add(board);
+				board.step();
 				frmProjectLegion.getContentPane().add(board);
-				board.step(); 
+			//Comment out before here
 			}
-		});
+			});
 		btnInitializeBoard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -483,6 +505,11 @@ public class GUI {
 		});
 		btnInitializeBoard.setBounds(1203, 681, 125, 24);
 		frmProjectLegion.getContentPane().add(btnInitializeBoard);
+		
+		JPanel displayPanel = new JPanel();
+		displayPanel.setBounds(10, 10, 800, 800);
+		displayPanel.setBackground(Color.WHITE);
+		frmProjectLegion.getContentPane().add(displayPanel);
 		
 		
 	}
