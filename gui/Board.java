@@ -1,3 +1,4 @@
+package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,6 +8,11 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
+
+import cells.Cell;
+import cells.Cell_2;
+import cells.GenCell;
+import other.Agent;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {
@@ -37,11 +43,12 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		//layer 1
 		cells = new Cell[numCellsOnSide][numCellsOnSide];
+		int rand;
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
 				if (typeBoard==0)
 				{
-					int rand = (int) (Math.random()*2);
+					rand = (int) (Math.random()*2);
 					if (rand == 0)
 					{
 						c = Color.black;
@@ -76,8 +83,9 @@ public class Board extends JPanel implements MouseInputListener {
 		agents = new Agent[500];
 		for (int i = 0; i < agents.length; i++) {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
-			agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
-		
+			//agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
+			agents[i] = new Agent(width, agentSize);
+			
 			//agent.x < EXTRA_BOARD_SPACE   AKA left border
 			//agent.y < EXTRA_BOARD_SPACE   AKA top border
 			//agent.x > EXTRA_BOARD_SPACE+(size*cellSize)   AKA right border
@@ -225,9 +233,10 @@ public class Board extends JPanel implements MouseInputListener {
 	public void step() {
 		//initialize temp array of colors
 		Color[][] result = new Color[numCellsOnSide][numCellsOnSide];
+		int tally;
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
-				int tally = 0;
+				tally = 0;
 				//check how many neighbors are alive
 				for (Cell n : getNeighbors(cells, row, col)) {
 					//the array may have nulls in it ;)

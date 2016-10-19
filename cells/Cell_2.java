@@ -1,3 +1,4 @@
+package cells;
 /*		Author: Zak Gray and Tim Dobeck
  * 		Description: This is the constuctor for determining the SECOND board's cells. The cells in layer 2 can be only red or blue. This class mainly just
  * 					creates the instance of the cells in layer 2. FlipColor allows the color to be flipped if any cell is clicked. This class extends GenCell 

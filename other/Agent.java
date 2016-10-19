@@ -1,3 +1,4 @@
+package other;
 /*		Author: Nick Corrado and Tim Dobeck
  * 		Description: This is the constructor class for the Agents to be created and drawn. Velocity determined the direction each agent will move and
  * 		Color is for determining if the color of the agent will be green or invisible. The rest of the agents are being made because it is extending the
@@ -26,6 +27,13 @@ public class Agent extends Ellipse2D.Double {
 		super(x, y, size, size);
 		this.velocity = v;
 		this.color = color;
+	}
+	
+	public Agent(int boardWidth, int agentSize) {
+		super((int)(Math.random()*boardWidth), (int)(Math.random()*boardWidth), agentSize, agentSize);
+		//kirsch has said that this is way too much random movement
+		this.velocity = new Point2D.Double(Math.random()*10-5, Math.random()*10-5);
+		this.color = Color.green;
 	}
 	
 	//draws Agents using the superclass for Ellipse2D
@@ -70,7 +78,10 @@ public class Agent extends Ellipse2D.Double {
 	public void step() {
 		this.setX(x+velocity.getX());
 		this.setY(y+velocity.getY());
-		this.setVelocity(Math.random()*10-5, Math.random()*10-5);
+		//only changes its velocity 10% of the time
+		if (Math.random() < 0.1) {
+			this.setVelocity(Math.random()*10-5, Math.random()*10-5);
+		}
 	}
 	
 }

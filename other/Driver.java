@@ -1,3 +1,4 @@
+package other;
 /*		Author: Zak Gray, Nick Corrado and Tim Dobeck
  * 		Description: This is the class to kick start the program to run. It is creating the instance of the Board to be called depending on whatever parameters
  * 					 the user types in. The first input determines the size of the board (x by x) and the second input determines if the board will be a 
@@ -7,6 +8,8 @@
 
 import java.util.Scanner;
 import javax.swing.JFrame;
+
+import gui.Board;
 
 public class Driver {
 
