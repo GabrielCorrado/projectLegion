@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
+import gui.GUI;
+
 public class Cell extends GenCell {
 	
 	public Cell(double x, double y, double size, Color c) {
@@ -22,13 +24,13 @@ public class Cell extends GenCell {
 		{
 			c = Color.BLACK;
 		}
-		else if (c == Color.RED)
+		else if (c == GUI.polarity1)
 		{
-			c = Color.BLUE;
+			c = GUI.polarity2;
 		}
 		else
 		{
-			c = Color.RED;
+			c = GUI.polarity1;
 		}
 	}
 	
