@@ -431,6 +431,15 @@ public class Board extends JPanel implements MouseInputListener {
 		return neighbors;
 	}
 
+	//This method exists to be called by the GUI jComboBox when its index is changed from green to another color. It will run this code with the string from its JComboBox.
+	protected void changeAgentColor(Color color){
+		this.agentColor = color;
+		System.out.print(agentColor);
+		for (int i = 0; i < agents.length; i++) {
+			agents[i].setColor(agentColor);
+		}
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
