@@ -1,4 +1,4 @@
-package other;
+package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -14,7 +14,7 @@ import javax.swing.event.MouseInputListener;
 import cells.Cell;
 import cells.GenCell;
 import cells.NullCell;
-import gui.GUI;
+import other.Agent;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {

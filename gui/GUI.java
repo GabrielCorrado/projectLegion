@@ -27,8 +27,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import other.Board;
-
 public class GUI {
 
 	static int HEIGHT = 864;
