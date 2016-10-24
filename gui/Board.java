@@ -26,13 +26,14 @@ public class Board extends JPanel implements MouseInputListener {
 	private Cell_2[][] cells2;//layer2
 	private GenCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
-	private static final int EXTRA_BOARD_SPACE = 50;//NEEDS TO BE REWORKED//////////////////
+	private int borderForCentering;
 	private Color c;
 	private Color polarity;
 	private int cellSize;//pixel dimensions of each cell
 	private int agentSize;//pixel dimensions of each agent
 	private Agent[] agents;
-	private Color agentColor = Color.green;
+	private Color agentColor = Color.green; //do we even need to use this or not?? it only seems to occur in two lines of code:
+	//setting each agent's color in the constructor and in the paintComponent
 	
 	public Board(int width, int height, int numCellsOnSide, int typeBoard) {//typeBoard is diagnostic and will be deleted
 		//set preferred graphical dimensions of the board
@@ -43,7 +44,13 @@ public class Board extends JPanel implements MouseInputListener {
 		//set the graphical dimensions of the cells themselves
 		//the cells are always square, but the space they take up is constrained by the width and height of the board
 		//and by the number of cells.
-		cellSize = ((width)-2*EXTRA_BOARD_SPACE)/numCellsOnSide; //board space in the middle?
+		
+		//determine how much border space it needs to be centered in the given panel, then use that value
+		//width and height are currently 800 and 800 respectively; these are and will be hard-coded values, but might possibly change
+		int spareSpace = width%numCellsOnSide;
+		borderForCentering = spareSpace/2;
+		
+		cellSize = ((width)-2*borderForCentering)/numCellsOnSide; //board space in the middle?
 		agentSize = (int)(cellSize*0.7);
 		//gap between the two changes depending on if the size is 100 vs 5
 		
@@ -63,7 +70,7 @@ public class Board extends JPanel implements MouseInputListener {
 					{
 						c = Color.white;
 					}
-					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
+					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, c);
 				}
 				else if (typeBoard==1)//"solved" checkboard to start
 				{
@@ -75,7 +82,7 @@ public class Board extends JPanel implements MouseInputListener {
 					{
 						c = Color.white;
 					}
-					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
+					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, c);
 
 				}
 
@@ -98,14 +105,14 @@ public class Board extends JPanel implements MouseInputListener {
 			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
 			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
 			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
-			if (agents[i].x < EXTRA_BOARD_SPACE || agents[i].y < EXTRA_BOARD_SPACE || agents[i].x+agentSize > EXTRA_BOARD_SPACE+(numCellsOnSide*cellSize) || agents[i].y+agentSize > EXTRA_BOARD_SPACE+(numCellsOnSide*cellSize))
+			if (agents[i].x < borderForCentering || agents[i].y < borderForCentering || agents[i].x+agentSize > borderForCentering+(numCellsOnSide*cellSize) || agents[i].y+agentSize > borderForCentering+(numCellsOnSide*cellSize))
 			{
 				agents[i].agentPastBoard = true;
 				agents[i].setColor(new Color(0,1,0,0));
 			}
 			else
 			{
-				agents[i].setColor(Color.green);
+				agents[i].setColor(agentColor);
 			}
 		}
 		
@@ -145,13 +152,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that should be black
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.RED);
 							//then you are the same polarity as cell[0][0]
 						}
 						else
 							//if its in a spot that SHOULDN'T be black
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.BLUE);
 							//then you are in the opposite polarity than cells[0][0]
 						}
 					}
@@ -161,13 +168,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that SHOULDN'T be 
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.BLUE);
 							// then its in the opposite polarity than cells[0]
 						}
 						else
 							//if its in a spot that should be white
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.RED);
 							//then its in the same polarity as cells[0][0]
 						}
 					}
@@ -178,22 +185,22 @@ public class Board extends JPanel implements MouseInputListener {
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.RED);
 						}
 						else
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.BLUE);
 						}
 					}
 					else
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.BLUE);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.BLUE);
 						}
 						else
 						{
-							cells2[row][col] = new Cell_2(800+EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, Color.RED);
+							cells2[row][col] = new Cell_2(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, Color.RED);
 						}
 					}
 				}
@@ -220,7 +227,7 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 			else
 			{
-				agents[i].setColor(Color.green);
+				agents[i].setColor(agentColor);
 			}
 			agents[i].draw(g);
 		}
@@ -434,7 +441,7 @@ public class Board extends JPanel implements MouseInputListener {
 			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
 			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
 			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
-			if (agent.x < EXTRA_BOARD_SPACE || agent.y < EXTRA_BOARD_SPACE || agent.x+agentSize > EXTRA_BOARD_SPACE+(numCellsOnSide*cellSize) || agent.y+agentSize > EXTRA_BOARD_SPACE+(numCellsOnSide*cellSize))
+			if (agent.x < borderForCentering || agent.y < borderForCentering || agent.x+agentSize > borderForCentering+(numCellsOnSide*cellSize) || agent.y+agentSize > borderForCentering+(numCellsOnSide*cellSize))
 			{
 				agent.agentPastBoard = true;
 				agent.setColor(new Color(0,1,0,0));

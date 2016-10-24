@@ -29,6 +29,13 @@ public class Agent extends Ellipse2D.Double {
 		this.color = color;
 	}
 	
+	/**
+	 * Constructor that makes an agent using randomly generated coordinates for its position.
+	 * The constructor takes in the boardWidth so that no agents are created outside the width
+	 * of the board.
+	 * @param boardWidth
+	 * @param agentSize
+	 */
 	public Agent(int boardWidth, int agentSize) {
 		super((int)(Math.random()*boardWidth), (int)(Math.random()*boardWidth), agentSize, agentSize);
 		//kirsch has said that this is way too much random movement
