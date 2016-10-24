@@ -1,4 +1,10 @@
 package gui;
+/*
+*		Authors: Zakary Gray, Tim Dobeck, Nick Corrado, Gabriel Petkac
+*		Description:  This is currently the main class for all intents and purposes.  The board holds the cells of layers 1 and 2
+*               as well as the agents in the layer 3 swarm. The jframe of Board are displayed in the GUI after a new board is created
+*               in NewBoardWindow.
+*/
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,19 +22,19 @@ import other.Agent;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {
-	private Cell[][] cells;
-	private Cell_2[][] cells2;
-	private GenCell[][] display;
+	private Cell[][] cells;//layer1
+	private Cell_2[][] cells2;//layer2
+	private GenCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
-	private static final int EXTRA_BOARD_SPACE = 50;
+	private static final int EXTRA_BOARD_SPACE = 50;//NEEDS TO BE REWORKED//////////////////
 	private Color c;
 	private Color polarity;
-	private int cellSize;
-	private int agentSize;
+	private int cellSize;//pixel dimensions of each cell
+	private int agentSize;//pixel dimensions of each agent
 	private Agent[] agents;
 	private Color agentColor = Color.green;
 	
-	public Board(int width, int height, int numCellsOnSide, int typeBoard) {
+	public Board(int width, int height, int numCellsOnSide, int typeBoard) {//typeBoard is diagnostic and will be deleted
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		//HOW DID I FORGET THIS EARLIER
@@ -46,7 +52,7 @@ public class Board extends JPanel implements MouseInputListener {
 		int rand;
 		for (int row = 0; row < cells.length; row++) {
 			for (int col = 0; col < cells[row].length; col++) {
-				if (typeBoard==0)
+				if (typeBoard==0)//random starting black and white board
 				{
 					rand = (int) (Math.random()*2);
 					if (rand == 0)
@@ -59,7 +65,7 @@ public class Board extends JPanel implements MouseInputListener {
 					}
 					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
 				}
-				else if (typeBoard==1)
+				else if (typeBoard==1)//"solved" checkboard to start
 				{
 					if (row%2 == col%2)
 					{
