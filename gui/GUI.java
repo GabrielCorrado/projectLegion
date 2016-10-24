@@ -27,6 +27,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import cells.Cell;
+
 public class GUI {
 
 	static int HEIGHT = 864;
@@ -42,6 +44,8 @@ public class GUI {
 	public static int layer2Draw = 1;
 	public static Board board;
 	private boolean timerStarted = true;
+	public static Color polarity1 = Color.RED;
+	public static Color polarity2 = Color.BLUE;
 	/**
 	 * Launch the application.
 	 */
@@ -180,7 +184,14 @@ public class GUI {
 		JComboBox comboPrimary = new JComboBox();
 		comboPrimary.setModel(new DefaultComboBoxModel(new String[] {"BLUE", "RED", "GREEN", "CYAN", "BLACK", "WHITE"}));
 		comboPrimary.setBounds(25, 50, 125, 22);
-		String[] tempString = {"BLUE","RED","GREEN","CYAN","WHITE","BLACK"};
+		comboPrimary.addActionListener(new ActionListener() {
+			 @Override
+	            public void actionPerformed(ActionEvent e){
+				 System.out.println("test");
+				 polarity1 = Color.CYAN;
+				 board.updateNewPolarityColor1(polarity1);
+	            }
+	        });
 		tabLayer2.add(comboPrimary);
 		
 		//************************************************************ Secondary color for polarity choice comboBox where you can change it
@@ -191,6 +202,14 @@ public class GUI {
 		JComboBox comboSecondary = new JComboBox();
 		comboSecondary.setModel(new DefaultComboBoxModel(new String[] {"RED", "BLUE", "GREEN", "CYAN", "BLACK", "WHITE"}));
 		comboSecondary.setBounds(238, 50, 125, 22);
+		comboSecondary.addActionListener(new ActionListener() {
+			 @Override
+	            public void actionPerformed(ActionEvent e){
+				 System.out.println("test");
+				 polarity2 = Color.YELLOW;
+				 board.updateNewPolarityColor2(polarity2);
+	            }
+	        });
 		tabLayer2.add(comboSecondary);
 		
 		//************************************************************ Tertiary color comboBox if we want it.
@@ -396,7 +415,7 @@ public class GUI {
 		
 		//************************************************************ Slider for the user to change how fast the board will step
 		JSlider sliderSwarmSpeed = new JSlider(0,100,50);
-		sliderSwarmSpeed.setBounds(953, 646, 450, 30);
+		sliderSwarmSpeed.setBounds(953, 646, 450, 24);
 		sliderSwarmSpeed.setMajorTickSpacing( 5 );
 		sliderSwarmSpeed.setPaintLabels( true );
 		
@@ -466,17 +485,7 @@ public class GUI {
 		btnRestart.setBounds(1203, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRestart);
 		
-		//************************************************************   This button now asks you to make the new board.
-		JButton btnNewBoard = new JButton("New Board");
-		btnNewBoard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
-				newBoardWindow.setVisible(true);			
-			}
-		});
-		btnNewBoard.setBackground(new Color(51, 102, 255));
-		btnNewBoard.setBounds(1338, 726, 125, 23);
-		frmProjectLegion.getContentPane().add(btnNewBoard);
+		
 		
 		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
@@ -496,7 +505,18 @@ public class GUI {
 		lblFastCycless.setBounds(1417, 671, 100, 14);
 		frmProjectLegion.getContentPane().add(lblFastCycless);
 		
-		JButton btnInitializeBoard = new JButton("Initialize Board");
+		JButton btnNewBoard = new JButton("New Board");
+		 		btnNewBoard.addActionListener(new ActionListener() {
+		 			public void actionPerformed(ActionEvent e) {
+		 				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
+		 				newBoardWindow.setVisible(true);			
+		 			}
+		 		});
+		 		btnNewBoard.setBackground(new Color(51, 102, 255));
+		 		btnNewBoard.setBounds(1338, 726, 125, 23);
+		 		frmProjectLegion.getContentPane().add(btnNewBoard);
+		
+		
 		
 		
 	}

@@ -32,8 +32,9 @@ public class Board extends JPanel implements MouseInputListener {
 	private int tempL2D;
 	private int agentRate = 50;
 	public int period = 10;
-	private boolean pause = false;
 	public Timer t;
+	private Color oldPolarity1 = Color.RED;
+	private Color oldPolarity2 = Color.BLUE;
 	
 	public Board(int width, int height, int size, int typeBoard, int numAgents) {
 		//set preferred graphical dimensions of the board
@@ -143,6 +144,11 @@ public class Board extends JPanel implements MouseInputListener {
 		//layer 2 initial construction
 		layer2(polarity);
 		StartTimer();
+		
+		if (GUI.layer2Draw == 3)
+		{
+			GUI.layer2Draw = 1;
+		}
 	}
 	
 	protected void layer2(Color polarity)
@@ -226,7 +232,7 @@ public class Board extends JPanel implements MouseInputListener {
 			public void run() {
 				step();
 				repaint();
-				System.out.println(agentRate);
+				//System.out.println("tick");
 				t.cancel(); // cancel time
 				StartTimer();
 			}
@@ -470,8 +476,27 @@ public class Board extends JPanel implements MouseInputListener {
 	{
 		agentRate = rate;
 	}
-	public void setPause(boolean input)
+
+	public void updateNewPolarityColor1(Color Polarity1)
 	{
-		pause = input;
+		for (int row = 0; row < cells2.length; row++) {
+			for (int col = 0; col < cells2[row].length; col++) {
+				if(cells2[row][col].getColor() == oldPolarity1)
+				{
+					cells2[row][col].setColor(Polarity1);
+				}
+			}
+		}
+	}
+	public void updateNewPolarityColor2(Color Polarity2)
+	{
+		for (int row = 0; row < cells2.length; row++) {
+			for (int col = 0; col < cells2[row].length; col++) {
+				if(cells2[row][col].getColor() == oldPolarity2)
+				{
+					cells2[row][col].setColor(Polarity2);
+				}
+			}
+		}
 	}
 }
