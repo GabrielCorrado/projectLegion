@@ -466,10 +466,17 @@ public class GUI {
 		btnRestart.setBounds(1203, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRestart);
 		
-		JButton btnNewRandomSwarm = new JButton("New Swarm");
-		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
-		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
-		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
+		//************************************************************   This button now asks you to make the new board.
+		JButton btnNewBoard = new JButton("New Board");
+		btnNewBoard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
+				newBoardWindow.setVisible(true);			
+			}
+		});
+		btnNewBoard.setBackground(new Color(51, 102, 255));
+		btnNewBoard.setBounds(1338, 726, 125, 23);
+		frmProjectLegion.getContentPane().add(btnNewBoard);
 		
 		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
@@ -490,22 +497,6 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(lblFastCycless);
 		
 		JButton btnInitializeBoard = new JButton("Initialize Board");
-			//************************************************************This code works with board, cell, gencell classes in order to have a basic board print on the JFrame UI
-			//Comment out after here
-			btnInitializeBoard.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
-					newBoardWindow.setVisible(true);
-				}
-			});
-		btnInitializeBoard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {	
-			}
-		});
-		btnInitializeBoard.setBounds(1203, 681, 125, 24);
-		frmProjectLegion.getContentPane().add(btnInitializeBoard);
-		
-		
 		
 		
 	}
