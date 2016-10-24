@@ -396,7 +396,7 @@ public class GUI {
 		
 		//************************************************************ Slider for the user to change how fast the board will step
 		JSlider sliderSwarmSpeed = new JSlider(0,100,50);
-		sliderSwarmSpeed.setBounds(953, 646, 450, 24);
+		sliderSwarmSpeed.setBounds(953, 646, 450, 30);
 		sliderSwarmSpeed.setMajorTickSpacing( 5 );
 		sliderSwarmSpeed.setPaintLabels( true );
 		
