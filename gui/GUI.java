@@ -308,10 +308,11 @@ public class GUI {
 		tabLayer3.add(lblAgentsColor);
 		
 		JComboBox comboBox_AgentColor = new JComboBox();
-		//*******************************************************The goal for this code is to set the color of the agents to whatever is chosen.
-		
-		//*******************************************Known error with the below code: The action listener runs twice when an index change happens once.
-		
+		comboBox_AgentColor.addItemListener(new ItemListener() {
+			//*******************************************************The goal for this code is to set the color of the agents to whatever is chosen.
+			
+			//*******************************************Known error with the below code: The action listener runs twice when an index change happens once.
+			
 			public void itemStateChanged(ItemEvent arg0) {
 				System.out.println("This should only appear once per button push");
 				passThisColor = convertColor.returnColor(comboBox_AgentColor.getSelectedItem().toString());
@@ -320,7 +321,7 @@ public class GUI {
 		});
 		comboBox_AgentColor.setBounds(568, 23, 100, 20);
 		tabLayer3.add(comboBox_AgentColor);
-		comboBox_AgentColor.setModel(new DefaultComboBoxModel(new String[] {"GREEN", "YELLOW", "ORANGE", "MAGENTA", "BLUE", "RED", "WHITE", "BLACK"}));
+		comboBox_AgentColor.setModel(new DefaultComboBoxModel(new String[] {"GREEN", "YELLOW", "ORANGE", "MAGENTA", "BLUE", "RED", "WHITE", "BLACK", "CYAN"}));
 		
 		//************************************************************ User can select how many changes the agent can make
 		JLabel lblNumberOfChanges = new JLabel("Number of Changes:");
