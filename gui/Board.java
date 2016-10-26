@@ -93,7 +93,7 @@ public class Board extends JPanel implements MouseInputListener {
 		//generate the swarm; kirsch suggested, say, 30 agents, so we're trying 10 right now
 		//we've tried moving the swarm agents every frame with mousedragged... it can handle at least 500 with no
 		//visible slowdown.
-		agents = new Agent[500];
+		agents = new Agent[100];
 		for (int i = 0; i < agents.length; i++) {
 			//these generate in a random spot on the board itself, with a random vector that makes no effing sense yet
 			//agents[i] = new Agent((int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), (int)(EXTRA_BOARD_SPACE+Math.random()*width-2*EXTRA_BOARD_SPACE), agentSize, new Point2D.Double(Math.random()*10-5, Math.random()*10-5), agentColor);
@@ -400,13 +400,52 @@ public class Board extends JPanel implements MouseInputListener {
 		//the behavior is boring atm because checkerboard is a bad starting pattern (almost everything
 		//has four neighbors, so everything dies immediately, except the border cells, which all
 		//spring alive)
-//		for (int row = 0; row < cells.length; row++) {
-//			for (int col = 0; col < cells[row].length; col++) {
-//				if (cells[row][col].contains(arg0.getPoint())) {
-//					cells[row][col].flipColor();
-//				}
-//			}
-//		}
+		//		for (int row = 0; row < cells.length; row++) {
+		//			for (int col = 0; col < cells[row].length; col++) {
+		//				if (cells[row][col].contains(arg0.getPoint())) {
+		//					cells[row][col].flipColor();
+		//				}
+		//			}
+		//		}
+
+		//for each agent, have the agent decide randomly whether to flip its cell's color
+		for (Agent agent : agents) {
+			if (Math.random() < 0.1) {
+				//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
+				//which cell each agent is in each time they move, in fact this could be determined using each agent's
+				//x and y rather than searching all the cells... but this should be runnable for now
+				//						for (int row = 0; row < cells.length; row++) {
+				//							for (int col = 0; col < cells[row].length; col++) {
+				//								if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
+				//									cells[row][col].flipColor();
+				//								}
+				//							}
+				//						}
+			}
+			//what we actually want to do is calculate which cell the agent is in based on its x and y coordinates.
+			//this is a bit complicated, but can be worked out algebraically. i think this might be it? should occur
+			//if and only if the agent is on the board.
+			if (agent.getCenterX() >= borderForCentering && agent.getCenterX() < 800-borderForCentering && agent.getCenterY() >= borderForCentering && agent.getCenterY() < 800-borderForCentering) {
+				cells[((int)(agent.getCenterX()-borderForCentering))/cellSize][((int)(agent.getCenterY()-borderForCentering))/cellSize].flipColor();
+			}
+			//agent.x < EXTRA_BOARD_SPACE   AKA left border
+			//agent.y < EXTRA_BOARD_SPACE   AKA top border
+			//agent.x > EXTRA_BOARD_SPACE+(size*cellSize)   AKA right border
+			//agent.y > EXTRA_BOARD_SPACE+(size*cellSize)   AKA bottom border
+			//you must add agentSize to the right border and the bottom border. This is because ellipses are essentially circles with boxes in them and the top left corner starts
+			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
+			if (agent.x < borderForCentering || agent.y < borderForCentering || agent.x+agentSize > borderForCentering+(numCellsOnSide*cellSize) || agent.y+agentSize > borderForCentering+(numCellsOnSide*cellSize))
+			{
+				agent.agentPastBoard = true;
+				agent.setColor(new Color(0,1,0,0));
+			}
+			else
+			{
+				agent.agentPastBoard = false;
+				agent.setColor(Color.green);
+			}
+		}
+		
 		step();
 		repaint();
 	}
@@ -427,13 +466,19 @@ public class Board extends JPanel implements MouseInputListener {
 				//to decide which cell the agent is in... this is bad :( need to possibly flip it around, or decide
 				//which cell each agent is in each time they move, in fact this could be determined using each agent's
 				//x and y rather than searching all the cells... but this should be runnable for now
-				for (int row = 0; row < cells.length; row++) {
-					for (int col = 0; col < cells[row].length; col++) {
-						if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
-							cells[row][col].flipColor();
-						}
-					}
-				}
+//				for (int row = 0; row < cells.length; row++) {
+//					for (int col = 0; col < cells[row].length; col++) {
+//						if (cells[row][col].contains(agent.getCenterX(), agent.getCenterY())) {
+//							cells[row][col].flipColor();
+//						}
+//					}
+//				}
+			}
+			//what we actually want to do is calculate which cell the agent is in based on its x and y coordinates.
+			//this is a bit complicated, but can be worked out algebraically. i think this might be it? should occur
+			//if and only if the agent is on the board.
+			if (agent.getCenterX() >= borderForCentering && agent.getCenterX() < 800-borderForCentering && agent.getCenterY() >= borderForCentering && agent.getCenterY() < 800-borderForCentering) {
+				cells[((int)(agent.getCenterX()-borderForCentering))/cellSize][((int)(agent.getCenterY()-borderForCentering))/cellSize].flipColor();
 			}
 			//agent.x < EXTRA_BOARD_SPACE   AKA left border
 			//agent.y < EXTRA_BOARD_SPACE   AKA top border
