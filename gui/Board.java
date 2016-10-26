@@ -23,19 +23,18 @@ public class Board extends JPanel implements MouseInputListener {
 	public GenCell[][] display;
 	public int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
-	private Color boardCellColor;
+	private Color c;
 	public Color polarity;
 	private int cellSize;
 	private int agentSize;
 	private Agent[] agents;
-	private Color agentColor = Color.green;
+	private Color agentColor = GUI.agentColor;
 	private int tempL2D;
 	private int agentRate = 50;
 	public int period = 10;
 	public Timer t;
 	public Color oldPolarity1 = Color.RED;
 	public Color oldPolarity2 = Color.BLUE;
-
 	
 	public Board(int width, int height, int size, int typeBoard, int numAgents) {
 		//set preferred graphical dimensions of the board
@@ -59,25 +58,25 @@ public class Board extends JPanel implements MouseInputListener {
 					int rand = (int) (Math.random()*2);
 					if (rand == 0)
 					{
-						boardCellColor = Color.black;
+						c = Color.black;
 					}
 					else
 					{
-						boardCellColor = Color.white;
+						c = Color.white;
 					}
-					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, boardCellColor);
+					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
 				}
 				else if (typeBoard==1)
 				{
 					if (row%2 == col%2)
 					{
-						boardCellColor = Color.black;
+						c = Color.black;
 					}
 					else
 					{
-						boardCellColor = Color.white;
+						c = Color.white;
 					}
-					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, boardCellColor);
+					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
 
 				}
 
@@ -279,7 +278,7 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 			else
 			{
-				agents[i].setColor(Color.green);
+				agents[i].setColor(agentColor);
 			}
 			agents[i].draw(g);
 		}
@@ -431,15 +430,6 @@ public class Board extends JPanel implements MouseInputListener {
 		
 		return neighbors;
 	}
-
-	//This method exists to be called by the GUI jComboBox when its index is changed from green to another color. It will run this code with the string from its JComboBox.
-	protected void changeAgentColor(Color color){
-		this.agentColor = color;
-		System.out.print(agentColor);
-		for (int i = 0; i < agents.length; i++) {
-			agents[i].setColor(agentColor);
-		}
-	}
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -510,5 +500,12 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 		oldPolarity2 = polarity2;
+	}
+	public void updateAgentColor(Color newColor)
+	{
+		this.agentColor = newColor;
+		for (int i = 0; i < agents.length; i++) {
+			agents[i].setColor(agentColor);
+		}
 	}
 }
