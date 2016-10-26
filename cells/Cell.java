@@ -9,37 +9,37 @@ import gui.GUI;
 
 public class Cell extends GenCell {
 	
-	public Cell(double x, double y, double size, Color c) {
+	public Cell(double x, double y, double size, Color color) {
 		//a lot of these parameters actually belong to Rectangle2D.Double, so we call in the super class GenCell
-		super(x,y,size,c);
+		super(x,y,size,color);
 	}
 	
 	public void flipColor()
 	{
-		if (c == Color.BLACK) 
+		if (cellColor == Color.BLACK) 
 		{
-			c = Color.WHITE;
+			cellColor = Color.WHITE;
 		}
-		else if (c == Color.WHITE)
+		else if (cellColor == Color.WHITE)
 		{
-			c = Color.BLACK;
+			cellColor = Color.BLACK;
 		}
-		else if (c == GUI.polarity1)
+		else if (cellColor == Color.RED)
 		{
-			c = GUI.polarity2;
+			cellColor = Color.BLUE;
 		}
 		else
 		{
-			c = GUI.polarity1;
+			cellColor = Color.RED;
 		}
 	}
 	
 	public Color getColor() {
-		return c;
+		return cellColor;
 	}
 	
 	public void setColor(Color newColor) {
-		c = newColor;
+		cellColor = newColor;
 	}
 
 }
