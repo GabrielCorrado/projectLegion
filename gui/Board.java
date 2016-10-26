@@ -477,6 +477,11 @@ public class Board extends JPanel implements MouseInputListener {
 		agentRate = rate;
 	}
 
+	/**
+	 * @author zgray17
+	 * This method updates the polary color 1. Blah blah blah.
+	 * @param polarity1
+	 */
 	public void updateNewPolarityColor1(Color polarity1)
 	{
 		for (int row = 0; row < cells2.length; row++) {

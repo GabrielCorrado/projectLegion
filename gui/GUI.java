@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -38,6 +39,8 @@ public class GUI {
 	private JTextField textField_AgentCloseness;
 	private JTextField textField_PheromoneStrength;
 	private JTextField textField_BoardSize;
+	
+	private JLabel lblBoardSizeInt = new JLabel();
 	
 	public static int layer2Draw = 1;
 	public static Board board;
@@ -423,7 +426,7 @@ public class GUI {
 		lblBoardSizeGlobal.setBounds(820, 621, 74, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeGlobal);
 		
-		JLabel lblBoardSizeInt = new JLabel(String.valueOf(initBoardSize));
+		lblBoardSizeInt.setText(String.valueOf(initBoardSize));
 		lblBoardSizeInt.setBounds(910, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeInt);
 		
@@ -530,20 +533,22 @@ public class GUI {
 		JLabel lblFastCycless = new JLabel("5 Cycles/s");
 		lblFastCycless.setBounds(1417, 671, 100, 14);
 		frmProjectLegion.getContentPane().add(lblFastCycless);
-		
+
 		JButton btnNewBoard = new JButton("New Board");
-		 		btnNewBoard.addActionListener(new ActionListener() {
-		 			public void actionPerformed(ActionEvent e) {
-		 				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
-		 				newBoardWindow.setVisible(true);	
-		 			}
-		 		});
-		 		btnNewBoard.setBackground(new Color(51, 102, 255));
-		 		btnNewBoard.setBounds(1338, 726, 125, 23);
-		 		frmProjectLegion.getContentPane().add(btnNewBoard);
+		btnNewBoard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Object obj = new NewBoardWindow();	
+				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
+				newBoardWindow.setVisible(true);
+			}
+		});
+		btnNewBoard.setBackground(new Color(51, 102, 255));
+		btnNewBoard.setBounds(1338, 726, 125, 23);
+		frmProjectLegion.getContentPane().add(btnNewBoard);
 	}
 	public void setinitBoardSize(int x)
 	{
-		
+		lblBoardSizeInt.setText(String.valueOf(x));
 	}
+
 }
