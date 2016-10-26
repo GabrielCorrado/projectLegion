@@ -83,6 +83,10 @@ public class NewBoardWindow extends JFrame {
 		//displayPanel.add();
 		frame.getContentPane().add(board);
 		GUI.board = board;
+		board.oldPolarity1 = GUI.polarity1;
+		board.oldPolarity2 = GUI.polarity2;
+		GUI.initBoardSize = size;
+		GUI.initAgentCount = numAgents;
 	}
 	
 }

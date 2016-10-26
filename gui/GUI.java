@@ -44,6 +44,7 @@ public class GUI {
 	private boolean timerStarted = true;
 	public static Color polarity1 = Color.RED;
 	public static Color polarity2 = Color.BLUE;
+	public static int initBoardSize, initAgentCount;
 	/**
 	 * Launch the application.
 	 */
@@ -424,7 +425,7 @@ public class GUI {
 		lblBoardSizeGlobal.setBounds(820, 621, 74, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeGlobal);
 		
-		JLabel lblBoardSizeInt = new JLabel("Int");
+		JLabel lblBoardSizeInt = new JLabel(String.valueOf(initBoardSize));
 		lblBoardSizeInt.setBounds(910, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeInt);
 		
@@ -432,7 +433,7 @@ public class GUI {
 		lblSwarmCount.setBounds(1014, 621, 100, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCount);
 		
-		JLabel lblSwarmCountInt = new JLabel("Int");
+		JLabel lblSwarmCountInt = new JLabel(String.valueOf(initAgentCount));
 		lblSwarmCountInt.setBounds(1109, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCountInt);
 		
@@ -536,15 +537,15 @@ public class GUI {
 		 		btnNewBoard.addActionListener(new ActionListener() {
 		 			public void actionPerformed(ActionEvent e) {
 		 				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
-		 				newBoardWindow.setVisible(true);			
+		 				newBoardWindow.setVisible(true);	
 		 			}
 		 		});
 		 		btnNewBoard.setBackground(new Color(51, 102, 255));
 		 		btnNewBoard.setBounds(1338, 726, 125, 23);
 		 		frmProjectLegion.getContentPane().add(btnNewBoard);
-		
-		
-		
+	}
+	public void setinitBoardSize(int x)
+	{
 		
 	}
 }

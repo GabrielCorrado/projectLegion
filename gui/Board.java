@@ -33,8 +33,9 @@ public class Board extends JPanel implements MouseInputListener {
 	private int agentRate = 50;
 	public int period = 10;
 	public Timer t;
-	private Color oldPolarity1 = Color.RED;
-	private Color oldPolarity2 = Color.BLUE;
+	public Color oldPolarity1 = Color.RED;
+	public Color oldPolarity2 = Color.BLUE;
+
 	
 	public Board(int width, int height, int size, int typeBoard, int numAgents) {
 		//set preferred graphical dimensions of the board
