@@ -23,7 +23,7 @@ public class Board extends JPanel implements MouseInputListener {
 	public GenCell[][] display;
 	public int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
-	private Color c;
+	private Color boardCellColor;
 	public Color polarity;
 	private int cellSize;
 	private int agentSize;
@@ -59,25 +59,25 @@ public class Board extends JPanel implements MouseInputListener {
 					int rand = (int) (Math.random()*2);
 					if (rand == 0)
 					{
-						c = Color.black;
+						boardCellColor = Color.black;
 					}
 					else
 					{
-						c = Color.white;
+						boardCellColor = Color.white;
 					}
-					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
+					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, boardCellColor);
 				}
 				else if (typeBoard==1)
 				{
 					if (row%2 == col%2)
 					{
-						c = Color.black;
+						boardCellColor = Color.black;
 					}
 					else
 					{
-						c = Color.white;
+						boardCellColor = Color.white;
 					}
-					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
+					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, boardCellColor);
 
 				}
 
