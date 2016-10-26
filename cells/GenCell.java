@@ -15,16 +15,16 @@ import java.awt.geom.Rectangle2D;
 public class GenCell extends Rectangle2D.Double {
 	protected double x, y;
 	protected double size;
-	protected Color c;
+	protected Color cellColor;
 	
 	//constructor
-	public GenCell(double x, double y, double size, Color c)
+	public GenCell(double x, double y, double size, Color color)
 	{
 		super(x,y,size,size);
 		this.x = x;
 		this.y = y;
 		this.size = size;
-		this.c = c;
+		this.cellColor = color;
 	}
 	
 	public GenCell() {
@@ -32,8 +32,9 @@ public class GenCell extends Rectangle2D.Double {
 	}
 	
 	public void draw(Graphics2D g) {
-		g.setColor(c);
+		g.setColor(cellColor);
 		g.fill(this);
 		g.fillRect((int)x, (int)y, (int)size, (int)size);
 	}
 }
+
