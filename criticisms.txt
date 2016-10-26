@@ -1,7 +1,7 @@
 These are current criticisms from the first code walkthrough with the Clinic Team.
 
 Broad criticisms:
-1. All of the code should be commented better. It is frequently unclear what the code is supposed to do. Certain sections, like the layer2() method in Board, are not commented at all. In particular, USE JAVADOCS NOTATION on all of the methods. --UNADDRESSED. We have not used Javadocs yet.
+1. All of the code should be commented better. It is frequently unclear what the code is supposed to do. Certain sections, like the layer2() method in Board, are not commented at all. In particular, USE JAVADOCS NOTATION on all of the methods. --ADDRESSED. We have begun using Javadoc. See Agents.java.
 2. The formatting is occasionally inconsistent; we can fix this by doing select all and then ctrl+I in Eclipse before sending code. --ADDRESSED. Team members are all doing this regularly now.
 3. All of our classes are not implementing the SerializableUID thing. Eclipse will auto-write that, so at some point do that for each of the classes. --ADDRESSED. We have decided to suppress the warnings since we don't think there is reason to serialize our classes.
 
@@ -23,6 +23,6 @@ Driver:
 2. Have the try/catch send a more specific exception as well. --ADDRESSED. This has been completely rewritten and uses IllegalArgumentException now.
 3. Put it in a while loop so it can take a new value if the user inputs a bad value the previous time. --ADDRESSED. This has been completely rewritten and uses a while loop as suggested now.
 GenCell:
-1. They suggested making GenCell an abstract class. We're not sure we want to do that.
+1. They suggested making GenCell an abstract class. We're not sure we want to do that. --UNADDRESSED. We have not returned to this design question yet.
 NullCell:
 1. Comment that it is a singleton. --ADDRESSED. This class has a description at the top now which explains that it is a singleton class.
