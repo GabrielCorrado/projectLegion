@@ -89,8 +89,8 @@ public class NewBoardWindow extends JFrame {
 		frame.getContentPane().add(board);
 		GUI.board = board;
 		//This section is to avoid bugs in the GUI Layer2 Polarity color selection combo boxes.
-		board.oldPolarity1 = GUI.polarity1;
-		board.oldPolarity2 = GUI.polarity2;
+		board.oldPolarity1 = GUI.getPolarity1();
+		board.oldPolarity2 = GUI.getPolarity2();
 		
 	}
 	

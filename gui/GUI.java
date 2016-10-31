@@ -77,6 +77,22 @@ public class GUI {
 		});
 	}
 
+	public static Color getPolarity1() {
+		return polarity1;
+	}
+
+	public static void setPolarity1(Color polarity1) {
+		GUI.polarity1 = polarity1;
+	}
+
+	public static Color getPolarity2() {
+		return polarity2;
+	}
+
+	public static void setPolarity2(Color polarity2) {
+		GUI.polarity2 = polarity2;
+	}
+
 	/**
 	 * Create the application.
 	 */

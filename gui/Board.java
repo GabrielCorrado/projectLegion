@@ -187,13 +187,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that should be black
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity1);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 							//then you are the same polarity as cell[0][0]
 						}
 						else
 							//if its in a spot that SHOULDN'T be black
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity2);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 							//then you are in the opposite polarity than cells[0][0]
 						}
 					}
@@ -203,13 +203,13 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that SHOULDN'T be 
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity2);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 							// then its in the opposite polarity than cells[0]
 						}
 						else
 							//if its in a spot that should be white
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity1);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 							//then its in the same polarity as cells[0][0]
 						}
 					}
@@ -220,22 +220,22 @@ public class Board extends JPanel implements MouseInputListener {
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity1);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 						}
 						else
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity2);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 						}
 					}
 					else
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity2);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 						}
 						else
 						{
-							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.polarity1);
+							cells2[row][col] = new Cell(800+borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 						}
 					}
 				}

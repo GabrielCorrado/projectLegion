@@ -36,13 +36,13 @@ public class Cell extends GenCell {
 			c = Color.BLACK;
 		}
 		//as cells2 can be different colors chosen by the user, the color is set in the GUI
-		else if (c == GUI.polarity1)
+		else if (c == GUI.getPolarity1())
 		{
-			c = GUI.polarity2;
+			c = GUI.getPolarity2();
 		}
 		else
 		{
-			c = GUI.polarity1;
+			c = GUI.getPolarity1();
 		}
 
 	}
