@@ -1,5 +1,6 @@
 package cells;
-/*		Author: Zak Gray and Nick Corrado
+/*		CURRENTLY NOT USED
+ * 		Author: Zak Gray and Nick Corrado
  * 		Description: This class is intended to use the Singleton Design Pattern to create a border around the cells. This border will be invisible. 
  * 					 This border will be populated with Null cells. If the cells go beyond the normal board, then they will disappear and be have null coordinates.
  */

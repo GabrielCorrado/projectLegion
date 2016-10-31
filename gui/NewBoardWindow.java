@@ -13,7 +13,11 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
+/*
+ * Authors: Gabriel, Zak
+ * Description: A window that creates itself when GUI button "New Board" is pressed. Allows for a creation of a new board with a input
+ * board size and number of agents
+ */
 @SuppressWarnings("serial")
 public class NewBoardWindow extends JFrame {
 
@@ -84,10 +88,9 @@ public class NewBoardWindow extends JFrame {
 		//displayPanel.add();
 		frame.getContentPane().add(board);
 		GUI.board = board;
+		//This section is to avoid bugs in the GUI Layer2 Polarity color selection combo boxes.
 		board.oldPolarity1 = GUI.polarity1;
 		board.oldPolarity2 = GUI.polarity2;
-		GUI.initBoardSize = size;
-		GUI.initAgentCount = numAgents;
 		
 	}
 	
