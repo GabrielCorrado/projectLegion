@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -8,47 +9,55 @@ import javax.swing.JSplitPane;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import java.awt.Color;
-import javax.swing.border.LineBorder;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import java.awt.Button;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.swing.JButton;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JToggleButton;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import cells.Cell;
 
 public class GUI {
 
 	static int HEIGHT = 864;
 	static int WIDTH = 1536;
 	static int BOARDSIZE = 800;
-	private JFrame frmProjectLegion;
+	private Color passThisColor;
+	public JFrame frmProjectLegion;
 	private JTextField textField_NumAgents;
 	private JTextField textField_NumAgentChanges;
 	private JTextField textField_AgentCloseness;
 	private JTextField textField_PheromoneStrength;
 	private JTextField textField_BoardSize;
-
+	
+	private JLabel lblBoardSizeInt = new JLabel();
+	
+	public static int layer2Draw = 1;
+	public static Board board;
+	private boolean timerStarted = true;
+	public static Color polarity1 = Color.RED;
+	public static Color polarity2 = Color.BLUE;
+	public static int initBoardSize, initAgentCount;
+	public static Color agentColor = Color.GREEN;
 	/**
 	 * Launch the application.
 	 */
@@ -102,15 +111,25 @@ public class GUI {
 		frmProjectLegion.getContentPane().setLayout(null);
 				
 		//************************************************************ This makes the 800 by 800 JPanel that will be where the board goes every time it is painted. 
-		//JPanel board = new JPanel();
-		/*board.setBackground(Color.WHITE);
-		board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
+		JPanel boardInGUI = new JPanel();
+		JFrame frame = new JFrame();
+		boardInGUI.setBackground(Color.WHITE);
+		boardInGUI.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
 		//System.out.print((HEIGHT-BOARDSIZE)/8);
-		frame.getContentPane().add(board);*/
+		frame.getContentPane().add(boardInGUI);
 
 		//This is where the tabs for the layer options go.
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(818, 10, 700, 600);
+		
+		ChangeListener changeListener = new ChangeListener(){
+			public void stateChanged(ChangeEvent changeEvent) {
+				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+				int index = sourceTabbedPane.getSelectedIndex();
+				layer2Draw = index + 1;
+			}
+		};
+		tabbedPane.addChangeListener(changeListener);
 		frmProjectLegion.getContentPane().add(tabbedPane);
 		
 		//************************************************************ TAB 1 ************************************************************ 
@@ -123,6 +142,8 @@ public class GUI {
 		JButton btnChangeBoardSize = new JButton("Update Size");
 		btnChangeBoardSize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//Button gains actions here
+				//board.size = Integer.parseInt(textField_BoardSize.getText());
 			}
 		});
 		btnChangeBoardSize.setBounds(286, 157, 125, 35);
@@ -173,9 +194,25 @@ public class GUI {
 		tabLayer2.add(lblPrimaryPolarityColor);
 		
 		JComboBox comboPrimary = new JComboBox();
-		comboPrimary.setModel(new DefaultComboBoxModel(new String[] {"BLUE", "RED", "GREEN", "CYAN", "BLACK", "WHITE"}));
+		comboPrimary.setModel(new DefaultComboBoxModel(new String[] {"RED", "BLUE", "GREEN", "CYAN", "YELLOW"}));
+		Color[] primaryColorList = new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW};
 		comboPrimary.setBounds(25, 50, 125, 22);
-		String[] tempString = {"BLUE","RED","GREEN","CYAN","WHITE","BLACK"};
+		comboPrimary.addActionListener(new ActionListener() {
+			 @Override
+	            public void actionPerformed(ActionEvent e){
+				 JComboBox src = (JComboBox) e.getSource();
+				 if(polarity2 == primaryColorList[src.getSelectedIndex()])
+				 {
+					int temp = Arrays.asList(primaryColorList).indexOf(polarity1);
+					comboPrimary.setSelectedIndex(temp);
+				 }
+				 else
+				 {
+				 polarity1 = primaryColorList[src.getSelectedIndex()];
+				 board.updateNewPolarityColor1(polarity1);
+				 }
+	            }
+	        });
 		tabLayer2.add(comboPrimary);
 		
 		//************************************************************ Secondary color for polarity choice comboBox where you can change it
@@ -184,8 +221,25 @@ public class GUI {
 		tabLayer2.add(lblSecondaryPolarityColor);
 		
 		JComboBox comboSecondary = new JComboBox();
-		comboSecondary.setModel(new DefaultComboBoxModel(new String[] {"RED", "BLUE", "GREEN", "CYAN", "BLACK", "WHITE"}));
+		comboSecondary.setModel(new DefaultComboBoxModel(new String[] {"BLUE", "RED", "GREEN", "CYAN"}));
+		Color[] secondaryColorList = new Color[] {Color.BLUE, Color.RED, Color.GREEN, Color.CYAN};
 		comboSecondary.setBounds(238, 50, 125, 22);
+		comboSecondary.addActionListener(new ActionListener() {
+			 @Override
+	            public void actionPerformed(ActionEvent e){
+				 JComboBox src = (JComboBox) e.getSource();
+				 if(polarity1 == secondaryColorList[src.getSelectedIndex()])
+				 {
+					 int temp = Arrays.asList(secondaryColorList).indexOf(polarity2);
+						comboSecondary.setSelectedIndex(temp);
+				 }
+				 else
+				 {
+				 polarity2 =secondaryColorList[src.getSelectedIndex()];
+				 board.updateNewPolarityColor2(polarity2);
+				 }
+	            }
+	        });
 		tabLayer2.add(comboSecondary);
 		
 		//************************************************************ Tertiary color comboBox if we want it.
@@ -287,10 +341,18 @@ public class GUI {
 		tabLayer3.add(lblAgentsColor);
 		
 		JComboBox comboBox_AgentColor = new JComboBox();
+		comboBox_AgentColor.setModel(new DefaultComboBoxModel(new String[] {"GREEN", "YELLOW", "ORANGE", "MAGENTA", "BLUE", "RED", "WHITE", "BLACK", "CYAN"}));
+		Color[] agentColorList = new Color[]{Color.GREEN, Color.YELLOW, Color.ORANGE, Color.MAGENTA, Color.BLUE, Color.RED, Color.WHITE, Color.BLACK, Color.CYAN};
 		comboBox_AgentColor.setBounds(568, 23, 100, 20);
+		comboBox_AgentColor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				JComboBox src = (JComboBox) e.getSource();
+				agentColor =agentColorList[src.getSelectedIndex()];
+				board.updateAgentColor(agentColor);
+			}
+		});
 		tabLayer3.add(comboBox_AgentColor);
-		comboBox_AgentColor.setModel(new DefaultComboBoxModel(new String[] {"GREEN", "YELLOW", "ORANGE", "MAGENTA", "BLUE", "RED", "WHITE", "BLACK"}));
-		
 		//************************************************************ User can select how many changes the agent can make
 		JLabel lblNumberOfChanges = new JLabel("Number of Changes:");
 		lblNumberOfChanges.setBounds(10, 58, 150, 14);
@@ -373,7 +435,7 @@ public class GUI {
 		lblBoardSizeGlobal.setBounds(820, 621, 74, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeGlobal);
 		
-		JLabel lblBoardSizeInt = new JLabel("Int");
+		lblBoardSizeInt.setText(String.valueOf(initBoardSize));
 		lblBoardSizeInt.setBounds(910, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeInt);
 		
@@ -381,7 +443,7 @@ public class GUI {
 		lblSwarmCount.setBounds(1014, 621, 100, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCount);
 		
-		JLabel lblSwarmCountInt = new JLabel("Int");
+		JLabel lblSwarmCountInt = new JLabel(String.valueOf(initAgentCount));
 		lblSwarmCountInt.setBounds(1109, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCountInt);
 		
@@ -390,8 +452,17 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(lblSwarmRate);
 		
 		//************************************************************ Slider for the user to change how fast the board will step
-		JSlider sliderSwarmSpeed = new JSlider();
+		JSlider sliderSwarmSpeed = new JSlider(0,100,50);
 		sliderSwarmSpeed.setBounds(953, 646, 450, 24);
+		sliderSwarmSpeed.setMajorTickSpacing( 5 );
+		sliderSwarmSpeed.setPaintLabels( true );
+		
+		sliderSwarmSpeed.addChangeListener(new ChangeListener() {
+            @Override public void stateChanged(ChangeEvent e) {
+                JSlider src = (JSlider) e.getSource();
+                board.setAgentRate(src.getValue());
+            }
+        });
 		frmProjectLegion.getContentPane().add(sliderSwarmSpeed);
 		
 		JLabel lblSlow = new JLabel("Slow");
@@ -406,11 +477,30 @@ public class GUI {
 		JButton btnStopSwarm = new JButton("Stop Swarm");
 		btnStopSwarm.setBackground(new Color(255, 51, 51));
 		btnStopSwarm.setBounds(1030, 726, 125, 23);
+		btnStopSwarm.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				board.t.cancel();
+				timerStarted = false;
+			}
+		});
 		frmProjectLegion.getContentPane().add(btnStopSwarm);
 		
 		JButton btnStartSwarm = new JButton("Start Swarm");
 		btnStartSwarm.setBackground(new Color(0, 255, 0));
 		btnStartSwarm.setBounds(895, 726, 125, 23);
+		btnStartSwarm.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent arg0) {
+            	if(timerStarted == true)
+            	{
+            		
+            	}
+            	else
+            	{
+            	board.StartTimer();
+            	timerStarted = true;
+            	}
+            }
+        });
 		frmProjectLegion.getContentPane().add(btnStartSwarm);
 		
 		JButton btnRecord = new JButton("Record");
@@ -433,16 +523,7 @@ public class GUI {
 		btnRestart.setBounds(1203, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRestart);
 		
-		JButton btnNewRandomSwarm = new JButton("New Swarm");
-		btnNewRandomSwarm.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NewBoardWindow newBoardWindow = new NewBoardWindow();
-				newBoardWindow.setVisible(true);
-			}
-		});
-		btnNewRandomSwarm.setBackground(new Color(51, 102, 255));
-		btnNewRandomSwarm.setBounds(1338, 726, 125, 23);
-		frmProjectLegion.getContentPane().add(btnNewRandomSwarm);
+		
 		
 		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
@@ -461,27 +542,22 @@ public class GUI {
 		JLabel lblFastCycless = new JLabel("5 Cycles/s");
 		lblFastCycless.setBounds(1417, 671, 100, 14);
 		frmProjectLegion.getContentPane().add(lblFastCycless);
-		
-		JButton btnInitializeBoard = new JButton("Initialize Board");
-		btnInitializeBoard.addMouseListener(new MouseAdapter() {
-			//************************************************************This code works with board, cell, gencell classes in order to have a basic board print on the JFrame UI
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				Board board = new Board(800,800,10,0);
-				board.setBackground(Color.WHITE);
-				board.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
-				frmProjectLegion.getContentPane().add(board);
-				board.step(); 
+
+		JButton btnNewBoard = new JButton("New Board");
+		btnNewBoard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Object obj = new NewBoardWindow();	
+				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
+				newBoardWindow.setVisible(true);
 			}
 		});
-		btnInitializeBoard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
-		btnInitializeBoard.setBounds(1203, 681, 125, 24);
-		frmProjectLegion.getContentPane().add(btnInitializeBoard);
-		
-		
+		btnNewBoard.setBackground(new Color(51, 102, 255));
+		btnNewBoard.setBounds(1338, 726, 125, 23);
+		frmProjectLegion.getContentPane().add(btnNewBoard);
 	}
+	public void setinitBoardSize(int x)
+	{
+		lblBoardSizeInt.setText(String.valueOf(x));
+	}
+
 }

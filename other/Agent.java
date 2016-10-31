@@ -116,9 +116,10 @@ public class Agent extends Ellipse2D.Double {
 	public void step() {
 		this.setX(x+velocity.getX());
 		this.setY(y+velocity.getY());
+		
 		if (Math.random() < 0.1) {
 			this.setVelocity(Math.random()*10-5, Math.random()*10-5);
 		}
 	}
-	
+
 }
