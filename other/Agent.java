@@ -121,5 +121,23 @@ public class Agent extends Ellipse2D.Double {
 			this.setVelocity(Math.random()*10-5, Math.random()*10-5);
 		}
 	}
+	
+	/**
+	 * @author Nick
+	 * This method negates the agent's x component of its vector, as if the agent
+	 * bounced off the wall of the simulation.
+	 */
+	public void xBounce() {
+		this.setVelocity(this.getVelocity().getX(), -1*this.getVelocity().getY());
+	}
+	
+	/**
+	 * @author Nick
+	 * This method negates the agent's y component of its vector, as if the agent
+	 * bounced off the ceiling or floor of the simulation.
+	 */
+	public void yBounce() {
+		this.setVelocity(-1*this.getVelocity().getX(), this.getVelocity().getY());
+	}
 
 }
