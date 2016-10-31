@@ -29,7 +29,7 @@ import other.LabelHandler;
  * Description: This is the guts of the program. Two 2x2 Cell arrays of size[size X size] are created to be layers 1 and 2,
  * Layer 2 gives information about layer 1, for example... Layer one currently tells which polarity (black in the corners or white)
  * of a checker board the cells in layer 1 are in.  An array of Agents is also created with random movement over the layers 1 & 2
- * while randomly changing the cells underneith them. In the future, the agents will have a low level of intelegence.
+ * while randomly changing the cells underneath them. In the future, the agents will have a low level of intelligence.
  * Parameters: width of board in pixels, height of board in pixels, size of board[nXn], typeBoard is a diagnostic tool, and number of Agents
  */
 @SuppressWarnings("serial")
