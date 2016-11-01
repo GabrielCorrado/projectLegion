@@ -1,21 +1,21 @@
 These are current criticisms from the first code walkthrough with the Clinic Team.
 
 Broad criticisms:
-1. All of the code should be commented better. It is frequently unclear what the code is supposed to do. Certain sections, like the layer2() method in Board, are not commented at all. In particular, USE JAVADOCS NOTATION on all of the methods. --ADDRESSED. We have begun using Javadoc. See Agents.java.
+1. All of the code should be commented better. It is frequently unclear what the code is supposed to do. Certain sections, like the layer2() method in Board, are not commented at all. In particular, USE JAVADOCS NOTATION on all of the methods. --PARTIALLY ADDRESSED. We have begun using Javadoc. See e.g. Agents.java. This is lacking in some places.
 2. The formatting is occasionally inconsistent; we can fix this by doing select all and then ctrl+I in Eclipse before sending code. --ADDRESSED. Team members are all doing this regularly now.
 3. All of our classes are not implementing the SerializableUID thing. Eclipse will auto-write that, so at some point do that for each of the classes. --ADDRESSED. We have decided to suppress the warnings since we don't think there is reason to serialize our classes.
 
 Specific criticisms:
 Packages:
 1. Separate the code into a couple of different packages. Jacob specifically suggested a Cells package where all of our cell classes would go. --ADDRESSED. We have moved cell classes to a cells package, GUI stuff to a gui package, and other stuff to an other package.
-2. Rename a couple of these classes: Cell, Cell_2, and GenCell are all bad names. --UNADDRESSED. We only recently merged all of our code, and do not have good substitute names for the cells right now. Cell_2 has been removed, which helps.
+2. Rename a couple of these classes: Cell, Cell_2, and GenCell are all bad names. --UNADDRESSED. We only recently merged all of our code, and do not have good substitute names for the cells right now. Cell_2 has been removed, which helps a bit.
 Agent:
 1. The name is not descriptive enough and it's not clear enough what they do. --ADDRESSED. We have written a description at the top which explains what the agents do. The agents also have intelligent behavior now, which makes them a little more comprehensible.
 2. We should try writing separate constructors, e.g. one to initialize them with random positions and velocities on the board. This gets all of that messy stuff out of the Board class and into Agent. --ADDRESSED. We have made a new constructor for Agent that initializes with random values.
 Board:
 1. Revise the getNeighbours() method. --UNADDRESSED. This is planned, but won't be happening right now. It actually needs more redesign than previously thought because it assumes one wants to check all eight neighbors rather than, say, the four cardinal neighbors.
-2. There are a number of poorly named variables, particularly size. Dr. Palmer hates size. :( He suggests numOfCells. --UNADDRESSED. We have renamed it to numCellsOnSide, but there are a number of other problematic variable names in Board which have not been renamed yet.
-3. There are at least two cases, tally and rand, in which variables get reinitialized inside of a loop, which is very wasteful. --ADDRESSED. We have moved the declaration of each of these variables outside of their respective loops.
+2. There are a number of poorly named variables, particularly size. Dr. Palmer hates size. :( He suggests numOfCells. --PARTLY ADDRESSED. We have renamed it to numCellsOnSide, but there are a number of other problematic variable names in Board which have not been renamed yet.
+3. There are at least two cases, tally and rand, in which variables get reinitialized inside of a loop, which is very wasteful. --ADDRESSED. We have moved the declaration of each of these variables outside of its respective loop.
 4. Have board center the layer in the given space rather than drawing along the top right. This is so trivial I'm not even putting the code here. --ADDRESSED. We have turned EXTRA_BOARD_SPACE into borderForCentering, and the board now centers properly.
 5. During initialization of e.g. checkerboards, you can draw them one row at a time instead of one cell at a time. --UNADDRESSED. We have not changed the initialization of checkerboards. We're not sure whether we're ever going to do that, since initializing as checkerboard was a diagnostic thing.
 Driver:
