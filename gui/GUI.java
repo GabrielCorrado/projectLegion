@@ -58,7 +58,7 @@ public class GUI {
 	public static Board board;//board to be drawn
 	private boolean timerStarted = true;//timer or agent step
 	public static Color polarity1 = Color.RED;//color1 of board.cells2
-	public static Color polarity2 = Color.BLUE;//color2 of coard.cells2
+	public static Color polarity2 = Color.BLUE;//color2 of board.cells2
 	public static int initBoardSize, initAgentCount;
 	public static Color agentColor = Color.GREEN;
 	/**
@@ -217,23 +217,23 @@ public class GUI {
 		Color[] primaryColorList = new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW};
 		comboPrimary.setBounds(25, 50, 125, 22);
 		comboPrimary.addActionListener(new ActionListener() {
-			 @Override
-	            public void actionPerformed(ActionEvent e){
-				 JComboBox src = (JComboBox) e.getSource();
-				 if(polarity2 == primaryColorList[src.getSelectedIndex()])
-				 {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				JComboBox src = (JComboBox) e.getSource();
+				if(polarity2 == primaryColorList[src.getSelectedIndex()])
+				{
 					int temp = Arrays.asList(primaryColorList).indexOf(polarity1);
 					comboPrimary.setSelectedIndex(temp);
-				 }
-				 else
-				 {
-				 polarity1 = primaryColorList[src.getSelectedIndex()];
-				 board.updateNewPolarityColor1(polarity1);
-				 }
-	            }
-	        });
+				}
+				else
+				{
+					polarity1 = primaryColorList[src.getSelectedIndex()];
+					board.updateNewPolarityColor1(polarity1);
+				}
+			}
+		});
 		tabLayer2.add(comboPrimary);
-		
+
 		//************************************************************ Secondary color for polarity choice comboBox where you can change it
 		JLabel lblSecondaryPolarityColor = new JLabel("Secondary Polarity Color");
 		lblSecondaryPolarityColor.setBounds(238, 25, 150, 14);
@@ -244,23 +244,23 @@ public class GUI {
 		Color[] secondaryColorList = new Color[] {Color.BLUE, Color.RED, Color.GREEN, Color.CYAN};
 		comboSecondary.setBounds(238, 50, 125, 22);
 		comboSecondary.addActionListener(new ActionListener() {
-			 @Override
-	            public void actionPerformed(ActionEvent e){
-				 JComboBox src = (JComboBox) e.getSource();
-				 if(polarity1 == secondaryColorList[src.getSelectedIndex()])
-				 {
-					 int temp = Arrays.asList(secondaryColorList).indexOf(polarity2);
-						comboSecondary.setSelectedIndex(temp);
-				 }
-				 else
-				 {
-				 polarity2 =secondaryColorList[src.getSelectedIndex()];
-				 board.updateNewPolarityColor2(polarity2);
-				 }
-	            }
-	        });
+			@Override
+			public void actionPerformed(ActionEvent e){
+				JComboBox src = (JComboBox) e.getSource();
+				if(polarity1 == secondaryColorList[src.getSelectedIndex()])
+				{
+					int temp = Arrays.asList(secondaryColorList).indexOf(polarity2);
+					comboSecondary.setSelectedIndex(temp);
+				}
+				else
+				{
+					polarity2 =secondaryColorList[src.getSelectedIndex()];
+					board.updateNewPolarityColor2(polarity2);
+				}
+			}
+		});
 		tabLayer2.add(comboSecondary);
-		
+
 		//************************************************************ Tertiary color comboBox if we want it.
 		JLabel lblTertiaryPolarityColor = new JLabel("Tertiary Polarity Color");
 		lblTertiaryPolarityColor.setBounds(450, 25, 125, 14);
@@ -477,17 +477,17 @@ public class GUI {
 		sliderSwarmSpeed.setPaintLabels( true );
 		//slider to change the speed of the agents in board.agents[]
 		sliderSwarmSpeed.addChangeListener(new ChangeListener() {
-            @Override public void stateChanged(ChangeEvent e) {
-                JSlider src = (JSlider) e.getSource();
-                board.setAgentRate(src.getValue());
-            }
-        });
+			@Override public void stateChanged(ChangeEvent e) {
+				JSlider src = (JSlider) e.getSource();
+				board.setAgentRate(src.getValue());
+			}
+		});
 		frmProjectLegion.getContentPane().add(sliderSwarmSpeed);
-		
+
 		JLabel lblSlow = new JLabel("Slow");
 		lblSlow.setBounds(910, 646, 46, 14);
 		frmProjectLegion.getContentPane().add(lblSlow);
-		
+
 		JLabel lblFast = new JLabel("Fast");
 		lblFast.setBounds(1417, 646, 46, 14);
 		frmProjectLegion.getContentPane().add(lblFast);
@@ -509,25 +509,25 @@ public class GUI {
 		btnStartSwarm.setBackground(new Color(0, 255, 0));
 		btnStartSwarm.setBounds(895, 726, 125, 23);
 		btnStartSwarm.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent arg0) {
-            	if(timerStarted == true)
-            	{
-            		
-            	}
-            	else
-            	{
-            	board.StartTimer();
-            	timerStarted = true;
-            	}
-            }
-        });
+			@Override public void actionPerformed(ActionEvent arg0) {
+				if(timerStarted == true)
+				{
+
+				}
+				else
+				{
+					board.StartTimer();
+					timerStarted = true;
+				}
+			}
+		});
 		frmProjectLegion.getContentPane().add(btnStartSwarm);
-		
+
 		JButton btnRecord = new JButton("Record");
 		btnRecord.setBackground(new Color(102, 255, 153));
 		btnRecord.setBounds(895, 767, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRecord);
-		
+
 		JButton btnStopRecord = new JButton("Stop Record");
 		btnStopRecord.setBackground(new Color(255, 102, 102));
 		btnStopRecord.setBounds(1030, 767, 125, 23);

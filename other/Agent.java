@@ -128,7 +128,7 @@ public class Agent extends Ellipse2D.Double {
 	 * bounced off the wall of the simulation.
 	 */
 	public void xBounce() {
-		this.setVelocity(this.getVelocity().getX(), -1*this.getVelocity().getY());
+		this.setVelocity(-1*this.getVelocity().getX(), this.getVelocity().getY());
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class Agent extends Ellipse2D.Double {
 	 * bounced off the ceiling or floor of the simulation.
 	 */
 	public void yBounce() {
-		this.setVelocity(-1*this.getVelocity().getX(), this.getVelocity().getY());
+		this.setVelocity(this.getVelocity().getX(), -1*this.getVelocity().getY());
 	}
 
 }

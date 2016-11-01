@@ -47,12 +47,10 @@ public class Cell extends GenCell {
 
 	}
 	
-	//getters
 	public Color getColor() {
 		return c;
 	}
 	
-	//setters
 	public void setColor(Color newColor) {
 		c = newColor;
 	}
