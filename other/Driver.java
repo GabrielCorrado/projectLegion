@@ -67,20 +67,9 @@ public class Driver {
 				System.out.println(ex.getMessage());
 			}
 		}
-		
-//			if ((typeBoard != 0 && typeBoard != 1) || input < 1 || input > 500) //500 should be the very maximum of what the board size will be, even then, it is super slow to update
-//			{
-//				throw new Exception(); //We were torn between using an IllegalArgumentExceptiona and a TypeMismatchException because we need to catch both so that is why we left Exception();
-//			}
-//			else
-//			{
-//				validResponse = true;
-//			}
-		
-		//as Tim noted, we should have a try/catch here, but the long term goal is not to need the scanner actually
 		sc.close();
 
-		Board board = new Board(800, 800, input, typeBoard, 30);
+		Board board = new Board(800, 800, input, 30);
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(board);

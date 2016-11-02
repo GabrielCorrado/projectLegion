@@ -82,7 +82,7 @@ public class NewBoardWindow extends JFrame {
 		{
 		frame.remove(GUI.board);
 		}
-		Board board = new Board(800,800,size,0,numAgents);
+		Board board = new Board(800,800,size,numAgents);
 		board.setBackground(Color.WHITE);
 		board.setBounds(10, 10, 800, 800);
 		//displayPanel.add();

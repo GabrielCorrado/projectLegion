@@ -34,8 +34,8 @@ import other.LabelHandler;
  */
 @SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {
-	private Cell[][] cells;//layer1
-	private Cell[][] cells2;//layer2
+	private Cell[][] layer1;
+	private Cell[][] layer2;
 	private GenCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private int borderForCentering;
@@ -52,7 +52,7 @@ public class Board extends JPanel implements MouseInputListener {
 	public Color oldPolarity2 = Color.BLUE;
 	public LabelHandler labelHandler;
 
-	public Board(int width, int height, int numCellsOnSide, int typeBoard, int numAgents) {
+	public Board(int width, int height, int numCellsOnSide, int numAgents) {
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		//HOW DID I FORGET THIS EARLIER
@@ -63,59 +63,28 @@ public class Board extends JPanel implements MouseInputListener {
 		//and by the number of cells.
 
 		//determine how much border space it needs to be centered in the given panel, then use that value
-		//width and height are currently 800 and 800 respectively; these are and will be hard-coded values, but might possibly change
+		//width and height are currently 800 and 800 respectively; these are and will be hard-coded values, but might change
 		int spareSpace = width%numCellsOnSide;
 		borderForCentering = spareSpace/2;
 
-		cellSize = ((width)-2*borderForCentering)/numCellsOnSide; //board space in the middle?
+		cellSize = ((width)-2*borderForCentering)/numCellsOnSide;
 		agentSize = (int)(cellSize*0.7);
-		//gap between the two changes depending on if the size is 100 vs 5
 		
-		Color cellColor; //a temp variable to 
 		//layer 1
-		cells = new Cell[numCellsOnSide][numCellsOnSide];
+		layer1 = new Cell[numCellsOnSide][numCellsOnSide];
 		int rand;
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
-				if (typeBoard==0)//random starting black and white board
-				{
-					rand = (int) (Math.random()*2);
-					if (rand == 0)
-					{
-						cellColor = Color.black;
-					}
-					else
-					{
-						cellColor = Color.white;
-					}
-					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, cellColor);
-				}
-				else if (typeBoard==1)//"solved" checkboard to start
-				{
-					if (row%2 == col%2)
-					{
-						cellColor = Color.black;
-					}
-					else
-					{
-						cellColor = Color.white;
-					}
-					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, cellColor);
-
-				}
-
+		for (int row = 0; row < layer1.length; row++) {
+			for (int col = 0; col < layer1[row].length; col++) {
+				rand = (int) (Math.random()*2);
+				layer1[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, (rand == 0? Color.BLACK : Color.WHITE));
 			}
-
 		}
-
-		//generate the swarm; kirsch suggested, say, 30 agents, so we're trying 10 right now
-		//we've tried moving the swarm agents every frame with mousedragged... it can handle at least 500 with no
-		//visible slowdown.
+		
+		//generates the swarm and 
 		agents = new Agent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
 			//these agents generate in a random spot on the board, with a random starting vector.
 			agents[i] = new Agent(width, agentSize);
-
 
 			//agent.x < borderForCentering   AKA left border
 			//agent.y < borderForCentering   AKA top border
@@ -125,19 +94,19 @@ public class Board extends JPanel implements MouseInputListener {
 			//at (0,0). Therefore you want to add agentSize to the right and the bottom so it knows if the tip of the circle is at the point where the board cannot go anymore.
 			if (agents[i].x < borderForCentering)
 			{
-				agents[i].x = agents[i].x + borderForCentering;
+				agents[i].x += borderForCentering;
 			}
 			if (agents[i].y < borderForCentering)
 			{
-				agents[i].y = agents[i].y + borderForCentering;
+				agents[i].y += borderForCentering;
 			}
 			if (agents[i].x+agentSize > borderForCentering+(numCellsOnSide*cellSize))
 			{
-				agents[i].x = agents[i].x - borderForCentering;
+				agents[i].x -= borderForCentering;
 			}
 			if (agents[i].y+agentSize > borderForCentering+(numCellsOnSide*cellSize))
 			{
-				agents[i].y = agents[i].y - borderForCentering;
+				agents[i].y -= borderForCentering;
 			}
 		}
 
@@ -145,7 +114,7 @@ public class Board extends JPanel implements MouseInputListener {
 		this.addMouseMotionListener(this);
 
 		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
-		if(cells[0][0].getColor()==Color.BLACK)
+		if(layer1[0][0].getColor()==Color.BLACK)
 		{
 			polarity = Color.RED;
 		}
@@ -168,27 +137,27 @@ public class Board extends JPanel implements MouseInputListener {
 
 	protected void layer2(Color polarity)
 	{
-		cells2 = new Cell[numCellsOnSide][numCellsOnSide];
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
 
-		for (int row = 0; row < cells.length; row++) {
-			for (int col = 0; col < cells[row].length; col++) {
+		for (int row = 0; row < layer1.length; row++) {
+			for (int col = 0; col < layer1[row].length; col++) {
 
 				if(polarity == Color.RED)
 					//if the top left is black
 				{
-					if(cells[row][col].getColor() == Color.BLACK)
+					if(layer1[row][col].getColor() == Color.BLACK)
 						//if the layer 1 cell is black
 					{
 						if(col%2 == row%2)
 							//if its in a spot that should be black
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 							//then you are the same polarity as cell[0][0]
 						}
 						else
 							//if its in a spot that SHOULDN'T be black
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 							//then you are in the opposite polarity than cells[0][0]
 						}
 					}
@@ -198,39 +167,39 @@ public class Board extends JPanel implements MouseInputListener {
 						if(col%2 == row%2)
 							//if its in a spot that SHOULDN'T be 
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 							// then its in the opposite polarity than cells[0]
 						}
 						else
 							//if its in a spot that should be white
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 							//then its in the same polarity as cells[0][0]
 						}
 					}
 				}
 				else
 				{
-					if(cells[row][col].getColor() == Color.WHITE)
+					if(layer1[row][col].getColor() == Color.WHITE)
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 						}
 						else
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 						}
 					}
 					else
 					{
 						if(col%2 == row%2)
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity2());
 						}
 						else
 						{
-							cells2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
+							layer2[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, GUI.getPolarity1());
 						}
 					}
 				}
@@ -264,7 +233,7 @@ public class Board extends JPanel implements MouseInputListener {
 		{
 			for (int row = 0; row < numCellsOnSide; row++) {
 				for (int col = 0; col <numCellsOnSide; col++) {
-					display[row][col] = cells[row][col];
+					display[row][col] = layer1[row][col];
 					display[row][col].draw(g);
 				}
 			}
@@ -274,7 +243,7 @@ public class Board extends JPanel implements MouseInputListener {
 		{
 			for (int row = 0; row < numCellsOnSide; row++) {
 				for (int col = 0; col <numCellsOnSide; col++) {
-					display[row][col] = cells2[row][col];
+					display[row][col] = layer2[row][col];
 					display[row][col].draw(g);
 				}
 			}
@@ -317,8 +286,8 @@ public class Board extends JPanel implements MouseInputListener {
 			//before leaving it--something we haven't gotten to yet.
 			if (Math.random() < 0.1) {
 				if (agent.getCenterX() >= borderForCentering && agent.getCenterX() < 800-borderForCentering && agent.getCenterY() >= borderForCentering && agent.getCenterY() < 800-borderForCentering) {
-					cells[((int)(agent.getCenterX()-borderForCentering))/cellSize][((int)(agent.getCenterY()-borderForCentering))/cellSize].flipColor();
-					cells2[((int)(agent.getCenterX()-borderForCentering))/cellSize][((int)(agent.getCenterY()-borderForCentering))/cellSize].flipColor();
+					layer1[((int)(agent.getCenterX()-borderForCentering))/cellSize][((int)(agent.getCenterY()-borderForCentering))/cellSize].flipColor();
+					layer2[((int)(agent.getCenterX()-borderForCentering))/cellSize][((int)(agent.getCenterY()-borderForCentering))/cellSize].flipColor();
 				}
 			}
 
@@ -503,11 +472,11 @@ public class Board extends JPanel implements MouseInputListener {
 	 */
 	public void updateNewPolarityColor1(Color polarity1)
 	{
-		for (int row = 0; row < cells2.length; row++) {
-			for (int col = 0; col < cells2[row].length; col++) {
-				if(cells2[row][col].getColor() == oldPolarity1)
+		for (int row = 0; row < layer2.length; row++) {
+			for (int col = 0; col < layer2[row].length; col++) {
+				if(layer2[row][col].getColor() == oldPolarity1)
 				{
-					cells2[row][col].setColor(polarity1);
+					layer2[row][col].setColor(polarity1);
 				}
 			}
 		}
@@ -521,11 +490,11 @@ public class Board extends JPanel implements MouseInputListener {
 	 */
 	public void updateNewPolarityColor2(Color polarity2)
 	{
-		for (int row = 0; row < cells2.length; row++) {
-			for (int col = 0; col < cells2[row].length; col++) {
-				if(cells2[row][col].getColor() == oldPolarity2)
+		for (int row = 0; row < layer2.length; row++) {
+			for (int col = 0; col < layer2[row].length; col++) {
+				if(layer2[row][col].getColor() == oldPolarity2)
 				{
-					cells2[row][col].setColor(polarity2);
+					layer2[row][col].setColor(polarity2);
 				}
 			}
 		}
