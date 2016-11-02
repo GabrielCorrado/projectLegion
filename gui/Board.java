@@ -39,7 +39,6 @@ public class Board extends JPanel implements MouseInputListener {
 	private GenCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private int borderForCentering;
-	private Color c;
 	private Color polarity;
 	private int cellSize;//pixel dimensions of each cell
 	private int agentSize;//pixel dimensions of each agent
@@ -71,7 +70,8 @@ public class Board extends JPanel implements MouseInputListener {
 		cellSize = ((width)-2*borderForCentering)/numCellsOnSide; //board space in the middle?
 		agentSize = (int)(cellSize*0.7);
 		//gap between the two changes depending on if the size is 100 vs 5
-
+		
+		Color cellColor; //a temp variable to 
 		//layer 1
 		cells = new Cell[numCellsOnSide][numCellsOnSide];
 		int rand;
@@ -82,25 +82,25 @@ public class Board extends JPanel implements MouseInputListener {
 					rand = (int) (Math.random()*2);
 					if (rand == 0)
 					{
-						c = Color.black;
+						cellColor = Color.black;
 					}
 					else
 					{
-						c = Color.white;
+						cellColor = Color.white;
 					}
-					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, c);
+					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, cellColor);
 				}
 				else if (typeBoard==1)//"solved" checkboard to start
 				{
 					if (row%2 == col%2)
 					{
-						c = Color.black;
+						cellColor = Color.black;
 					}
 					else
 					{
-						c = Color.white;
+						cellColor = Color.white;
 					}
-					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, c);
+					cells[row][col] = new Cell(borderForCentering+row*cellSize, borderForCentering+col*cellSize, cellSize, cellColor);
 
 				}
 

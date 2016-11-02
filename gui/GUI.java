@@ -510,11 +510,7 @@ public class GUI {
 		btnStartSwarm.setBounds(895, 726, 125, 23);
 		btnStartSwarm.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent arg0) {
-				if(timerStarted == true)
-				{
-
-				}
-				else
+				if(!timerStarted)
 				{
 					board.StartTimer();
 					timerStarted = true;

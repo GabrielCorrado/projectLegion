@@ -28,30 +28,30 @@ public class Cell extends GenCell {
 	public void flipColor()
 	{
 		//these first two cases apply to cells as they only are ever black or white
-		if (c == Color.BLACK) 
+		if (cellColor == Color.BLACK) 
 		{
-			c = Color.WHITE;
+			cellColor = Color.WHITE;
 		}
-		else if (c == Color.WHITE) {
-			c = Color.BLACK;
+		else if (cellColor == Color.WHITE) {
+			cellColor = Color.BLACK;
 		}
 		//as cells2 can be different colors chosen by the user, the color is set in the GUI
-		else if (c == GUI.getPolarity1())
+		else if (cellColor == GUI.getPolarity1())
 		{
-			c = GUI.getPolarity2();
+			cellColor = GUI.getPolarity2();
 		}
 		else
 		{
-			c = GUI.getPolarity1();
+			cellColor = GUI.getPolarity1();
 		}
 
 	}
 	
 	public Color getColor() {
-		return c;
+		return cellColor;
 	}
 	
 	public void setColor(Color newColor) {
-		c = newColor;
+		cellColor = newColor;
 	}
 }
