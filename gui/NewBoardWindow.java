@@ -1,4 +1,4 @@
-package gui;
+package code;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,13 +7,20 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+//import other.LabelHandler;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
+/*
+ * Authors: Gabriel, Zak
+ * Description: A window that creates itself when GUI button "New Board" is pressed. Allows for a creation of a new board with a input
+ * board size and number of agents
+ */
 @SuppressWarnings("serial")
 public class NewBoardWindow extends JFrame {
 
@@ -21,6 +28,7 @@ public class NewBoardWindow extends JFrame {
 	private JTextField NewBoardSize;
 	private JTextField txtNewswarmsize;
 	private int size, numAgents;
+	private LabelHandler labelHandler;
 
 	/**
 	 * Launch the application.
@@ -28,7 +36,8 @@ public class NewBoardWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public NewBoardWindow(JFrame frame) {
+	public NewBoardWindow(final JFrame frame, final LabelHandler labelHandler) {
+		this.labelHandler = labelHandler;
 		System.out.println("test");
 		setTitle("New Board Size");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +73,9 @@ public class NewBoardWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				size= Integer.parseInt(NewBoardSize.getText());
 				numAgents = Integer.parseInt(txtNewswarmsize.getText());
-				MakeNewBoard(frame);
+				MakeNewBoard(frame, labelHandler);
+				GUI.setLblBoardSizeInt(size);
+				GUI.setLblSwarmSizeInt(numAgents);
 				dispose();
 			}
 		});
@@ -73,22 +84,25 @@ public class NewBoardWindow extends JFrame {
 	}
 	
 	//This will be the code that will make a new board and set the variables in the Priamary GUI to the selected ones in this.
-	protected void MakeNewBoard(JFrame frame){
+	protected LabelHandler MakeNewBoard(JFrame frame, LabelHandler labelHandler){
 		if(GUI.board != null)
 		{
 		frame.remove(GUI.board);
 		}
 		Board board = new Board(800,800,size,0,numAgents);
+		labelHandler = Board.updateLabelHandler(labelHandler);
 		board.setBackground(Color.WHITE);
 		board.setBounds(10, 10, 800, 800);
 		//displayPanel.add();
 		frame.getContentPane().add(board);
 		GUI.board = board;
+		//This section is to avoid bugs in the GUI Layer2 Polarity color selection combo boxes.
 		board.oldPolarity1 = GUI.polarity1;
 		board.oldPolarity2 = GUI.polarity2;
-		GUI.initBoardSize = size;
-		GUI.initAgentCount = numAgents;
-		
+		return labelHandler;
 	}
-	
+	public LabelHandler getLabel()
+	{
+		return labelHandler;
+	}
 }
