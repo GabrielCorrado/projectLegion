@@ -1,3 +1,20 @@
+These are current criticisms from the second code walkthrough with the Clinic Team.
+
+Broad criticisms:
+1. The code should STILL be commented better. Use more Javadocs. Don't write comments like "Blah blah blah." Some of the old comments can clearly be removed.
+2. Add the WindowBuilder stuff to GitHub if it's really required to run the code properly.
+3. Try using a recycled code package. You can put deprecated classes and methods you might have a use for there without actually deleting them.
+
+Specific criticisms:
+GUI:
+1. That empty if-else at line 512. --ADDRESSED. We fixed it to exactly what Dr. Palmer suggested.
+Driver:
+1. Remove it! Or put it in a recycled code package (see Broad #3).
+Board:
+1. Some of the variables are clearly still poorly named. Why is cells and cells2 so named if there's a one-word comment layer1 and layer2 directly following?
+2. typeBoard can go! --ADDRESSED: Done! What a relief.
+3. Can the tests for xBounce and yBounce be combined, since there's two for each? --ADDRESSED: Yes they can be, but they'd be extremely hard to read and confusing.
+
 These are current criticisms from the first code walkthrough with the Clinic Team.
 
 Broad criticisms:
