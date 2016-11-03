@@ -1,4 +1,4 @@
-package cells;
+package code;
 /*		Author: Zak Gray and Tim Dobeck
  * 		Description: GenCell allows for the objects of Cell and Cell_2 to be created and the rectangles (cells) to be drawn. This extends Rectangle2D and uses the
  * 					 Rectangle2D superclass for creating the cells.
