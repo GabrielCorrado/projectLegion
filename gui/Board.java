@@ -1,4 +1,4 @@
-package gui;
+package code;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,17 +11,21 @@ import java.util.TimerTask;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
-import cells.Cell;
-import cells.GenCell;
-import cells.NullCell;
-import other.Agent;
 
+/*
+ * Authors: Nick, Tim, Zak, Gabriel
+ * Description: This is the guts of the program. Two 2x2 Cell arrays of size[size X size] are created to be layers 1 and 2,
+ * Layer 2 gives information about layer 1, for example... Layer one currently tells which polarity (black in the corners or white)
+ * of a checker board the cells in layer 1 are in.  An array of Agents is also created with random movement over the layers 1 & 2
+ * while randomly changing the cells underneith them. In the future, the agents will have a low level of intelegence.
+ * Parameters: width of board in pixels, height of board in pixels, size of board[nXn], typeBoard is a diagnostic tool, and number of Agents
+ */
 @SuppressWarnings("serial")
 public class Board extends JPanel implements MouseInputListener {
 	public Cell[][] cells;
 	public Cell[][] cells2;
 	public GenCell[][] display;
-	public int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
+	public static int size; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private static final int EXTRA_BOARD_SPACE = 50;
 	private Color c;
 	public Color polarity;
@@ -35,6 +39,8 @@ public class Board extends JPanel implements MouseInputListener {
 	public Timer t;
 	public Color oldPolarity1 = Color.RED;
 	public Color oldPolarity2 = Color.BLUE;
+	private int blackCellCounter = 0;
+	private int whiteCellCounter = 0;
 	
 	public Board(int width, int height, int size, int typeBoard, int numAgents) {
 		//set preferred graphical dimensions of the board
@@ -59,10 +65,13 @@ public class Board extends JPanel implements MouseInputListener {
 					if (rand == 0)
 					{
 						c = Color.black;
+						blackCellCounter++;
+						
 					}
 					else
 					{
 						c = Color.white;
+						whiteCellCounter++;
 					}
 					cells[row][col] = new Cell(EXTRA_BOARD_SPACE+row*cellSize, EXTRA_BOARD_SPACE+col*cellSize, cellSize, c);
 				}
@@ -149,6 +158,13 @@ public class Board extends JPanel implements MouseInputListener {
 		{
 			GUI.layer2Draw = 1;
 		}
+	
+	//System.out.println(blackCellCounter);	
+	//System.out.println(whiteCellCounter);	
+		
+	GUI.setLblIntBlackCells(blackCellCounter);
+	GUI.setLblIntWhiteCells(whiteCellCounter);
+		
 	}
 	
 	protected void layer2(Color polarity)
@@ -472,6 +488,12 @@ public class Board extends JPanel implements MouseInputListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/**
+	 * @author zgray17
+	 * This method updates the rate of the agent clock. Blah blah blah.
+	 * @param rate
+	 */
 	public void setAgentRate(int rate)
 	{
 		agentRate = rate;
@@ -494,6 +516,12 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 		oldPolarity1 = polarity1;
 	}
+	
+	/**
+	 * @author zgray17
+	 * This method updates the polarity of color 2. Blah blah blah.
+	 * @param polarity2
+	 */
 	public void updateNewPolarityColor2(Color polarity2)
 	{
 		for (int row = 0; row < cells2.length; row++) {
@@ -506,11 +534,22 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 		oldPolarity2 = polarity2;
 	}
+	
+	/**
+	 * @author zgray17
+	 * This method updates the color of the agents. Blah blah blah.
+	 * @param newColor
+	 */
 	public void updateAgentColor(Color newColor)
 	{
 		this.agentColor = newColor;
 		for (int i = 0; i < agents.length; i++) {
 			agents[i].setColor(agentColor);
 		}
+	}
+	public static LabelHandler updateLabelHandler(LabelHandler lblHdr)
+	{
+		lblHdr.setInitBoardSize(size);
+		return lblHdr;
 	}
 }
