@@ -1,4 +1,4 @@
-package gui;
+package code;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -25,30 +25,39 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cells.Cell;
+//import cells.Cell;
+//import other.LabelHandler;
 
+/*
+ * Authors: Gabriel, Zak
+ * Description: Gui created through Auto-generated code. Most of the code is simple creation, with functionality within certain labels and buttons.
+ */
 public class GUI {
 
 	static int HEIGHT = 864;
 	static int WIDTH = 1536;
-	static int BOARDSIZE = 800;
-	private Color passThisColor;
-	public JFrame frmProjectLegion;
+	static int BOARDSIZE = 800;//pixel size of board
+	public JFrame frmProjectLegion;//main frame
 	private JTextField textField_NumAgents;
 	private JTextField textField_NumAgentChanges;
 	private JTextField textField_AgentCloseness;
 	private JTextField textField_PheromoneStrength;
 	private JTextField textField_BoardSize;
 	
-	private JLabel lblBoardSizeInt = new JLabel();
+	public static JLabel lblBoardSizeInt = new JLabel(); //updates BoardSize Label
+	public static JLabel lblSwarmCountInt = new JLabel(); //updates SwarmCount Label
+	public static JLabel lblIntWhiteCells = new JLabel(); //updates InitWhiteCells
+	public static JLabel lblIntblackCells = new JLabel(); //updates InitBlackCells
 	
-	public static int layer2Draw = 1;
-	public static Board board;
-	private boolean timerStarted = true;
-	public static Color polarity1 = Color.RED;
-	public static Color polarity2 = Color.BLUE;
+	public static int layer2Draw = 1;//which cell array in board to display
+	public static Board board;//board to be drawn
+	private boolean timerStarted = true;//timer or agent step
+	public static Color polarity1 = Color.RED;//color1 of board.cells2
+	public static Color polarity2 = Color.BLUE;//color2 of coard.cells2
 	public static int initBoardSize, initAgentCount;
 	public static Color agentColor = Color.GREEN;
+	public LabelHandler labelHandler = new LabelHandler(0,0,0,0);
+	
 	/**
 	 * Launch the application.
 	 */
@@ -112,7 +121,7 @@ public class GUI {
 		//This is where the tabs for the layer options go.
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(818, 10, 700, 600);
-		
+		//used to change whether board.cells or board.cells2 is shown in board when the tab selected is changed 
 		ChangeListener changeListener = new ChangeListener(){
 			public void stateChanged(ChangeEvent changeEvent) {
 				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
@@ -146,7 +155,6 @@ public class GUI {
 		lblNumStartingWhite.setBounds(10, 11, 125, 35);
 		tabLayer1.add(lblNumStartingWhite);
 		
-		JLabel lblIntWhiteCells = new JLabel("IntWhiteCells");
 		lblIntWhiteCells.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIntWhiteCells.setBounds(145, 11, 125, 35);
 		tabLayer1.add(lblIntWhiteCells);
@@ -156,7 +164,7 @@ public class GUI {
 		lblNumStartingBlack.setBounds(10, 79, 125, 35);
 		tabLayer1.add(lblNumStartingBlack);
 		
-		JLabel lblIntblackCells = new JLabel("IntBlackCells");
+		
 		lblIntblackCells.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIntblackCells.setBounds(145, 79, 125, 35);
 		tabLayer1.add(lblIntblackCells);
@@ -183,10 +191,10 @@ public class GUI {
 		JLabel lblPrimaryPolarityColor = new JLabel("Primary Polarity Color");
 		lblPrimaryPolarityColor.setBounds(25, 25, 125, 14);
 		tabLayer2.add(lblPrimaryPolarityColor);
-		
-		JComboBox comboPrimary = new JComboBox();
+		//update the first color of cells in board.cells2
+		final JComboBox comboPrimary = new JComboBox();
 		comboPrimary.setModel(new DefaultComboBoxModel(new String[] {"RED", "BLUE", "GREEN", "CYAN", "YELLOW"}));
-		Color[] primaryColorList = new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW};
+		final Color[] primaryColorList = new Color[] {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW};
 		comboPrimary.setBounds(25, 50, 125, 22);
 		comboPrimary.addActionListener(new ActionListener() {
 			 @Override
@@ -210,10 +218,10 @@ public class GUI {
 		JLabel lblSecondaryPolarityColor = new JLabel("Secondary Polarity Color");
 		lblSecondaryPolarityColor.setBounds(238, 25, 150, 14);
 		tabLayer2.add(lblSecondaryPolarityColor);
-		
-		JComboBox comboSecondary = new JComboBox();
+		//update the second color of cells in board.cells2
+		final JComboBox comboSecondary = new JComboBox();
 		comboSecondary.setModel(new DefaultComboBoxModel(new String[] {"BLUE", "RED", "GREEN", "CYAN"}));
-		Color[] secondaryColorList = new Color[] {Color.BLUE, Color.RED, Color.GREEN, Color.CYAN};
+		final Color[] secondaryColorList = new Color[] {Color.BLUE, Color.RED, Color.GREEN, Color.CYAN};
 		comboSecondary.setBounds(238, 50, 125, 22);
 		comboSecondary.addActionListener(new ActionListener() {
 			 @Override
@@ -330,10 +338,10 @@ public class GUI {
 		JLabel lblAgentsColor = new JLabel("Agents Color:");
 		lblAgentsColor.setBounds(440, 25, 125, 14);
 		tabLayer3.add(lblAgentsColor);
-		
+		//update the color of agents in board.agents[]
 		JComboBox comboBox_AgentColor = new JComboBox();
 		comboBox_AgentColor.setModel(new DefaultComboBoxModel(new String[] {"GREEN", "YELLOW", "ORANGE", "MAGENTA", "BLUE", "RED", "WHITE", "BLACK", "CYAN"}));
-		Color[] agentColorList = new Color[]{Color.GREEN, Color.YELLOW, Color.ORANGE, Color.MAGENTA, Color.BLUE, Color.RED, Color.WHITE, Color.BLACK, Color.CYAN};
+		final Color[] agentColorList = new Color[]{Color.GREEN, Color.YELLOW, Color.ORANGE, Color.MAGENTA, Color.BLUE, Color.RED, Color.WHITE, Color.BLACK, Color.CYAN};
 		comboBox_AgentColor.setBounds(568, 23, 100, 20);
 		comboBox_AgentColor.addActionListener(new ActionListener() {
 			@Override
@@ -426,7 +434,6 @@ public class GUI {
 		lblBoardSizeGlobal.setBounds(820, 621, 74, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeGlobal);
 		
-		lblBoardSizeInt.setText(String.valueOf(initBoardSize));
 		lblBoardSizeInt.setBounds(910, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblBoardSizeInt);
 		
@@ -434,7 +441,6 @@ public class GUI {
 		lblSwarmCount.setBounds(1014, 621, 100, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCount);
 		
-		JLabel lblSwarmCountInt = new JLabel(String.valueOf(initAgentCount));
 		lblSwarmCountInt.setBounds(1109, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCountInt);
 		
@@ -447,7 +453,7 @@ public class GUI {
 		sliderSwarmSpeed.setBounds(953, 646, 450, 24);
 		sliderSwarmSpeed.setMajorTickSpacing( 5 );
 		sliderSwarmSpeed.setPaintLabels( true );
-		
+		//slider to change the speed of the agents in board.agents[]
 		sliderSwarmSpeed.addChangeListener(new ChangeListener() {
             @Override public void stateChanged(ChangeEvent e) {
                 JSlider src = (JSlider) e.getSource();
@@ -465,6 +471,7 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(lblFast);
 		
 		//************************************************************ Buttons that start stop and do other things that they are clearly labeled for.
+		//button to freeze swarm agents
 		JButton btnStopSwarm = new JButton("Stop Swarm");
 		btnStopSwarm.setBackground(new Color(255, 51, 51));
 		btnStopSwarm.setBounds(1030, 726, 125, 23);
@@ -475,7 +482,7 @@ public class GUI {
 			}
 		});
 		frmProjectLegion.getContentPane().add(btnStopSwarm);
-		
+		//button used to unfreeze swarm agents
 		JButton btnStartSwarm = new JButton("Start Swarm");
 		btnStartSwarm.setBackground(new Color(0, 255, 0));
 		btnStartSwarm.setBounds(895, 726, 125, 23);
@@ -533,22 +540,39 @@ public class GUI {
 		JLabel lblFastCycless = new JLabel("5 Cycles/s");
 		lblFastCycless.setBounds(1417, 671, 100, 14);
 		frmProjectLegion.getContentPane().add(lblFastCycless);
-
+		//create new NewBoardWindow to make new board
 		JButton btnNewBoard = new JButton("New Board");
 		btnNewBoard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Object obj = new NewBoardWindow();	
-				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
+				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion, labelHandler);
 				newBoardWindow.setVisible(true);
+				//setLblBoardSizeInt(newBoardWindow.getLabel().getInitBoardSize());
+				
 			}
 		});
 		btnNewBoard.setBackground(new Color(51, 102, 255));
 		btnNewBoard.setBounds(1338, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnNewBoard);
 	}
-	public void setinitBoardSize(int x)
+	
+	public static void setLblBoardSizeInt(int boardSize)
 	{
-		lblBoardSizeInt.setText(String.valueOf(x));
+		lblBoardSizeInt.setText(String.valueOf(boardSize));
+	}
+	
+	public static void setLblSwarmSizeInt(int swarmSize)
+	{
+		lblSwarmCountInt.setText(String.valueOf(swarmSize));
 	}
 
+	public static void setLblIntWhiteCells(int whiteCellSize)
+	{
+		lblIntWhiteCells.setText(String.valueOf(whiteCellSize));
+	}
+	
+	public static void setLblIntBlackCells(int blackCellSize)
+	{
+		lblIntblackCells.setText(String.valueOf(blackCellSize));
+	}
 }
