@@ -28,8 +28,6 @@ public class Agent extends Ellipse2D.Double {
 	private int size;
 	private Point2D velocity;	//adds direction to our agents
 	private Color color; 	//only adding a color here so we can make it green or invisible in the board class
-	public boolean agentPastBoard = false;    //helps determine if the color will be green or invisible
-	
 	
 	/**
 	 * @author Nick
@@ -60,7 +58,7 @@ public class Agent extends Ellipse2D.Double {
 	public Agent(int boardWidth, int size) {
 		super((int)(Math.random()*boardWidth), (int)(Math.random()*boardWidth), size, size);
 		this.velocity = new Point2D.Double(Math.random()*10-5, Math.random()*10-5);
-		this.color = Color.green;
+		this.color = Color.GREEN;
 	}
 	
 	/**

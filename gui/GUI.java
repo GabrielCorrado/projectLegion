@@ -42,9 +42,9 @@ import cells.Cell;
  */
 public class GUI {
 
-	static int HEIGHT = 864;
-	static int WIDTH = 1536;
-	static int BOARDSIZE = 800;//pixel size of board
+	public static final int HEIGHT = 864;
+	public static final int WIDTH = 1536;
+	public static final int MAXBOARDSIZE = 800;//pixel size of board
 	public JFrame frmProjectLegion;//main frame
 	private JTextField textField_NumAgents;
 	private JTextField textField_NumAgentChanges;
@@ -133,7 +133,7 @@ public class GUI {
 		JPanel boardInGUI = new JPanel();
 		JFrame frame = new JFrame();
 		boardInGUI.setBackground(Color.WHITE);
-		boardInGUI.setBounds(10, (HEIGHT-BOARDSIZE)/8, BOARDSIZE, BOARDSIZE);
+		boardInGUI.setBounds(10, (HEIGHT-MAXBOARDSIZE)/8, MAXBOARDSIZE, MAXBOARDSIZE);
 		//System.out.print((HEIGHT-BOARDSIZE)/8);
 		frame.getContentPane().add(boardInGUI);
 

@@ -24,7 +24,7 @@ public class NewBoardWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField NewBoardSize;
 	private JTextField txtNewswarmsize;
-	private int size, numAgents;
+	private int numCellsOnSide, numAgents;
 
 	/**
 	 * Launch the application.
@@ -60,13 +60,13 @@ public class NewBoardWindow extends JFrame {
 		txtNewswarmsize.setBounds(292, 102, 40, 20);
 		contentPane.add(txtNewswarmsize);
 		txtNewswarmsize.setColumns(10);
-		
-		
+
+
 		//This button will close the JFrame and set the request Board class to create a new board that will be shown in the Main GUI
 		JButton btnMakeNewBoard = new JButton("Make New Board");
 		btnMakeNewBoard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				size= Integer.parseInt(NewBoardSize.getText());
+				numCellsOnSide = Integer.parseInt(NewBoardSize.getText());
 				numAgents = Integer.parseInt(txtNewswarmsize.getText());
 				MakeNewBoard(frame);
 				dispose();
@@ -75,16 +75,23 @@ public class NewBoardWindow extends JFrame {
 		btnMakeNewBoard.setBounds(95, 184, 237, 49);
 		contentPane.add(btnMakeNewBoard);
 	}
-	
-	//This will be the code that will make a new board and set the variables in the Priamary GUI to the selected ones in this.
-	protected void MakeNewBoard(JFrame frame){
+
+	//This will be the code that will make a new board and set the variables in the Primary GUI to the selected ones in this.
+	protected void MakeNewBoard(JFrame frame) {
 		if(GUI.board != null)
 		{
-		frame.remove(GUI.board);
+			frame.remove(GUI.board);
 		}
-		Board board = new Board(800,800,size,numAgents);
+		//I factored out the borderForCentering so that the border is around the Board JPanel itself.
+		//This math is the same math that used to be done at the beginning of the Board constructor.
+		int spareSpace = GUI.MAXBOARDSIZE%numCellsOnSide;
+		int borderForCentering = spareSpace/2;
+		int boardSize = GUI.MAXBOARDSIZE-borderForCentering*2;
+		
+		boolean whetherBoardWraps = true;
+		Board board = new Board(boardSize,boardSize,numCellsOnSide,numAgents, whetherBoardWraps);
 		board.setBackground(Color.WHITE);
-		board.setBounds(10, 10, 800, 800);
+		board.setBounds(10+borderForCentering, 10+borderForCentering, boardSize, boardSize);
 		//displayPanel.add();
 		frame.getContentPane().add(board);
 		GUI.board = board;

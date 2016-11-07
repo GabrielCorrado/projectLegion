@@ -69,7 +69,7 @@ public class Driver {
 		}
 		sc.close();
 
-		Board board = new Board(800, 800, input, 30);
+		Board board = new Board(800, 800, input, 30, false);
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(board);
