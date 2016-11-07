@@ -8,6 +8,7 @@ Broad criticisms:
 Specific criticisms:
 GUI:
 1. That empty if-else at line 512. --ADDRESSED. We fixed it to exactly what Dr. Palmer suggested.
+2. The GUI objects' positions and dimensions can be parameterized, e.g. all the colored buttons at the bottom of the screen are in rows and columns and have the same width.
 Driver:
 1. Remove it! Or put it in a recycled code package (see Broad #3).
 Board:

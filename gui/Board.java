@@ -237,6 +237,9 @@ public class Board extends JPanel implements MouseInputListener {
 			if (wrap && agent.getY()+agentSize > this.getHeight()) {
 				g.fill(new Ellipse2D.Double(agent.getX(), agent.getY()-this.getHeight(), agentSize, agentSize));
 			}
+			if (wrap && agent.getX()+agentSize > this.getWidth() && wrap && agent.getY()+agentSize > this.getHeight()) {
+				g.fill(new Ellipse2D.Double(agent.getX()-this.getWidth(), agent.getY()-this.getWidth(), agentSize, agentSize));
+			}
 		}
 	}
 
