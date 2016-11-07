@@ -44,7 +44,7 @@ public class Cell extends GenCell {
 		{
 			cellColor = GUI.getPolarity1();
 		}
-
+		
 	}
 	
 	public Color getColor() {

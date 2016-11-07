@@ -264,12 +264,11 @@ public class Board extends JPanel implements MouseInputListener {
 			
 			agent.step();
 			if (wrap) {
-				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
+				//since there's no walls, this lets the agents "wrap" to the other side of the screen. Adding the width
+				//before taking remainder from width and mutatis mutandis to height is a clever trick for treating the
+				//positive and negative cases the same.
 				agent.setX((agent.getX()+this.getWidth())%this.getWidth());
 				agent.setY((agent.getY()+this.getHeight())%this.getHeight());
-				
-				//this is not perfect: what we actually want this to do is draw both, so long as it's sticking a bit
-				//off of the screen. that makes the above operations much uglier. :(
 			} else {
 				//since there's walls, this checks whether the agent has crossed any of the four bounds of the board:
 				//left, then top, then right, then bottom, and whether the agent's velocity has it headed further off
