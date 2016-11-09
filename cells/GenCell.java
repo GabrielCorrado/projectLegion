@@ -31,6 +31,10 @@ public class GenCell extends Rectangle2D.Double {
 		//does nothing; just exists for NullCell to work
 	}
 	
+	public Color getColor(){
+		return cellColor;
+	}
+	
 	public void draw(Graphics2D g) {
 		g.setColor(cellColor);
 		g.fill(this);
