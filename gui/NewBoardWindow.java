@@ -68,6 +68,8 @@ public class NewBoardWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numCellsOnSide = Integer.parseInt(NewBoardSize.getText());
 				numAgents = Integer.parseInt(txtNewswarmsize.getText());
+				GUI.setLblBoardSizeInt(numCellsOnSide);
+				GUI.setLblSwarmSizeInt(numAgents);
 				MakeNewBoard(frame);
 				dispose();
 			}

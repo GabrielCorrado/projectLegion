@@ -20,10 +20,10 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 import cells.Cell;
-import cells.GenCell;
+import cells.GenericCell;
 import cells.NullCell;
-import other.Agent;
-import other.LabelHandler;
+import other.SwarmAgent;
+
 /*
  * Authors: Nick, Tim, Zak, Gabriel
  * Description: This is the guts of the program. Two 2x2 Cell arrays of size[size X size] are created to be layers 1 and 2,
@@ -36,13 +36,13 @@ import other.LabelHandler;
 public class Board extends JPanel implements MouseInputListener {
 	private Cell[][] layer1;
 	private Cell[][] layer2;
-	private GenCell[][] display;//layer to paint
+	private GenericCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private boolean wrap = false; //whether the walls of the Board wrap or not; by default, they don't
 	private Color polarity;
 	private int cellSize;//pixel dimensions of each cell
 	private int agentSize;//pixel dimensions of each agent
-	private Agent[] agents;
+	private SwarmAgent[] agents;
 	private Color agentColor = GUI.agentColor;
 	private int tempL2D;
 	private int agentRate = 50;
@@ -50,14 +50,17 @@ public class Board extends JPanel implements MouseInputListener {
 	public Timer t;
 	public Color oldPolarity1 = Color.RED;
 	public Color oldPolarity2 = Color.BLUE;
-	public LabelHandler labelHandler;
+	private int blackCellCounter = 0;
+	private int whiteCellCounter = 0;
+	public static int currBlackCellCounter = 0;
+	public static int currWhiteCellCounter = 0;
 
 	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap) {
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		this.numCellsOnSide = numCellsOnSide;
 		this.wrap = wrap;
-		display = new GenCell[numCellsOnSide][numCellsOnSide];
+		display = new GenericCell[numCellsOnSide][numCellsOnSide];
 		//set the graphical dimensions of the cells themselves. the cells are always square, but the
 		//space they take up is constrained by the width and height of the board and by the number of cells.
 		cellSize = width/numCellsOnSide;
@@ -69,15 +72,25 @@ public class Board extends JPanel implements MouseInputListener {
 		for (int row = 0; row < layer1.length; row++) {
 			for (int col = 0; col < layer1[row].length; col++) {
 				rand = (int) (Math.random()*2);
+				if (rand==0)
+				{
+					blackCellCounter++;
+					currBlackCellCounter++;
+				}
+				else
+				{
+					whiteCellCounter++;
+					currWhiteCellCounter++;
+				}
 				layer1[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, (rand == 0? Color.BLACK : Color.WHITE));
 			}
 		}
 
 		//generates the swarm and adjusts their positions
-		agents = new Agent[numAgents];
+		agents = new SwarmAgent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
 			//these agents generate in a random spot on the board, with a random starting vector.
-			agents[i] = new Agent(width, agentSize);
+			agents[i] = new SwarmAgent(width, agentSize);
 		}
 
 		this.addMouseListener(this);
@@ -95,8 +108,9 @@ public class Board extends JPanel implements MouseInputListener {
 		{
 			GUI.layer2Draw = 1;
 		}
-
-		labelHandler = new LabelHandler(numCellsOnSide, agents.length,0,0);
+		
+		GUI.setLblIntBlackCells(blackCellCounter);
+		GUI.setLblIntWhiteCells(whiteCellCounter);
 	}
 
 	/**
@@ -226,7 +240,7 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 		
 		//draw agents
-		for (Agent agent : agents) {
+		for (SwarmAgent agent : agents) {
 			agent.setColor(agentColor);
 			agent.draw(g);
 			//if you're sticking off the right or bottom of map, draw another ellipse there too
@@ -250,7 +264,7 @@ public class Board extends JPanel implements MouseInputListener {
 	 */
 	public void step() {
 		//for each agent, have the agent decide randomly whether to flip its cell's color
-		for (Agent agent : agents) {
+		for (SwarmAgent agent : agents) {
 			//10% of the time, the agent will determine algebraically which cell it's in, then flip the color of that cell.
 			//a better approach than this would be to have the agent store which cell it's currently in, then just flip that
 			//color 10% of the time. this would also make it easy to keep the agent from flipping the same cell many times
@@ -293,6 +307,8 @@ public class Board extends JPanel implements MouseInputListener {
 				}
 			}
 		}
+		GUI.setLblCurrBlackCells(currBlackCellCounter);
+		GUI.setLblCurrWhiteCells(currWhiteCellCounter);
 	}
 
 	/**
@@ -307,15 +323,15 @@ public class Board extends JPanel implements MouseInputListener {
 	 * @param colNum
 	 * @return an array of all of the neighbors of the cell whose row and column number has been provided.
 	 */
-	public GenCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
+	public GenericCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
 		//each cell only has 8 neighbors! for now at least.... :(
-		GenCell[] neighbors = new Cell[8];
+		GenericCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
 		int colMax = cells[rowMax-1].length-1;
 		
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
-		GenCell[][] cellsWithNull = new GenCell[numCellsOnSide+2][numCellsOnSide+2];
+		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
 		for (int row = 0; row < cellsWithNull.length; row++) {
 			cellsWithNull[row][0] = NullCell.getNullCell();
 			cellsWithNull[row][colMax] = NullCell.getNullCell();

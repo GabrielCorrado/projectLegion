@@ -1,8 +1,8 @@
 package cells;
 /*		Author: Zak Gray and Tim Dobeck
- * 		Description: GenCell allows for the objects of Cell and Cell_2 to be created and the rectangles (cells) to be drawn. This extends Rectangle2D and uses the
+ * 		Description: GenericCell allows for the objects of Cell and Cell_2 to be created and the rectangles (cells) to be drawn. This extends Rectangle2D and uses the
  * 					 Rectangle2D superclass for creating the cells.
- * 		Parameters: GenCell is the constructor. Each cell has an X coordinate, Y coordinate, fixed size, and Cell is either black or white while Cell_2 is either red or blue
+ * 		Parameters: GenericCell is the constructor. Each cell has an X coordinate, Y coordinate, fixed size, and Cell is either black or white while Cell_2 is either red or blue
  * 					Draw is allowing the graphics to appear on the JPanel
  * 
  */
@@ -12,13 +12,13 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
-public class GenCell extends Rectangle2D.Double {
+public class GenericCell extends Rectangle2D.Double {
 	protected double x, y;
 	protected double size;
 	protected Color cellColor;
 	
 	//constructor
-	public GenCell(double x, double y, double size, Color color)
+	public GenericCell(double x, double y, double size, Color color)
 	{
 		super(x,y,size,size);
 		this.x = x;
@@ -27,7 +27,7 @@ public class GenCell extends Rectangle2D.Double {
 		this.cellColor = color;
 	}
 	
-	public GenCell() {
+	public GenericCell() {
 		//does nothing; just exists for NullCell to work
 	}
 	

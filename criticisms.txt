@@ -10,11 +10,11 @@ GUI:
 1. That empty if-else at line 512. --ADDRESSED. We fixed it to exactly what Dr. Palmer suggested.
 2. The GUI objects' positions and dimensions can be parameterized, e.g. all the colored buttons at the bottom of the screen are in rows and columns and have the same width.
 Driver:
-1. Remove it! Or put it in a recycled code package (see Broad #3).
+1. Remove it! Or put it in a recycled code package (see Broad #3). --ADDRESSED. Removed it.
 Board:
-1. Some of the variables are clearly still poorly named. Why is cells and cells2 so named if there's a one-word comment layer1 and layer2 directly following?
-2. typeBoard can go! --ADDRESSED: Done! What a relief.
-3. Can the tests for xBounce and yBounce be combined, since there's two for each? --ADDRESSED: Yes they can be, but they'd be extremely hard to read and confusing.
+1. Some of the variables are clearly still poorly named. Why is cells and cells2 so named if there's a one-word comment layer1 and layer2 directly following? --ADDRESSED. 
+2. typeBoard can go! --ADDRESSED. Done! What a relief.
+3. Can the tests for xBounce and yBounce be combined, since there's two for each? --ADDRESSED. Yes they can be, but they'd be extremely hard to read and confusing.
 
 These are current criticisms from the first code walkthrough with the Clinic Team.
 

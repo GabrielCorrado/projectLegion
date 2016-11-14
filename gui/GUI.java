@@ -45,6 +45,7 @@ public class GUI {
 	public static final int HEIGHT = 864;
 	public static final int WIDTH = 1536;
 	public static final int MAXBOARDSIZE = 800;//pixel size of board
+	
 	public JFrame frmProjectLegion;//main frame
 	private JTextField textField_NumAgents;
 	private JTextField textField_NumAgentChanges;
@@ -52,7 +53,12 @@ public class GUI {
 	private JTextField textField_PheromoneStrength;
 	private JTextField textField_BoardSize;
 	
-	private JLabel lblBoardSizeInt = new JLabel();//test for updating labels
+	public static JLabel lblBoardSizeInt = new JLabel(); //updates BoardSize Label
+	public static JLabel lblSwarmCountInt = new JLabel(); //updates SwarmCount Label
+	public static JLabel lblIntWhiteCells = new JLabel(); //updates InitWhiteCells
+	public static JLabel lblIntBlackCells = new JLabel(); //updates InitBlackCells
+	public static JLabel lblCurrWhiteCells = new JLabel(); //updates CurrentWhiteCells
+	public static JLabel lblCurrBlackCells = new JLabel(); //updates CurrentBlackCells
 	
 	public static int layer2Draw = 1;//which cell array in board to display
 	public static Board board;//board to be drawn
@@ -174,7 +180,7 @@ public class GUI {
 		lblNumStartingWhite.setBounds(10, 11, 125, 35);
 		tabLayer1.add(lblNumStartingWhite);
 		
-		JLabel lblIntWhiteCells = new JLabel("IntWhiteCells");
+		
 		lblIntWhiteCells.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIntWhiteCells.setBounds(145, 11, 125, 35);
 		tabLayer1.add(lblIntWhiteCells);
@@ -184,15 +190,33 @@ public class GUI {
 		lblNumStartingBlack.setBounds(10, 79, 125, 35);
 		tabLayer1.add(lblNumStartingBlack);
 		
-		JLabel lblIntblackCells = new JLabel("IntBlackCells");
-		lblIntblackCells.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIntblackCells.setBounds(145, 79, 125, 35);
-		tabLayer1.add(lblIntblackCells);
+		
+		lblIntBlackCells.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIntBlackCells.setBounds(145, 79, 125, 35);
+		tabLayer1.add(lblIntBlackCells);
 		
 		JLabel lblBoardSizeLayer = new JLabel("Board Size:");
 		lblBoardSizeLayer.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBoardSizeLayer.setBounds(10, 157, 125, 35);
 		tabLayer1.add(lblBoardSizeLayer);
+		
+		JLabel lblNumCurrentWhite = new JLabel("Current White Cells:");
+		lblNumCurrentWhite.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumCurrentWhite.setBounds(10, 300, 125, 35);
+		tabLayer1.add(lblNumCurrentWhite);
+		
+		lblCurrWhiteCells.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCurrWhiteCells.setBounds(145, 300, 125, 35);
+		tabLayer1.add(lblCurrWhiteCells);
+		
+		JLabel lblNumCurrentBlack = new JLabel("Current Black Cells:");
+		lblNumCurrentBlack.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumCurrentBlack.setBounds(10, 368, 125, 35);
+		tabLayer1.add(lblNumCurrentBlack);
+		
+		lblCurrBlackCells.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCurrBlackCells.setBounds(145, 368, 125, 35);
+		tabLayer1.add(lblCurrBlackCells);
 		
 		//************************************************************ Text field that will trigger when button pushed, this is the value that will be the new board size
 		textField_BoardSize = new JTextField();
@@ -462,7 +486,7 @@ public class GUI {
 		lblSwarmCount.setBounds(1014, 621, 100, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCount);
 		
-		JLabel lblSwarmCountInt = new JLabel(String.valueOf(initAgentCount));
+		
 		lblSwarmCountInt.setBounds(1109, 621, 46, 14);
 		frmProjectLegion.getContentPane().add(lblSwarmCountInt);
 		
@@ -571,6 +595,37 @@ public class GUI {
 		btnNewBoard.setBackground(new Color(51, 102, 255));
 		btnNewBoard.setBounds(1338, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnNewBoard);
+	}
+	
+	public static void setLblBoardSizeInt(int boardSize)
+	{
+		lblBoardSizeInt.setText(String.valueOf(boardSize));
+	}
+	
+	public static void setLblSwarmSizeInt(int swarmSize)
+	{
+		lblSwarmCountInt.setText(String.valueOf(swarmSize));
+	}
+
+
+	public static void setLblIntWhiteCells(int whiteCellSize)
+	{
+		lblIntWhiteCells.setText(String.valueOf(whiteCellSize));
+	}
+	
+	public static void setLblIntBlackCells(int blackCellSize)
+	{
+		lblIntBlackCells.setText(String.valueOf(blackCellSize));
+	}
+	
+	public static void setLblCurrWhiteCells(int currWhiteCells)
+	{
+		lblCurrWhiteCells.setText(String.valueOf(currWhiteCells));
+	}
+	
+	public static void setLblCurrBlackCells(int currBlackCells)
+	{
+		lblCurrBlackCells.setText(String.valueOf(currBlackCells));
 	}
 
 }

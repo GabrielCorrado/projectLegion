@@ -6,7 +6,7 @@ package cells;
  */
 
 @SuppressWarnings("serial")
-public class NullCell extends GenCell {
+public class NullCell extends GenericCell {
 	private static NullCell nullCell;
 	
 	private NullCell() {

@@ -3,7 +3,7 @@ package other;
  * 		Description: This is the constructor class for the Agents to be created and drawn. Velocity determined the direction each agent will move and
  * 		Color is for determining if the color of the agent will be green or invisible. The rest of the agents are being made because it is extending the
  * 		Rectangle2D superclass.
- * 		Parameters: Agent is made up of its x coordinate, y coordinate, fixed size of agent, Point2D is the direction the agent will move, and color of agent
+ * 		Parameters: SwarmAgent is made up of its x coordinate, y coordinate, fixed size of agent, Point2D is the direction the agent will move, and color of agent
  * 					Draw is made up of Graphics g which is the type for drawing things in a JPanel
  * 					SetColor is made up of the specific color of the agent, this is called in the Board class
  * 					Both setVelocity's determine a new x and y coordinate for the Agents to have after they step
@@ -20,11 +20,11 @@ import java.awt.geom.Point2D;
  * An agent is a freely moving and freely acting member of the swarm. An agent's goal is to
  * bring layer 1 of the simulation to a desired state as defined by the user. Agents move
  * around the board interacting with the board's cells. Agents can ask a given cell what its
- * state is, change that state if it wishes. The Agent class extends Ellipse2D.Double because
+ * state is, change that state if it wishes. The SwarmAgent class extends Ellipse2D.Double because
  * agents are, graphically, small circles with a position, width, height, etc.
  */
 @SuppressWarnings("serial")
-public class Agent extends Ellipse2D.Double {
+public class SwarmAgent extends Ellipse2D.Double {
 	private int size;
 	private Point2D velocity;	//adds direction to our agents
 	private Color color; 	//only adding a color here so we can make it green or invisible in the board class
@@ -40,7 +40,7 @@ public class Agent extends Ellipse2D.Double {
 	 * @param v
 	 * @param color
 	 */
-	public Agent(int x, int y, int size, Point2D v, Color color) {
+	public SwarmAgent(int x, int y, int size, Point2D v, Color color) {
 		super(x, y, size, size);
 		this.velocity = v;
 		this.color = color;
@@ -55,7 +55,7 @@ public class Agent extends Ellipse2D.Double {
 	 * @param boardWidth
 	 * @param size
 	 */
-	public Agent(int boardWidth, int size) {
+	public SwarmAgent(int boardWidth, int size) {
 		super((int)(Math.random()*boardWidth), (int)(Math.random()*boardWidth), size, size);
 		this.velocity = new Point2D.Double(Math.random()*10-5, Math.random()*10-5);
 		this.color = Color.GREEN;
