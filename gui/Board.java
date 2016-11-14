@@ -24,6 +24,10 @@ import cells.GenCell;
 import cells.NullCell;
 import other.Agent;
 import other.LabelHandler;
+import strategies.AbstractStrategy;
+import strategies.AllBlack;
+import strategies.CheckerBoard;
+import strategies.Lines;
 /*
  * Authors: Nick, Tim, Zak, Gabriel
  * Description: This is the guts of the program. Two 2x2 Cell arrays of size[size X size] are created to be layers 1 and 2,
@@ -52,8 +56,10 @@ public class Board extends JPanel implements MouseInputListener {
 	public Color oldPolarity2 = Color.BLUE;
 	public LabelHandler labelHandler;
 	private GenCell[] testLayer1 = new GenCell[8];
+	private AbstractStrategy strategy;
 
 	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap) {
+		strategy = new CheckerBoard();
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		this.numCellsOnSide = numCellsOnSide;
@@ -88,7 +94,9 @@ public class Board extends JPanel implements MouseInputListener {
 		polarity = (layer1[0][0].getColor() == Color.BLACK ? Color.RED : Color.BLUE);
 
 		//layer 2 initial construction
-		layer2(polarity);
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
+		//layer2(polarity);
+		layer2 = strategy.Layer2(layer1, polarity, cellSize);
 		
 		StartTimer();
 
@@ -258,6 +266,13 @@ public class Board extends JPanel implements MouseInputListener {
 			int cornerCount = 0;
 			int edgeCount = 0;
 			testLayer1 = getNeighbors(layer1, (int)agent.getCenterX()/cellSize, (int)agent.getCenterY()/cellSize);
+			int rowMax = layer1.length-1;
+			int colMax = layer1[rowMax-1].length-1;
+			if((int)agent.getCenterX()/cellSize<=rowMax && (int)agent.getCenterY()/cellSize<=colMax)
+			{
+			strategy.logic(agent, layer1, layer2, testLayer1, layer1[((int)agent.getCenterX()/cellSize)][((int)agent.getCenterY()/cellSize)], cellSize);
+			}
+			/*
 			//if (Math.random() < 0.1) {
 			if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
 				for(int index = 0; index<testLayer1.length; index++)
@@ -325,7 +340,7 @@ public class Board extends JPanel implements MouseInputListener {
 				}
 			}
 			//}
-
+			*/
 			agent.step();
 			if (wrap) {
 				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
