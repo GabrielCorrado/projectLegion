@@ -101,14 +101,14 @@ public class Board extends JPanel implements MouseInputListener {
 
 		//layer 2 initial construction
 		layer2(polarity);
-		
+
 		StartTimer();
 
 		if (GUI.layer2Draw == 3)
 		{
 			GUI.layer2Draw = 1;
 		}
-		
+
 		GUI.setLblIntBlackCells(blackCellCounter);
 		GUI.setLblIntWhiteCells(whiteCellCounter);
 	}
@@ -211,7 +211,7 @@ public class Board extends JPanel implements MouseInputListener {
 		super.paintComponent(arg0);
 
 		Graphics2D g = (Graphics2D)arg0;
-		
+
 		//draw boards
 		if (GUI.layer2Draw == 1)
 		{
@@ -238,7 +238,7 @@ public class Board extends JPanel implements MouseInputListener {
 			GUI.layer2Draw = tempL2D;
 			repaint();
 		}
-		
+
 		//draw agents
 		for (SwarmAgent agent : agents) {
 			agent.setColor(agentColor);
@@ -271,11 +271,14 @@ public class Board extends JPanel implements MouseInputListener {
 			//before leaving it--something we haven't gotten to yet.
 			if (Math.random() < 0.1) {
 				if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
-					layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-					layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+//					layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+//					layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+					
+					Board.getOccupiedCell(agent, layer1).flipColor();
+					Board.getOccupiedCell(agent, layer2).flipColor();
 				}
 			}
-			
+
 			agent.step();
 			if (wrap) {
 				//since there's no walls, this lets the agents "wrap" to the other side of the screen. Adding the width
@@ -328,7 +331,7 @@ public class Board extends JPanel implements MouseInputListener {
 		GenericCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
 		int colMax = cells[rowMax-1].length-1;
-		
+
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
 		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
@@ -340,7 +343,7 @@ public class Board extends JPanel implements MouseInputListener {
 			cellsWithNull[0][col] = NullCell.getNullCell();
 			cellsWithNull[rowMax][col] = NullCell.getNullCell();
 		}
-		
+
 		//this 10% chance thing is just because java gets mad if you have stuff
 		//after a return statement, it is super hardcore not a permanent feature
 		//of this class trust me guys.
@@ -355,7 +358,7 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
 			return neighbors;
 		}
-		
+
 		//obsolete approach
 		//top left
 		if (rowNum == 0 && colNum == 0) {
@@ -434,6 +437,19 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 
 		return neighbors;
+	}
+
+	
+	/**
+	 * This method returns the Cell occupied by a given agent in a given layer. Static because it's really just
+	 * converting between x and y coordinates and 2D array position. Really, /that/ should be the static method
+	 * and may be coming up next.
+	 * @param agent
+	 * @param layer
+	 * @return the cell occupied by a given agent in a given layer
+	 */
+	public static Cell getOccupiedCell(SwarmAgent agent, Cell[][] layer) {
+		return layer[(int)(agent.getCenterX()/layer[0][0].width)][(int)(agent.getCenterY()/layer[0][0].height)];
 	}
 
 	@Override
