@@ -36,13 +36,13 @@ import other.SwarmAgent;
 public class Board extends JPanel implements MouseInputListener {
 	private Cell[][] layer1;
 	private Cell[][] layer2;
-	private GenericCell[][] display;//layer to paint
+	private GenCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private boolean wrap = false; //whether the walls of the Board wrap or not; by default, they don't
 	private Color polarity;
 	private int cellSize;//pixel dimensions of each cell
 	private int agentSize;//pixel dimensions of each agent
-	private SwarmAgent[] agents;
+	private Agent[] agents;
 	private Color agentColor = GUI.agentColor;
 	private int tempL2D;
 	private int agentRate = 50;
@@ -50,21 +50,26 @@ public class Board extends JPanel implements MouseInputListener {
 	public Timer t;
 	public Color oldPolarity1 = Color.RED;
 	public Color oldPolarity2 = Color.BLUE;
-	private int blackCellCounter = 0;
-	private int whiteCellCounter = 0;
-	public static int currBlackCellCounter = 0;
-	public static int currWhiteCellCounter = 0;
+	public LabelHandler labelHandler;
+	private GenCell[] testLayer1 = new GenCell[8];
+	private double RowClicked;
+	private double ColClicked;
+	private int cellClickedWidth; //trying to figure out the cell you are on when you click any cell
+	private int cellClickedHeight; //trying to figure out the cell you are on when you click any cell
 
 	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap) {
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		this.numCellsOnSide = numCellsOnSide;
 		this.wrap = wrap;
-		display = new GenericCell[numCellsOnSide][numCellsOnSide];
+		display = new GenCell[numCellsOnSide][numCellsOnSide];
 		//set the graphical dimensions of the cells themselves. the cells are always square, but the
 		//space they take up is constrained by the width and height of the board and by the number of cells.
 		cellSize = width/numCellsOnSide;
 		agentSize = (int)(cellSize*0.7);
+
+		cellClickedWidth = width; //cellClickedWidth is used only in mouseClicked but it needs to be the same width as whatever the user defines it as
+		cellClickedHeight = height; //cellClickedHeight is used only in mouseClicked but it needs to be the same height as whatever the user defines it as
 
 		//layer 1
 		layer1 = new Cell[numCellsOnSide][numCellsOnSide];
@@ -72,25 +77,15 @@ public class Board extends JPanel implements MouseInputListener {
 		for (int row = 0; row < layer1.length; row++) {
 			for (int col = 0; col < layer1[row].length; col++) {
 				rand = (int) (Math.random()*2);
-				if (rand==0)
-				{
-					blackCellCounter++;
-					currBlackCellCounter++;
-				}
-				else
-				{
-					whiteCellCounter++;
-					currWhiteCellCounter++;
-				}
 				layer1[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, (rand == 0? Color.BLACK : Color.WHITE));
 			}
 		}
 
 		//generates the swarm and adjusts their positions
-		agents = new SwarmAgent[numAgents];
+		agents = new Agent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
 			//these agents generate in a random spot on the board, with a random starting vector.
-			agents[i] = new SwarmAgent(width, agentSize);
+			agents[i] = new Agent(width, agentSize);
 		}
 
 		this.addMouseListener(this);
@@ -101,16 +96,17 @@ public class Board extends JPanel implements MouseInputListener {
 
 		//layer 2 initial construction
 		layer2(polarity);
-		
+
 		StartTimer();
 
 		if (GUI.layer2Draw == 3)
 		{
 			GUI.layer2Draw = 1;
 		}
-		
-		GUI.setLblIntBlackCells(blackCellCounter);
-		GUI.setLblIntWhiteCells(whiteCellCounter);
+
+		labelHandler = new LabelHandler(numCellsOnSide, agents.length,0,0);
+		System.out.println("Board width: " + width);
+		System.out.println("Board height: " + height);
 	}
 
 	/**
@@ -211,7 +207,7 @@ public class Board extends JPanel implements MouseInputListener {
 		super.paintComponent(arg0);
 
 		Graphics2D g = (Graphics2D)arg0;
-		
+
 		//draw boards
 		if (GUI.layer2Draw == 1)
 		{
@@ -238,9 +234,9 @@ public class Board extends JPanel implements MouseInputListener {
 			GUI.layer2Draw = tempL2D;
 			repaint();
 		}
-		
+
 		//draw agents
-		for (SwarmAgent agent : agents) {
+		for (Agent agent : agents) {
 			agent.setColor(agentColor);
 			agent.draw(g);
 			//if you're sticking off the right or bottom of map, draw another ellipse there too
@@ -250,9 +246,6 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 			if (wrap && agent.getY()+agentSize > this.getHeight()) {
 				g.fill(new Ellipse2D.Double(agent.getX(), agent.getY()-this.getHeight(), agentSize, agentSize));
-			}
-			if (wrap && agent.getX()+agentSize > this.getWidth() && wrap && agent.getY()+agentSize > this.getHeight()) {
-				g.fill(new Ellipse2D.Double(agent.getX()-this.getWidth(), agent.getY()-this.getWidth(), agentSize, agentSize));
 			}
 		}
 	}
@@ -264,25 +257,92 @@ public class Board extends JPanel implements MouseInputListener {
 	 */
 	public void step() {
 		//for each agent, have the agent decide randomly whether to flip its cell's color
-		for (SwarmAgent agent : agents) {
+		for (Agent agent : agents) {
 			//10% of the time, the agent will determine algebraically which cell it's in, then flip the color of that cell.
 			//a better approach than this would be to have the agent store which cell it's currently in, then just flip that
 			//color 10% of the time. this would also make it easy to keep the agent from flipping the same cell many times
 			//before leaving it--something we haven't gotten to yet.
-			if (Math.random() < 0.1) {
-				if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
-					layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-					layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+
+			//TESTING NEIGHBORS
+			int cornerCount = 0;
+			int edgeCount = 0;
+			testLayer1 = getNeighbors(layer1, (int)agent.getCenterX()/cellSize, (int)agent.getCenterY()/cellSize);
+			//if (Math.random() < 0.1) {
+			if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
+				for(int index = 0; index<testLayer1.length; index++)
+				{
+					if(testLayer1[index] != null)
+					{
+						if(index%2==0)
+						{
+							if (testLayer1[index].getColor() == Color.BLACK){
+								cornerCount++;
+							}
+						}
+						else
+						{
+							if (testLayer1[index].getColor() == Color.BLACK){
+								edgeCount++;
+							}
+						}
+					}
+					else
+					{
+
+					}
+				}
+				if(cornerCount>edgeCount)
+				{
+					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
+					{
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+					else
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+				}
+				else if(edgeCount>cornerCount)
+				{
+					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+					else
+					{
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+				}
+				else
+				{
+					double flipCoin = Math.random();
+					if (flipCoin >.5)
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
 				}
 			}
-			
+			//}
+
 			agent.step();
 			if (wrap) {
-				//since there's no walls, this lets the agents "wrap" to the other side of the screen. Adding the width
-				//before taking remainder from width and mutatis mutandis to height is a clever trick for treating the
-				//positive and negative cases the same.
+				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
 				agent.setX((agent.getX()+this.getWidth())%this.getWidth());
 				agent.setY((agent.getY()+this.getHeight())%this.getHeight());
+
+				//this is not perfect: what we actually want this to do is draw both, so long as it's sticking a bit
+				//off of the screen. that makes the above operations much uglier. :(
 			} else {
 				//since there's walls, this checks whether the agent has crossed any of the four bounds of the board:
 				//left, then top, then right, then bottom, and whether the agent's velocity has it headed further off
@@ -307,8 +367,6 @@ public class Board extends JPanel implements MouseInputListener {
 				}
 			}
 		}
-		GUI.setLblCurrBlackCells(currBlackCellCounter);
-		GUI.setLblCurrWhiteCells(currWhiteCellCounter);
 	}
 
 	/**
@@ -323,15 +381,15 @@ public class Board extends JPanel implements MouseInputListener {
 	 * @param colNum
 	 * @return an array of all of the neighbors of the cell whose row and column number has been provided.
 	 */
-	public GenericCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
+	public GenCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
 		//each cell only has 8 neighbors! for now at least.... :(
-		GenericCell[] neighbors = new Cell[8];
+		GenCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
 		int colMax = cells[rowMax-1].length-1;
-		
+		/*
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
-		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
+		GenCell[][] cellsWithNull = new GenCell[numCellsOnSide+2][numCellsOnSide+2];
 		for (int row = 0; row < cellsWithNull.length; row++) {
 			cellsWithNull[row][0] = NullCell.getNullCell();
 			cellsWithNull[row][colMax] = NullCell.getNullCell();
@@ -340,7 +398,7 @@ public class Board extends JPanel implements MouseInputListener {
 			cellsWithNull[0][col] = NullCell.getNullCell();
 			cellsWithNull[rowMax][col] = NullCell.getNullCell();
 		}
-		
+
 		//this 10% chance thing is just because java gets mad if you have stuff
 		//after a return statement, it is super hardcore not a permanent feature
 		//of this class trust me guys.
@@ -355,43 +413,44 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
 			return neighbors;
 		}
-		
+		 */
+
 		//obsolete approach
 		//top left
 		if (rowNum == 0 && colNum == 0) {
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
 		}
 
 		//bottom left
 		if (rowNum == rowMax && colNum == 0) {
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[4] = cells[rowNum][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
 		}
 
 		//top right
 		if (rowNum == 0 && colNum == cells[0].length-1) {
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//bottom right
 		if (rowNum == rowMax && colNum == colMax) {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[3] = cells[rowNum][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//top
 		if (rowNum == 0 && colNum > 0 && colNum < colMax) {
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//bottom
@@ -399,26 +458,26 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[4] = cells[rowNum][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//left
 		if (rowNum > 0 && rowNum < rowMax && colNum == 0) {
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
 		}
 
 		//right
 		if (rowNum > 0 && rowNum < rowMax && colNum == colMax) {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//middle cells obviously get everything
@@ -426,11 +485,11 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		return neighbors;
@@ -438,8 +497,11 @@ public class Board extends JPanel implements MouseInputListener {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+		int rowClickedInt = (int) (arg0.getX()/cellSize);
+		int colClickedInt = (int) (arg0.getY()/cellSize);
+		System.out.println(rowClickedInt);
+		System.out.println(colClickedInt);
+		System.out.println();
 	}
 
 	@Override
@@ -535,3 +597,4 @@ public class Board extends JPanel implements MouseInputListener {
 		}
 	}
 }
+
