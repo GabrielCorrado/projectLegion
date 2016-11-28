@@ -3,9 +3,9 @@ package strategies;
 import java.awt.Color;
 
 import cells.Cell;
-import cells.GenCell;
+import cells.GenericCell;
 import gui.GUI;
-import other.Agent;
+import other.SwarmAgent;
 
 public class Lines extends AbstractStrategy{
 
@@ -32,7 +32,7 @@ public class Lines extends AbstractStrategy{
 	}
 
 	@Override
-	public void logic(Agent agent, Cell[][] layer1, Cell[][] layer2, GenCell[] neighbors, Cell cell, int cellSize) {
+	public void logic(SwarmAgent agent, Cell[][] layer1, Cell[][] layer2, GenericCell[] neighbors, Cell cell, int cellSize) {
 		int cornerCount = 0;
 		int edgeCount = 0;
 		//if (Math.random() < 0.1) {
