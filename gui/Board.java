@@ -535,7 +535,9 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-
+		System.out.println((int)(arg0.getX()/cellSize));
+		System.out.println((int)(arg0.getY()/cellSize));
+		System.out.println();
 	}
 
 	@Override
