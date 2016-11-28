@@ -67,6 +67,7 @@ public class GUI {
 	public static Color polarity2 = Color.BLUE;//color2 of board.cells2
 	public static int initBoardSize, initAgentCount;
 	public static Color agentColor = Color.GREEN;
+	public static boolean whetherAgentsVisible = true;
 	/**
 	 * Launch the application.
 	 */
@@ -393,6 +394,7 @@ public class GUI {
 				JComboBox src = (JComboBox) e.getSource();
 				agentColor =agentColorList[src.getSelectedIndex()];
 				board.updateAgentColor(agentColor);
+				whetherAgentsVisible = true;
 			}
 		});
 		tabLayer3.add(comboBox_AgentColor);
@@ -454,6 +456,11 @@ public class GUI {
 		JToggleButton tglbtnViewAgents = new JToggleButton("View Agents");
 		tglbtnViewAgents.setSelected(true);
 		tglbtnViewAgents.setBounds(10, 495, 187, 69);
+		tglbtnViewAgents.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				whetherAgentsVisible = !whetherAgentsVisible;
+			}
+		});
 		tabLayer3.add(tglbtnViewAgents);
 		
 		JButton btnSetPhrmnTrail = new JButton("Set Phrmn Trail");

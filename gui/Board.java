@@ -249,7 +249,12 @@ public class Board extends JPanel implements MouseInputListener {
 
 		//draw agents
 		for (SwarmAgent agent : agents) {
-			agent.setColor(agentColor);
+			//if the agents have been set to non-visible, sets them to a transparent color
+			if (GUI.whetherAgentsVisible) {
+				agent.setColor(agentColor);
+			} else {
+				agent.setColor(new Color(0,1,0,0));
+			}
 			agent.draw(g);
 			//if you're sticking off the right or bottom of map, draw another ellipse there too
 			//this is a hack; really, i think this should be a job for the agent's draw method.
@@ -422,94 +427,94 @@ public class Board extends JPanel implements MouseInputListener {
 		//this 10% chance thing is just because java gets mad if you have stuff
 		//after a return statement, it is super hardcore not a permanent feature
 		//of this class trust me guys.
-		if (Math.random() < 0.1) {
-			neighbors[0] = cellsWithNull[rowNum-1][colNum-1];
-			neighbors[1] = cellsWithNull[rowNum-1][colNum];
-			neighbors[2] = cellsWithNull[rowNum-1][colNum+1];
-			neighbors[3] = cellsWithNull[rowNum][colNum-1];
-			neighbors[4] = cellsWithNull[rowNum][colNum+1];
-			neighbors[5] = cellsWithNull[rowNum+1][colNum-1];
-			neighbors[6] = cellsWithNull[rowNum+1][colNum];
-			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
-			return neighbors;
-		}
-		
-		//obsolete approach
-		//top left
-		if (rowNum == 0 && colNum == 0) {
-			neighbors[3] = cells[rowNum][colNum+1];
-			neighbors[4] = cells[rowNum+1][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum];
-		}
-
-		//bottom left
-		if (rowNum == rowMax && colNum == 0) {
-			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum+1];
-		}
-
-		//top right
-		if (rowNum == 0 && colNum == cells[0].length-1) {
-			neighbors[5] = cells[rowNum+1][colNum];
-			neighbors[6] = cells[rowNum+1][colNum-1];
-			neighbors[7] = cells[rowNum][colNum-1];
-		}
-
-		//bottom right
-		if (rowNum == rowMax && colNum == colMax) {
-			neighbors[0] = cells[rowNum-1][colNum-1];
-			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[7] = cells[rowNum][colNum-1];
-		}
-
-		//top
-		if (rowNum == 0 && colNum > 0 && colNum < colMax) {
-			neighbors[3] = cells[rowNum][colNum+1];
-			neighbors[4] = cells[rowNum+1][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum];
-			neighbors[6] = cells[rowNum+1][colNum-1];
-			neighbors[7] = cells[rowNum][colNum-1];
-		}
-
-		//bottom
-		if (rowNum == rowMax && colNum > 0 && colNum < colMax) {
-			neighbors[0] = cells[rowNum-1][colNum-1];
-			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum+1];
-			neighbors[7] = cells[rowNum][colNum-1];
-		}
-
-		//left
-		if (rowNum > 0 && rowNum < rowMax && colNum == 0) {
-			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum+1];
-			neighbors[4] = cells[rowNum+1][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum];
-		}
-
-		//right
-		if (rowNum > 0 && rowNum < rowMax && colNum == colMax) {
-			neighbors[0] = cells[rowNum-1][colNum-1];
-			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[5] = cells[rowNum+1][colNum];
-			neighbors[6] = cells[rowNum+1][colNum-1];
-			neighbors[7] = cells[rowNum][colNum-1];
-		}
-
-		//middle cells obviously get everything
-		if (rowNum > 0 && rowNum < rowMax && colNum > 0 && colNum < colMax) {
-			neighbors[0] = cells[rowNum-1][colNum-1];
-			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum+1];
-			neighbors[4] = cells[rowNum+1][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum];
-			neighbors[6] = cells[rowNum+1][colNum-1];
-			neighbors[7] = cells[rowNum][colNum-1];
-		}
+//		if (Math.random() < 0.1) {
+//			neighbors[0] = cellsWithNull[rowNum-1][colNum-1];
+//			neighbors[1] = cellsWithNull[rowNum-1][colNum];
+//			neighbors[2] = cellsWithNull[rowNum-1][colNum+1];
+//			neighbors[3] = cellsWithNull[rowNum][colNum-1];
+//			neighbors[4] = cellsWithNull[rowNum][colNum+1];
+//			neighbors[5] = cellsWithNull[rowNum+1][colNum-1];
+//			neighbors[6] = cellsWithNull[rowNum+1][colNum];
+//			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
+//			return neighbors;
+//		}
+//		
+//		//obsolete approach
+//		//top left
+//		if (rowNum == 0 && colNum == 0) {
+//			neighbors[3] = cells[rowNum][colNum+1];
+//			neighbors[4] = cells[rowNum+1][colNum+1];
+//			neighbors[5] = cells[rowNum+1][colNum];
+//		}
+//
+//		//bottom left
+//		if (rowNum == rowMax && colNum == 0) {
+//			neighbors[1] = cells[rowNum-1][colNum];
+//			neighbors[2] = cells[rowNum-1][colNum+1];
+//			neighbors[3] = cells[rowNum][colNum+1];
+//		}
+//
+//		//top right
+//		if (rowNum == 0 && colNum == cells[0].length-1) {
+//			neighbors[5] = cells[rowNum+1][colNum];
+//			neighbors[6] = cells[rowNum+1][colNum-1];
+//			neighbors[7] = cells[rowNum][colNum-1];
+//		}
+//
+//		//bottom right
+//		if (rowNum == rowMax && colNum == colMax) {
+//			neighbors[0] = cells[rowNum-1][colNum-1];
+//			neighbors[1] = cells[rowNum-1][colNum];
+//			neighbors[7] = cells[rowNum][colNum-1];
+//		}
+//
+//		//top
+//		if (rowNum == 0 && colNum > 0 && colNum < colMax) {
+//			neighbors[3] = cells[rowNum][colNum+1];
+//			neighbors[4] = cells[rowNum+1][colNum+1];
+//			neighbors[5] = cells[rowNum+1][colNum];
+//			neighbors[6] = cells[rowNum+1][colNum-1];
+//			neighbors[7] = cells[rowNum][colNum-1];
+//		}
+//
+//		//bottom
+//		if (rowNum == rowMax && colNum > 0 && colNum < colMax) {
+//			neighbors[0] = cells[rowNum-1][colNum-1];
+//			neighbors[1] = cells[rowNum-1][colNum];
+//			neighbors[2] = cells[rowNum-1][colNum+1];
+//			neighbors[3] = cells[rowNum][colNum+1];
+//			neighbors[7] = cells[rowNum][colNum-1];
+//		}
+//
+//		//left
+//		if (rowNum > 0 && rowNum < rowMax && colNum == 0) {
+//			neighbors[1] = cells[rowNum-1][colNum];
+//			neighbors[2] = cells[rowNum-1][colNum+1];
+//			neighbors[3] = cells[rowNum][colNum+1];
+//			neighbors[4] = cells[rowNum+1][colNum+1];
+//			neighbors[5] = cells[rowNum+1][colNum];
+//		}
+//
+//		//right
+//		if (rowNum > 0 && rowNum < rowMax && colNum == colMax) {
+//			neighbors[0] = cells[rowNum-1][colNum-1];
+//			neighbors[1] = cells[rowNum-1][colNum];
+//			neighbors[5] = cells[rowNum+1][colNum];
+//			neighbors[6] = cells[rowNum+1][colNum-1];
+//			neighbors[7] = cells[rowNum][colNum-1];
+//		}
+//
+//		//middle cells obviously get everything
+//		if (rowNum > 0 && rowNum < rowMax && colNum > 0 && colNum < colMax) {
+//			neighbors[0] = cells[rowNum-1][colNum-1];
+//			neighbors[1] = cells[rowNum-1][colNum];
+//			neighbors[2] = cells[rowNum-1][colNum+1];
+//			neighbors[3] = cells[rowNum][colNum+1];
+//			neighbors[4] = cells[rowNum+1][colNum+1];
+//			neighbors[5] = cells[rowNum+1][colNum];
+//			neighbors[6] = cells[rowNum+1][colNum-1];
+//			neighbors[7] = cells[rowNum][colNum-1];
+//		}
 
 		return neighbors;
 	}
