@@ -50,7 +50,7 @@ public class Cell extends GenericCell {
 		{
 			cellColor = GUI.getPolarity1();
 		}
-		
+
 	}
 	
 	public Color getColor() {

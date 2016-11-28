@@ -23,7 +23,10 @@ import cells.Cell;
 import cells.GenericCell;
 import cells.NullCell;
 import other.SwarmAgent;
-
+import strategies.AbstractStrategy;
+import strategies.AllBlack;
+import strategies.CheckerBoard;
+import strategies.Lines;
 /*
  * Authors: Nick, Tim, Zak, Gabriel
  * Description: This is the guts of the program. Two 2x2 Cell arrays of size[size X size] are created to be layers 1 and 2,
@@ -54,8 +57,11 @@ public class Board extends JPanel implements MouseInputListener {
 	private int whiteCellCounter = 0;
 	public static int currBlackCellCounter = 0;
 	public static int currWhiteCellCounter = 0;
+	private GenericCell[] testLayer1 = new GenericCell[8];
+	private AbstractStrategy strategy;
 
 	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap) {
+		strategy = new CheckerBoard();
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
 		this.numCellsOnSide = numCellsOnSide;
@@ -100,8 +106,10 @@ public class Board extends JPanel implements MouseInputListener {
 		polarity = (layer1[0][0].getColor() == Color.BLACK ? Color.RED : Color.BLUE);
 
 		//layer 2 initial construction
-		layer2(polarity);
-
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
+		//layer2(polarity);
+		layer2 = strategy.Layer2(layer1, polarity, cellSize);
+		
 		StartTimer();
 
 		if (GUI.layer2Draw == 3)
@@ -251,9 +259,6 @@ public class Board extends JPanel implements MouseInputListener {
 			if (wrap && agent.getY()+agentSize > this.getHeight()) {
 				g.fill(new Ellipse2D.Double(agent.getX(), agent.getY()-this.getHeight(), agentSize, agentSize));
 			}
-			if (wrap && agent.getX()+agentSize > this.getWidth() && wrap && agent.getY()+agentSize > this.getHeight()) {
-				g.fill(new Ellipse2D.Double(agent.getX()-this.getWidth(), agent.getY()-this.getWidth(), agentSize, agentSize));
-			}
 		}
 	}
 
@@ -269,23 +274,94 @@ public class Board extends JPanel implements MouseInputListener {
 			//a better approach than this would be to have the agent store which cell it's currently in, then just flip that
 			//color 10% of the time. this would also make it easy to keep the agent from flipping the same cell many times
 			//before leaving it--something we haven't gotten to yet.
-			if (Math.random() < 0.1) {
-				if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
-//					layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-//					layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-					
-					Board.getOccupiedCell(agent, layer1).flipColor();
-					Board.getOccupiedCell(agent, layer2).flipColor();
+			
+			//TESTING NEIGHBORS
+			int cornerCount = 0;
+			int edgeCount = 0;
+			testLayer1 = getNeighbors(layer1, (int)agent.getCenterX()/cellSize, (int)agent.getCenterY()/cellSize);
+			int rowMax = layer1.length-1;
+			int colMax = layer1[rowMax-1].length-1;
+			if((int)agent.getCenterX()/cellSize<=rowMax && (int)agent.getCenterY()/cellSize<=colMax)
+			{
+				strategy.logic(agent, layer1, layer2, testLayer1, layer1[((int)agent.getCenterX()/cellSize)][((int)agent.getCenterY()/cellSize)], cellSize);
+			}
+			/*
+			//if (Math.random() < 0.1) {
+			if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
+				for(int index = 0; index<testLayer1.length; index++)
+				{
+					if(testLayer1[index] != null)
+					{
+						if(index%2==0)
+						{
+							if (testLayer1[index].getColor() == Color.BLACK){
+								cornerCount++;
+							}
+						}
+						else
+						{
+							if (testLayer1[index].getColor() == Color.BLACK){
+								edgeCount++;
+							}
+						}
+					}
+					else
+					{
+
+					}
+				}
+				if(cornerCount>edgeCount)
+				{
+					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
+					{
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+					else
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+				}
+				else if(edgeCount>cornerCount)
+				{
+					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+					else
+					{
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+				}
+				else
+				{
+					double flipCoin = Math.random();
+					if (flipCoin >.5)
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
 				}
 			}
-
+			//}
+			*/
 			agent.step();
 			if (wrap) {
-				//since there's no walls, this lets the agents "wrap" to the other side of the screen. Adding the width
-				//before taking remainder from width and mutatis mutandis to height is a clever trick for treating the
-				//positive and negative cases the same.
+				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
 				agent.setX((agent.getX()+this.getWidth())%this.getWidth());
 				agent.setY((agent.getY()+this.getHeight())%this.getHeight());
+				
+				//this is not perfect: what we actually want this to do is draw both, so long as it's sticking a bit
+				//off of the screen. that makes the above operations much uglier. :(
 			} else {
 				//since there's walls, this checks whether the agent has crossed any of the four bounds of the board:
 				//left, then top, then right, then bottom, and whether the agent's velocity has it headed further off
@@ -331,7 +407,6 @@ public class Board extends JPanel implements MouseInputListener {
 		GenericCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
 		int colMax = cells[rowMax-1].length-1;
-
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
 		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
@@ -358,43 +433,43 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
 			return neighbors;
 		}
-
+		
 		//obsolete approach
 		//top left
 		if (rowNum == 0 && colNum == 0) {
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
 		}
 
 		//bottom left
 		if (rowNum == rowMax && colNum == 0) {
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[4] = cells[rowNum][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
 		}
 
 		//top right
 		if (rowNum == 0 && colNum == cells[0].length-1) {
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//bottom right
 		if (rowNum == rowMax && colNum == colMax) {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[3] = cells[rowNum][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//top
 		if (rowNum == 0 && colNum > 0 && colNum < colMax) {
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//bottom
@@ -402,26 +477,26 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[4] = cells[rowNum][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//left
 		if (rowNum > 0 && rowNum < rowMax && colNum == 0) {
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
 		}
 
 		//right
 		if (rowNum > 0 && rowNum < rowMax && colNum == colMax) {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		//middle cells obviously get everything
@@ -429,11 +504,11 @@ public class Board extends JPanel implements MouseInputListener {
 			neighbors[0] = cells[rowNum-1][colNum-1];
 			neighbors[1] = cells[rowNum-1][colNum];
 			neighbors[2] = cells[rowNum-1][colNum+1];
-			neighbors[3] = cells[rowNum][colNum-1];
-			neighbors[4] = cells[rowNum][colNum+1];
-			neighbors[5] = cells[rowNum+1][colNum-1];
-			neighbors[6] = cells[rowNum+1][colNum];
-			neighbors[7] = cells[rowNum+1][colNum+1];
+			neighbors[3] = cells[rowNum][colNum+1];
+			neighbors[4] = cells[rowNum+1][colNum+1];
+			neighbors[5] = cells[rowNum+1][colNum];
+			neighbors[6] = cells[rowNum+1][colNum-1];
+			neighbors[7] = cells[rowNum][colNum-1];
 		}
 
 		return neighbors;
