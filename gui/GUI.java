@@ -1,4 +1,4 @@
-package gui;
+package swarm;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -34,7 +34,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import cells.Cell;
 
 /*
  * Authors: Gabriel, Zak
@@ -68,6 +67,7 @@ public class GUI {
 	public static int initBoardSize, initAgentCount;
 	public static Color agentColor = Color.GREEN;
 	public static boolean whetherAgentsVisible = true;
+	public static boolean attractOrRepel = true;
 	/**
 	 * Launch the application.
 	 */
@@ -462,6 +462,21 @@ public class GUI {
 			}
 		});
 		tabLayer3.add(tglbtnViewAgents);
+		
+		JToggleButton tglbtnAttractOrRepel = new JToggleButton("Attract");
+		tglbtnAttractOrRepel.setSelected(true);
+		tglbtnAttractOrRepel.setBounds(207, 495, 187, 69);
+		tglbtnAttractOrRepel.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				attractOrRepel = !attractOrRepel;
+				if (attractOrRepel) {
+					tglbtnAttractOrRepel.setText("Attract");
+				} else {
+					tglbtnAttractOrRepel.setText("Repel");
+				}
+			}
+		});
+		tabLayer3.add(tglbtnAttractOrRepel);
 		
 		JButton btnSetPhrmnTrail = new JButton("Set Phrmn Trail");
 		btnSetPhrmnTrail.setBounds(10, 272, 187, 30);
