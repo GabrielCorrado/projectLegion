@@ -1,4 +1,4 @@
-package gui;
+package swarm;
 
 /*
  *		Authors: Zakary Gray, Tim Dobeck, Nick Corrado, Gabriel Petkac
@@ -19,15 +19,6 @@ import java.util.TimerTask;
 
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
-
-import cells.Cell;
-import cells.GenericCell;
-import cells.NullCell;
-import other.SwarmAgent;
-import strategies.AbstractStrategy;
-import strategies.AllBlack;
-import strategies.CheckerBoard;
-import strategies.Lines;
 /*
  * Authors: Nick, Tim, Zak, Gabriel
  * Description: This is the guts of the program. Two 2x2 Cell arrays of size[size X size] are created to be layers 1 and 2,
@@ -40,17 +31,17 @@ import strategies.Lines;
 public class Board extends JPanel implements MouseInputListener {
 	private Cell[][] layer1;
 	private Cell[][] layer2;
-	private GenericCell[][] display; //layer to paint
+	private GenericCell[][] display;//layer to paint
 	private int numCellsOnSide; //these are the numbers of cells in the board, NOT the graphical dimensions of the board
 	private boolean wrap = false; //whether the walls of the Board wrap or not; by default, they don't
 	private Color polarity;
-	private int cellSize; //pixel dimensions of each cell
-	private int agentSize; //pixel dimensions of each agent
+	private int cellSize;//pixel dimensions of each cell
+	private int agentSize;//pixel dimensions of each agent
 	private SwarmAgent[] agents;
 	private Color agentColor = GUI.agentColor;
 	private double attractorStrength = 1;
 	private int attractorMaxDistance; //distance in cells, not pixels
-	private int attractOrRepel = 1; //1 if attract, -1 if repel
+	private int attractOrRepel; //1 if attract, -1 if repel
 	private int tempL2D;
 	private int agentRate = 50;
 	public int period = 10;
@@ -75,7 +66,7 @@ public class Board extends JPanel implements MouseInputListener {
 		//space they take up is constrained by the width and height of the board and by the number of cells.
 		cellSize = width/numCellsOnSide;
 		agentSize = (int)(cellSize*0.7);
-
+		
 		attractorMaxDistance = cellSize*5; //the attractor affects everything in a five cell block radius
 
 		//layer 1
@@ -102,7 +93,7 @@ public class Board extends JPanel implements MouseInputListener {
 		agents = new SwarmAgent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
 			//these agents generate in a random spot on the board, with a random starting vector.
-			agents[i] = new SwarmAgent(width, cellSize, agentSize);
+			agents[i] = new SwarmAgent(width, agentSize);
 		}
 
 		this.addMouseListener(this);
@@ -115,7 +106,7 @@ public class Board extends JPanel implements MouseInputListener {
 		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
 		//layer2(polarity);
 		layer2 = strategy.Layer2(layer1, polarity, cellSize);
-
+		
 		StartTimer();
 
 		if (GUI.layer2Draw == 3)
@@ -285,7 +276,7 @@ public class Board extends JPanel implements MouseInputListener {
 			//a better approach than this would be to have the agent store which cell it's currently in, then just flip that
 			//color 10% of the time. this would also make it easy to keep the agent from flipping the same cell many times
 			//before leaving it--something we haven't gotten to yet.
-
+			
 			//TESTING NEIGHBORS
 			int cornerCount = 0;
 			int edgeCount = 0;
@@ -364,13 +355,13 @@ public class Board extends JPanel implements MouseInputListener {
 				}
 			}
 			//}
-			 */
-			agent.step(cellSize);
+			*/
+			agent.step();
 			if (wrap) {
 				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
 				agent.setX((agent.getX()+this.getWidth())%this.getWidth());
 				agent.setY((agent.getY()+this.getHeight())%this.getHeight());
-
+				
 				//this is not perfect: what we actually want this to do is draw both, so long as it's sticking a bit
 				//off of the screen. that makes the above operations much uglier. :(
 			} else {
@@ -420,32 +411,32 @@ public class Board extends JPanel implements MouseInputListener {
 		int colMax = cells[rowMax-1].length-1;
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
-		//		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
-		//		for (int row = 0; row < cellsWithNull.length; row++) {
-		//			cellsWithNull[row][0] = NullCell.getNullCell();
-		//			cellsWithNull[row][colMax] = NullCell.getNullCell();
-		//		}
-		//		for (int col = 0; col < cellsWithNull[0].length; col++) {
-		//			cellsWithNull[0][col] = NullCell.getNullCell();
-		//			cellsWithNull[rowMax][col] = NullCell.getNullCell();
-		//		}
+//		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
+//		for (int row = 0; row < cellsWithNull.length; row++) {
+//			cellsWithNull[row][0] = NullCell.getNullCell();
+//			cellsWithNull[row][colMax] = NullCell.getNullCell();
+//		}
+//		for (int col = 0; col < cellsWithNull[0].length; col++) {
+//			cellsWithNull[0][col] = NullCell.getNullCell();
+//			cellsWithNull[rowMax][col] = NullCell.getNullCell();
+//		}
 
 		//this 10% chance thing is just because java gets mad if you have stuff
 		//after a return statement, it is super hardcore not a permanent feature
 		//of this class trust me guys.
-		//		if (Math.random() < 0.1) {
-		//			neighbors[0] = cellsWithNull[rowNum-1][colNum-1];
-		//			neighbors[1] = cellsWithNull[rowNum-1][colNum];
-		//			neighbors[2] = cellsWithNull[rowNum-1][colNum+1];
-		//			neighbors[3] = cellsWithNull[rowNum][colNum-1];
-		//			neighbors[4] = cellsWithNull[rowNum][colNum+1];
-		//			neighbors[5] = cellsWithNull[rowNum+1][colNum-1];
-		//			neighbors[6] = cellsWithNull[rowNum+1][colNum];
-		//			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
-		//			return neighbors;
-		//		}
-		//		
-		//		//obsolete approach
+//		if (Math.random() < 0.1) {
+//			neighbors[0] = cellsWithNull[rowNum-1][colNum-1];
+//			neighbors[1] = cellsWithNull[rowNum-1][colNum];
+//			neighbors[2] = cellsWithNull[rowNum-1][colNum+1];
+//			neighbors[3] = cellsWithNull[rowNum][colNum-1];
+//			neighbors[4] = cellsWithNull[rowNum][colNum+1];
+//			neighbors[5] = cellsWithNull[rowNum+1][colNum-1];
+//			neighbors[6] = cellsWithNull[rowNum+1][colNum];
+//			neighbors[7] = cellsWithNull[rowNum+1][colNum+1];
+//			return neighbors;
+//		}
+//		
+//		//obsolete approach
 		//top left
 		if (rowNum == 0 && colNum == 0) {
 			neighbors[3] = cells[rowNum][colNum+1];
@@ -525,10 +516,10 @@ public class Board extends JPanel implements MouseInputListener {
 		return neighbors;
 	}
 
-
+	
 	/**
 	 * This method returns the Cell occupied by a given agent in a given layer. Static because it's really just
-	 * converting between x and y coordinates and 2D array position. Really, <em>that</em> should be the static method
+	 * converting between x and y coordinates and 2D array position. Really, /that/ should be the static method
 	 * and may be coming up next.
 	 * @param agent
 	 * @param layer
@@ -544,6 +535,8 @@ public class Board extends JPanel implements MouseInputListener {
 		System.out.println((int)(arg0.getX()/cellSize));
 		System.out.println((int)(arg0.getY()/cellSize));
 		System.out.println();
+		
+		
 	}
 
 	@Override
@@ -561,7 +554,7 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -573,22 +566,29 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		double magnitude;
-		Point2D.Double towardMouse;
-
+		
 		//if you click in a spot on the board, the agents will be attracted to that spot with decreasing effect
 		//the further away they are
+		if (GUI.attractOrRepel)
+		{
+			attractOrRepel=1;
+		}
+		else
+		{
+			attractOrRepel=-1;
+		}
 		for (SwarmAgent agent : agents) {
-			magnitude = Math.sqrt((agent.getCenterX()-arg0.getX())*(agent.getCenterX()-arg0.getX()) + (agent.getCenterY()-arg0.getY())*(agent.getCenterY()-arg0.getY()));
-			towardMouse = new Point2D.Double(attractOrRepel*cellSize*(arg0.getX()-agent.getCenterX())/magnitude, attractOrRepel*cellSize*(arg0.getY()-agent.getCenterY())/magnitude);
+			double magnitude = Math.sqrt((agent.getCenterX()-arg0.getX())*(agent.getCenterX()-arg0.getX()) + (agent.getCenterY()-arg0.getY())*(agent.getCenterY()-arg0.getY()));
+			Point2D.Double newVector = new Point2D.Double(attractOrRepel*10*(arg0.getX()-agent.getCenterX())/magnitude, attractOrRepel*10*(arg0.getY()-agent.getCenterY())/magnitude);
 
 			if (magnitude < attractorMaxDistance) {
 				//then the agent is in the specified range
 				//double angle = Math.asin(distance/(agent.getCenterY()-arg0.getY()));
 				if (Math.random() < attractorStrength) {
-					agent.setVelocity(towardMouse);
+					agent.setVelocity(newVector);
 				}
 			}
+			
 		}
 	}
 
