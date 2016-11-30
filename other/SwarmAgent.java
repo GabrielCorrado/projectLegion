@@ -28,7 +28,7 @@ public class SwarmAgent extends Ellipse2D.Double {
 	private int size;
 	private Point2D velocity;	//adds direction to our agents
 	private Color color; 	//only adding a color here so we can make it green or invisible in the board class
-
+	
 	/**
 	 * @author Nick
 	 * Constructor that makes an agent using given coordinates, Color, and velocity vector.
@@ -45,7 +45,7 @@ public class SwarmAgent extends Ellipse2D.Double {
 		this.velocity = v;
 		this.color = color;
 	}
-
+	
 	/**
 	 * @author Nick
 	 * Constructor that makes an agent using randomly generated coordinates for its position.
@@ -55,12 +55,12 @@ public class SwarmAgent extends Ellipse2D.Double {
 	 * @param boardWidth
 	 * @param size
 	 */
-	public SwarmAgent(int boardWidth, int cellSize, int size) {
+	public SwarmAgent(int boardWidth, int size) {
 		super((int)(Math.random()*boardWidth), (int)(Math.random()*boardWidth), size, size);
-		this.velocity = new Point2D.Double(cellSize*(Math.random()-0.5), cellSize*(Math.random()-0.5));
+		this.velocity = new Point2D.Double(Math.random()*10-5, Math.random()*10-5);
 		this.color = Color.GREEN;
 	}
-
+	
 	/**
 	 * @author Nick
 	 * Draws the agent as an ellipse.
@@ -75,7 +75,7 @@ public class SwarmAgent extends Ellipse2D.Double {
 	public void setColor(Color color) {
 		this.color = color;
 	}
-
+	
 	public int getSize() {
 		return size;
 	}
@@ -83,26 +83,26 @@ public class SwarmAgent extends Ellipse2D.Double {
 	public Point2D getVelocity() {
 		return velocity;
 	}
-
+	
 	//determines how much an agent will move in a particular direction
 	public void setVelocity(Point2D velocity) {
 		this.velocity = new Point2D.Double(velocity.getX(), velocity.getY());
 	}
-
+	
 	//determines how much an agent will move in a particular direction
 	public void setVelocity(double x, double y) {
 		this.velocity = new Point2D.Double(x, y);
 	}
-
+	
 	public void setX(double x) {
 		//this is being autocast to an int in board
 		this.x = x;
 	}
-
+	
 	public void setY(double y) {
 		this.y = y;
 	}
-
+	
 	/**
 	 * @author Nick
 	 * This method is called when the simulation is being "stepped" forward once. It
@@ -111,15 +111,15 @@ public class SwarmAgent extends Ellipse2D.Double {
 	 * but not too often. The range of the velocity is between (-5, 5) in both the x
 	 * and y directions so that values will be evenly distributed in each direction.
 	 */
-	public void step(int cellSize) {
+	public void step() {
 		this.setX(x+velocity.getX());
 		this.setY(y+velocity.getY());
-
+		
 		if (Math.random() < 0.1) {
-			this.setVelocity(cellSize*(Math.random()-0.5), cellSize*(Math.random()-0.5));
+			this.setVelocity(Math.random()*10-5, Math.random()*10-5);
 		}
 	}
-
+	
 	/**
 	 * @author Nick
 	 * This method negates the agent's x component of its vector, as if the agent
@@ -128,7 +128,7 @@ public class SwarmAgent extends Ellipse2D.Double {
 	public void xBounce() {
 		this.setVelocity(-1*this.getVelocity().getX(), this.getVelocity().getY());
 	}
-
+	
 	/**
 	 * @author Nick
 	 * This method negates the agent's y component of its vector, as if the agent
