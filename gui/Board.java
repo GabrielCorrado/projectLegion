@@ -659,4 +659,12 @@ public class Board extends JPanel implements MouseInputListener {
 			agents[i].setColor(agentColor);
 		}
 	}
+	public void updateGoalStrategy(AbstractStrategy newStrategy)
+	{
+		strategy = newStrategy;
+	}
+	public void toggleWrap()
+	{
+		wrap = !wrap;
+	}
 }
