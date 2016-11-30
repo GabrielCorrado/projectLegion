@@ -170,6 +170,7 @@ public class GUI {
 		
 		//************************************************************ Change Size of the Board Button
 		JButton btnChangeBoardSize = new JButton("Update Size");
+		btnChangeBoardSize.setForeground(Color.LIGHT_GRAY);
 		btnChangeBoardSize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//Button gains actions here
@@ -201,6 +202,7 @@ public class GUI {
 		tabLayer1.add(lblIntBlackCells);
 		
 		JLabel lblBoardSizeLayer = new JLabel("Board Size:");
+		lblBoardSizeLayer.setForeground(Color.lightGray);
 		lblBoardSizeLayer.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBoardSizeLayer.setBounds(10, 157, 125, 35);
 		tabLayer1.add(lblBoardSizeLayer);
@@ -302,6 +304,7 @@ public class GUI {
 		
 		//************************************************************ Sets what the polarity ratios should be for the two colors.
 		JLabel lblReginalStability = new JLabel("Reginal Stability");
+		lblReginalStability.setForeground(Color.LIGHT_GRAY);
 		lblReginalStability.setBounds(25, 200, 125, 14);
 		tabLayer2.add(lblReginalStability);
 		
@@ -334,6 +337,17 @@ public class GUI {
 		});
 		tabLayer2.add(comboGoalStrategy);
 		
+		JToggleButton tglbtnWrapAgents = new JToggleButton("Wrap Agents");
+		tglbtnWrapAgents.setSelected(true);
+		tglbtnWrapAgents.setBounds(215, 495, 187, 69);
+		tglbtnWrapAgents.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				board.toggleWrap();
+			}
+		});
+		tabLayer2.add(tglbtnWrapAgents);
+		
+		
 		//************************************************************ TAB 3 ************************************************************ 
 		JPanel tabLayer3 = new JPanel();
 		tabLayer3.setBackground(new Color(211, 211, 211));
@@ -342,6 +356,7 @@ public class GUI {
 		
 		//************************************************************ User can set the number of agents
 		JLabel lblNumberOfAgents = new JLabel("Number of Agents:");
+		lblNumberOfAgents.setForeground(Color.LIGHT_GRAY);
 		lblNumberOfAgents.setBounds(10, 25, 150, 14);
 		tabLayer3.add(lblNumberOfAgents);
 		
@@ -352,6 +367,7 @@ public class GUI {
 		textField_NumAgents.setColumns(10);
 		
 		JButton btnUpdateAgents = new JButton("Update Agents");
+		btnUpdateAgents.setForeground(Color.LIGHT_GRAY);
 		btnUpdateAgents.setBounds(215, 23, 150, 20);
 		tabLayer3.add(btnUpdateAgents);
 		
@@ -376,6 +392,7 @@ public class GUI {
 		tabLayer3.add(comboBox_AgentColor);
 		//************************************************************ User can select how many changes the agent can make
 		JLabel lblNumberOfChanges = new JLabel("Number of Changes:");
+		lblNumberOfChanges.setForeground(Color.LIGHT_GRAY);
 		lblNumberOfChanges.setBounds(10, 58, 150, 14);
 		tabLayer3.add(lblNumberOfChanges);
 		
@@ -386,11 +403,13 @@ public class GUI {
 		textField_NumAgentChanges.setColumns(10);
 		
 		JButton btnUpdateChanges = new JButton("Update Changes");
+		btnUpdateChanges.setForeground(Color.LIGHT_GRAY);
 		btnUpdateChanges.setBounds(215, 56, 150, 20);
 		tabLayer3.add(btnUpdateChanges);
 		
 		//************************************************************ User can choose how close an agent can get to another. 0 implies that many spaces between, thus they could overlap.
 		JLabel lblAgentCloseness = new JLabel("Agent Closeness:");
+		lblAgentCloseness.setForeground(Color.LIGHT_GRAY);
 		lblAgentCloseness.setBounds(10, 92, 150, 14);
 		tabLayer3.add(lblAgentCloseness);
 		
@@ -401,11 +420,13 @@ public class GUI {
 		textField_AgentCloseness.setColumns(10);
 		
 		JButton btnUpdateCloseness = new JButton("Update Closeness");
+		btnUpdateCloseness.setForeground(Color.LIGHT_GRAY);
 		btnUpdateCloseness.setBounds(215, 90, 150, 20);
 		tabLayer3.add(btnUpdateCloseness);
 		
 		//************************************************************ User changes the color of the pheromone trails on the board.
 		JLabel lblPharamoneTrailColor = new JLabel("Pheromone Color:");
+		lblPharamoneTrailColor.setForeground(Color.LIGHT_GRAY);
 		lblPharamoneTrailColor.setBounds(440, 58, 125, 14);
 		tabLayer3.add(lblPharamoneTrailColor);
 		
@@ -416,6 +437,7 @@ public class GUI {
 		
 		//************************************************************ User can set how strongly the agents should follow the swarm.
 		JLabel lblPheromoneStrength = new JLabel("Pheromone Strength:");
+		lblPheromoneStrength.setForeground(Color.LIGHT_GRAY);
 		lblPheromoneStrength.setBounds(10, 125, 150, 14);
 		tabLayer3.add(lblPheromoneStrength);
 		
@@ -426,6 +448,7 @@ public class GUI {
 		tabLayer3.add(textField_PheromoneStrength);
 		
 		JButton btnUpdatePStrength = new JButton("Update P Strength");
+		btnUpdatePStrength.setForeground(Color.LIGHT_GRAY);
 		btnUpdatePStrength.setBounds(215, 123, 150, 18);
 		tabLayer3.add(btnUpdatePStrength);
 		
@@ -440,18 +463,22 @@ public class GUI {
 		tabLayer3.add(tglbtnViewAgents);
 		
 		JButton btnSetPhrmnTrail = new JButton("Set Phrmn Trail");
+		btnSetPhrmnTrail.setForeground(Color.LIGHT_GRAY);
 		btnSetPhrmnTrail.setBounds(10, 272, 187, 30);
 		tabLayer3.add(btnSetPhrmnTrail);
 		
 		JButton btnRemovePhrmnTrail = new JButton("Remove Phrmn Trail");
+		btnRemovePhrmnTrail.setForeground(Color.LIGHT_GRAY);
 		btnRemovePhrmnTrail.setBounds(10, 316, 187, 30);
 		tabLayer3.add(btnRemovePhrmnTrail);
 		
 		JButton btnSetPhrmnZone = new JButton("Set Phrmn Zone");
+		btnSetPhrmnZone.setForeground(Color.LIGHT_GRAY);
 		btnSetPhrmnZone.setBounds(215, 272, 187, 30);
 		tabLayer3.add(btnSetPhrmnZone);
 		
 		JButton btnRemovePhrmnZone = new JButton("Remove Phrmn Zone");
+		btnRemovePhrmnZone.setForeground(Color.LIGHT_GRAY);
 		btnRemovePhrmnZone.setBounds(215, 316, 187, 30);
 		tabLayer3.add(btnRemovePhrmnZone);
 		
@@ -527,21 +554,25 @@ public class GUI {
 		frmProjectLegion.getContentPane().add(btnStartSwarm);
 
 		JButton btnRecord = new JButton("Record");
+		btnRecord.setForeground(Color.LIGHT_GRAY);
 		btnRecord.setBackground(new Color(102, 255, 153));
 		btnRecord.setBounds(895, 767, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRecord);
 
 		JButton btnStopRecord = new JButton("Stop Record");
+		btnStopRecord.setForeground(Color.LIGHT_GRAY);
 		btnStopRecord.setBackground(new Color(255, 102, 102));
 		btnStopRecord.setBounds(1030, 767, 125, 23);
 		frmProjectLegion.getContentPane().add(btnStopRecord);
 		
 		JButton btnSaveRec = new JButton("Save Rec.");
+		btnSaveRec.setForeground(Color.LIGHT_GRAY);
 		btnSaveRec.setBackground(new Color(204, 51, 255));
 		btnSaveRec.setBounds(1203, 767, 125, 23);
 		frmProjectLegion.getContentPane().add(btnSaveRec);
 		
 		JButton btnRestart = new JButton("Restart");
+		btnRestart.setForeground(Color.LIGHT_GRAY);
 		btnRestart.setBackground(new Color(51, 204, 255));
 		btnRestart.setBounds(1203, 726, 125, 23);
 		frmProjectLegion.getContentPane().add(btnRestart);
@@ -550,6 +581,7 @@ public class GUI {
 		
 		//************************************************************ This code will open a new JFrame that will ask the user the new dimentions for the new board.
 		JButton btnNewScreenSave = new JButton("Screen Shot");
+		btnNewScreenSave.setForeground(Color.LIGHT_GRAY);
 		btnNewScreenSave.setBackground(new Color(204, 51, 255));
 		btnNewScreenSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -572,6 +604,7 @@ public class GUI {
 				//Object obj = new NewBoardWindow();	
 				NewBoardWindow newBoardWindow = new NewBoardWindow(frmProjectLegion);
 				newBoardWindow.setVisible(true);
+				tglbtnWrapAgents.setSelected(true);
 				//lblBoardSizeInt.setText(String.valueOf(board.labelHandler.getInitBoardSize()));
 			}
 		});

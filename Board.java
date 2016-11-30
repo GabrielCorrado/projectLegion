@@ -663,4 +663,8 @@ public class Board extends JPanel implements MouseInputListener {
 	{
 		strategy = newStrategy;
 	}
+	public void toggleWrap()
+	{
+		wrap = !wrap;
+	}
 }
