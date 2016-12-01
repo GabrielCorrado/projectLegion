@@ -1,4 +1,4 @@
-package swarm;
+package gui;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -34,7 +34,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
+import cells.Cell;
 /*
  * Authors: Gabriel, Zak
  * Description: Gui created through Auto-generated code. Most of the code is simple creation, with functionality within certain labels and buttons.
