@@ -90,7 +90,7 @@ public class NewBoardWindow extends JFrame {
 		int borderForCentering = spareSpace/2;
 		int boardSize = GUI.MAXBOARDSIZE-borderForCentering*2;
 		
-		boolean whetherBoardWraps = true;
+		boolean whetherBoardWraps = GUI.wrap;
 		Board board = new Board(boardSize,boardSize,numCellsOnSide,numAgents, whetherBoardWraps);
 		board.setBackground(Color.WHITE);
 		board.setBounds(10+borderForCentering, 10+borderForCentering, boardSize, boardSize);
@@ -100,6 +100,8 @@ public class NewBoardWindow extends JFrame {
 		//This section is to avoid bugs in the GUI Layer2 Polarity color selection combo boxes.
 		board.oldPolarity1 = GUI.getPolarity1();
 		board.oldPolarity2 = GUI.getPolarity2();
+		board.updateGoalStrategy(GUI.goalStrategy);
+		board.setAgentRate(GUI.agentSliderRate);
 		
 	}
 	
