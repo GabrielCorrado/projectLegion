@@ -41,21 +41,26 @@ public class NewBoardWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblNewBoardSize = new JLabel("New Board Size");
 		lblNewBoardSize.setBounds(95, 48, 100, 20);
 		contentPane.add(lblNewBoardSize);
-		
+
 		JLabel lblNewSwarmSize = new JLabel("New Swarm Size");
 		lblNewSwarmSize.setBounds(95, 102, 100, 20);
 		contentPane.add(lblNewSwarmSize);
-		
+
+		JLabel ErrorMessage = new JLabel("Please enter a number greater than 0");
+		ErrorMessage.setBounds(95, 140, 220, 20);
+		ErrorMessage.setForeground(Color.red);
+		ErrorMessage.setVisible(false);
+		contentPane.add(ErrorMessage);
+
 		NewBoardSize = new JTextField("10",5);
 		NewBoardSize.setBounds(292, 48, 40, 20);
 		contentPane.add(NewBoardSize);
 		NewBoardSize.setColumns(10);
-		
-		
+
 		txtNewswarmsize = new JTextField("10");
 		txtNewswarmsize.setBounds(292, 102, 40, 20);
 		contentPane.add(txtNewswarmsize);
@@ -68,10 +73,15 @@ public class NewBoardWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numCellsOnSide = Integer.parseInt(NewBoardSize.getText());
 				numAgents = Integer.parseInt(txtNewswarmsize.getText());
-				GUI.setLblBoardSizeInt(numCellsOnSide);
-				GUI.setLblSwarmSizeInt(numAgents);
-				MakeNewBoard(frame);
-				dispose();
+				if(numCellsOnSide <= 0 || numAgents <= 0)
+				{
+					ErrorMessage.setVisible(true);
+				}
+				else
+				{
+					MakeNewBoard(frame);
+					dispose();
+				}
 			}
 		});
 		btnMakeNewBoard.setBounds(95, 184, 237, 49);
