@@ -84,6 +84,8 @@ public class NewBoardWindow extends JFrame {
 		{
 			frame.remove(GUI.board);
 		}
+//		GUI.board.getGraphics().setColor(Color.WHITE);
+//		GUI.board.getGraphics().drawRect(-5, -5, 810, 810);
 		//I factored out the borderForCentering so that the border is around the Board JPanel itself.
 		//This math is the same math that used to be done at the beginning of the Board constructor.
 		int spareSpace = GUI.MAXBOARDSIZE%numCellsOnSide;
