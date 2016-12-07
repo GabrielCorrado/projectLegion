@@ -673,8 +673,8 @@ public class Board extends JPanel implements MouseInputListener {
 		strategy = newStrategy;
 	}
 
-	public void toggleWrap()
+	public void setWrap(boolean guiWrap)
 	{
-		wrap = !wrap;
+		this.wrap = guiWrap;
 	}
 }
