@@ -237,6 +237,17 @@ public class GUI {
 		tabLayer2.setBackground(new Color(211, 211, 211));
 		tabbedPane.addTab("Layer 2", null, tabLayer2, null);
 		tabLayer2.setLayout(null);
+		tabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				// TODO Auto-generated method stub
+				if (!timerStarted) {
+					board.repaint();
+				}
+			}
+
+		});
 
 		//************************************************************ Primary color for polarity choice comboBox where you can change it
 		JLabel lblPrimaryPolarityColor = new JLabel("Primary Polarity Color");
@@ -250,6 +261,7 @@ public class GUI {
 		comboPrimary.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
+
 				JComboBox src = (JComboBox) e.getSource();
 				if(polarity2 == primaryColorList[src.getSelectedIndex()])
 				{
@@ -261,6 +273,11 @@ public class GUI {
 					polarity1 = primaryColorList[src.getSelectedIndex()];
 					board.updateNewPolarityColor1(polarity1);
 				}
+				if(!timerStarted)
+				{
+					board.repaint();
+				}
+
 			}
 		});
 		tabLayer2.add(comboPrimary);
@@ -288,6 +305,11 @@ public class GUI {
 					polarity2 =secondaryColorList[src.getSelectedIndex()];
 					board.updateNewPolarityColor2(polarity2);
 				}
+				if (!timerStarted)
+				{
+					board.repaint();
+				}
+
 			}
 		});
 		tabLayer2.add(comboSecondary);
@@ -383,10 +405,17 @@ public class GUI {
 		comboBox_AgentColor.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
+
 				JComboBox src = (JComboBox) e.getSource();
 				agentColor =agentColorList[src.getSelectedIndex()];
 				board.updateAgentColor(agentColor);
 				whetherAgentsVisible = true;
+				board.repaint();
+
+				if (!timerStarted)
+				{
+					board.repaint();
+				}
 			}
 		});
 		tabLayer3.add(comboBox_AgentColor);
@@ -458,6 +487,9 @@ public class GUI {
 		tglbtnViewAgents.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				whetherAgentsVisible = !whetherAgentsVisible;
+				if (!timerStarted) {
+					board.repaint();
+				}
 			}
 		});
 		tabLayer3.add(tglbtnViewAgents);
