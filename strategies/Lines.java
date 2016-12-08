@@ -4,30 +4,169 @@ import java.awt.Color;
 
 import cells.Cell;
 import cells.GenericCell;
+import gui.Board;
 import gui.GUI;
 import other.SwarmAgent;
 
 public class Lines extends AbstractStrategy{
 
 	@Override
-	public Cell[][] Layer2(Cell[][] layer1, Color polarity, int cellSize) {
-		Cell[][] layer2 = new Cell[layer1.length][layer1.length];
-		for (int row = 0; row < layer1.length; row++) {
-			for (int col = 0; col < layer1[row].length; col++) {
-
-					if(layer1[row][col].getColor() == Color.BLACK)
-						//if the layer 1 cell is black
-					{
-						layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
-					}
-					else
-						//if the layer 1 cell is white
-					{
-						layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+	public Cell Layer2(Cell[][] layer1, int cellSize, int row, int col, GenericCell[] neighbors) {
+		Cell layer2 = new Cell(0,0,0,Color.RED);
+		int[] listOfPolarities = new int[4];
+		int max = listOfPolarities[0], chosenPolarity = 0, cornerCount = 0, edgeCount = 0, vertical = 0, horizontal = 0;
+		for(int index = 0; index<neighbors.length; index++)
+		{
+			if(neighbors[index] != null)
+			{
+				if(index%2==0)
+				{
+					if (neighbors[index].getColor() == Color.BLACK){
+						cornerCount++;
 					}
 				}
+				else
+				{
+					if (neighbors[index].getColor() == Color.BLACK){
+						edgeCount++;
+						if(index==1||index==5)
+						{
+							vertical++;
+						}
+						if(index==3||index==7)
+						{
+							horizontal++;
+						}
+					}
+				}
+			}
+			else
+			{
 
+			}
 		}
+		if(layer1[row][col].getColor()==Color.BLACK)
+		{
+			edgeCount+=2;
+		}
+
+		if (edgeCount>cornerCount)
+		{
+			if(vertical>horizontal)
+			{
+				chosenPolarity = 2;
+			}
+			else
+			{
+				chosenPolarity = 0;
+			}
+		}
+		else
+		{
+			if(vertical>horizontal)
+			{
+				chosenPolarity = 1;
+			}
+			else
+			{
+				chosenPolarity = 3;
+			}
+		}
+		if(layer1[row][col].getColor()==Color.BLACK)
+		{
+			if(chosenPolarity == 0)
+			{
+				if(row%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+				}
+			}
+			else if(chosenPolarity == 1)
+			{
+				if(row%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+				}
+			}
+			else if(chosenPolarity == 2)
+			{
+				if(col%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity4());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity3());
+				}
+			}
+			else
+			{
+				if(col%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity4());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity3());
+				}
+			}
+		}
+		else
+		{
+			if(chosenPolarity == 0)
+			{
+				if(row%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+				}
+			}
+			else if(chosenPolarity == 1)
+			{
+				if(row%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+				}
+			}
+			else if(chosenPolarity == 2)
+			{
+				if(col%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity3());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity4());
+				}
+			}
+			else
+			{
+				if(col%2==0)
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity3());
+				}
+				else
+				{
+					layer2 = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity4());
+				}
+			}
+		}
+
 		return layer2;
 	}
 
@@ -68,7 +207,7 @@ public class Lines extends AbstractStrategy{
 			else
 			{
 				layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize] = Layer2(layer1, cellSize, (int)agent.getCenterX()/cellSize, (int)agent.getCenterY()/cellSize, neighbors);
 				cornerCount = 0;
 				edgeCount = 0;
 			}
@@ -78,7 +217,8 @@ public class Lines extends AbstractStrategy{
 			if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
 			{
 				layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize] = Layer2(layer1, cellSize, (int)agent.getCenterX()/cellSize, (int)agent.getCenterY()/cellSize, neighbors);
+
 				cornerCount = 0;
 				edgeCount = 0;
 			}
@@ -94,7 +234,8 @@ public class Lines extends AbstractStrategy{
 			if (flipCoin >.5)
 			{
 				layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize] = Layer2(layer1, cellSize, (int)agent.getCenterX()/cellSize, (int)agent.getCenterY()/cellSize, neighbors);
+
 				cornerCount = 0;
 				edgeCount = 0;
 			}
