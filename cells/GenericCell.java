@@ -13,7 +13,8 @@ import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
 public class GenericCell extends Rectangle2D.Double {
-	protected double x, y;
+	public double x;
+	public double y;
 	protected double size;
 	protected Color cellColor;
 	
