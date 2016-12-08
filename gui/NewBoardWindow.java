@@ -50,16 +50,11 @@ public class NewBoardWindow extends JFrame {
 		lblNewSwarmSize.setBounds(95, 102, 100, 20);
 		contentPane.add(lblNewSwarmSize);
 
-		JLabel ErrorMessage = new JLabel("Please enter a number greater than 0");
-		ErrorMessage.setBounds(95, 140, 220, 20);
-		ErrorMessage.setForeground(Color.red);
-		ErrorMessage.setVisible(false);
-		contentPane.add(ErrorMessage);
-
 		NewBoardSize = new JTextField("10",5);
 		NewBoardSize.setBounds(292, 48, 40, 20);
 		contentPane.add(NewBoardSize);
 		NewBoardSize.setColumns(10);
+
 
 		txtNewswarmsize = new JTextField("10");
 		txtNewswarmsize.setBounds(292, 102, 40, 20);
@@ -73,15 +68,10 @@ public class NewBoardWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				numCellsOnSide = Integer.parseInt(NewBoardSize.getText());
 				numAgents = Integer.parseInt(txtNewswarmsize.getText());
-				if(numCellsOnSide <= 0 || numAgents <= 0)
-				{
-					ErrorMessage.setVisible(true);
-				}
-				else
-				{
-					MakeNewBoard(frame);
-					dispose();
-				}
+				GUI.setLblBoardSizeInt(numCellsOnSide);
+				GUI.setLblSwarmSizeInt(numAgents);
+				MakeNewBoard(frame);
+				dispose();
 			}
 		});
 		btnMakeNewBoard.setBounds(95, 184, 237, 49);
@@ -94,16 +84,16 @@ public class NewBoardWindow extends JFrame {
 		{
 			frame.remove(GUI.board);
 		}
-//		GUI.board.getGraphics().setColor(Color.WHITE);
-//		GUI.board.getGraphics().drawRect(-5, -5, 810, 810);
+		//		GUI.board.getGraphics().setColor(Color.WHITE);
+		//		GUI.board.getGraphics().drawRect(-5, -5, 810, 810);
 		//I factored out the borderForCentering so that the border is around the Board JPanel itself.
 		//This math is the same math that used to be done at the beginning of the Board constructor.
 		int spareSpace = GUI.MAXBOARDSIZE%numCellsOnSide;
 		int borderForCentering = spareSpace/2;
 		int boardSize = GUI.MAXBOARDSIZE-borderForCentering*2;
-		
+
 		boolean whetherBoardWraps = GUI.wrap;
-		Board board = new Board(boardSize,boardSize,numCellsOnSide,numAgents, whetherBoardWraps);
+		Board board = new Board(boardSize,boardSize,numCellsOnSide,numAgents, whetherBoardWraps, null);
 		board.setBackground(Color.WHITE);
 		board.setBounds(10+borderForCentering, 10+borderForCentering, boardSize, boardSize);
 		//displayPanel.add();
@@ -114,7 +104,7 @@ public class NewBoardWindow extends JFrame {
 		board.oldPolarity2 = GUI.getPolarity2();
 		board.updateGoalStrategy(GUI.goalStrategy);
 		board.setAgentRate(GUI.agentSliderRate);
-		
+
 	}
-	
+
 }
