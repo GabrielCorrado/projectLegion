@@ -57,6 +57,8 @@ public class Board extends JPanel implements MouseInputListener {
 	public Timer t;
 	public Color oldPolarity1 = Color.RED;
 	public Color oldPolarity2 = Color.BLUE;
+	public Color oldPolarity3 = Color.YELLOW;
+	public Color oldPolarity4 = Color.WHITE;
 	private int blackCellCounter = 0;
 	private int whiteCellCounter = 0;
 	public static int currBlackCellCounter = 0;
@@ -64,7 +66,7 @@ public class Board extends JPanel implements MouseInputListener {
 	private GenericCell[] neighbors = new GenericCell[8];
 	private AbstractStrategy strategy;
 
-	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap) {
+	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap, Cell[][] layer1GetNeighbor) {
 		strategy = new CheckerBoard();
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
@@ -80,6 +82,7 @@ public class Board extends JPanel implements MouseInputListener {
 
 		//layer 1
 		layer1 = new Cell[numCellsOnSide][numCellsOnSide];
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
 		int rand;
 		for (int row = 0; row < layer1.length; row++) {
 			for (int col = 0; col < layer1[row].length; col++) {
@@ -98,6 +101,12 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 
+		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
+		for (int row = 0; row < layer2.length; row++) {
+			for (int col = 0; col < layer2[row].length; col++) {
+				layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, getNeighbors(layer1, row, col));	
+			}
+		}
 		//generates the swarm and adjusts their positions
 		agents = new SwarmAgent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
@@ -107,14 +116,6 @@ public class Board extends JPanel implements MouseInputListener {
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-
-		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
-		polarity = (layer1[0][0].getColor() == Color.BLACK ? Color.RED : Color.BLUE);
-
-		//layer 2 initial construction
-		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
-		//layer2(polarity);
-		layer2 = strategy.Layer2(layer1, polarity, cellSize);
 
 		StartTimer();
 
@@ -133,6 +134,7 @@ public class Board extends JPanel implements MouseInputListener {
 	 * the checkerboard condition. I have no clue how to generalize it.
 	 * @param polarity
 	 */
+	/*
 	protected void layer2(Color polarity)
 	{
 		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
@@ -204,6 +206,7 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 	}
+	 */
 
 	public void StartTimer()
 	{
@@ -295,6 +298,12 @@ public class Board extends JPanel implements MouseInputListener {
 			if((int)agent.getCenterX()/cellSize<=rowMax && (int)agent.getCenterY()/cellSize<=colMax)
 			{
 				strategy.logic(agent, layer1, layer2, neighbors, layer1[((int)agent.getCenterX()/cellSize)][((int)agent.getCenterY()/cellSize)], cellSize);
+				for (int row = 0; row < layer2.length; row++) {
+					for (int col = 0; col < layer2[row].length; col++) {
+						GenericCell[] neighbors =  getNeighbors(layer1, row, col);
+						layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, neighbors);
+					}
+				}
 			}
 			/*
 			//if (Math.random() < 0.1) {
@@ -413,7 +422,7 @@ public class Board extends JPanel implements MouseInputListener {
 	 * @param colNum
 	 * @return an array of all of the neighbors of the cell whose row and column number has been provided.
 	 */
-	public GenericCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
+	public static GenericCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
 		//each cell only has 8 neighbors! for now at least.... :(
 		GenericCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
@@ -655,6 +664,32 @@ public class Board extends JPanel implements MouseInputListener {
 		oldPolarity2 = polarity2;
 	}
 
+	public void updateNewPolarityColor3(Color polarity3)
+	{
+		for (int row = 0; row < layer2.length; row++) {
+			for (int col = 0; col < layer2[row].length; col++) {
+				if(layer2[row][col].getColor() == oldPolarity3)
+				{
+					layer2[row][col].setColor(polarity3);
+				}
+			}
+		}
+		oldPolarity3 = polarity3;
+	}
+
+	public void updateNewPolarityColor4(Color polarity4)
+	{
+		for (int row = 0; row < layer2.length; row++) {
+			for (int col = 0; col < layer2[row].length; col++) {
+				if(layer2[row][col].getColor() == oldPolarity4)
+				{
+					layer2[row][col].setColor(polarity4);
+				}
+			}
+		}
+		oldPolarity4 = polarity4;
+	}
+
 	/**
 	 * @author zgray17
 	 * This method updates the color of the agents. Blah blah blah.
@@ -671,6 +706,12 @@ public class Board extends JPanel implements MouseInputListener {
 	public void updateGoalStrategy(AbstractStrategy newStrategy)
 	{
 		strategy = newStrategy;
+		for (int row = 0; row < layer2.length; row++) {
+			for (int col = 0; col < layer2[row].length; col++) {
+				GenericCell[] neighbors =  getNeighbors(layer1, row, col);
+				layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, neighbors);
+			}
+		}
 	}
 
 	public void setWrap(boolean guiWrap)
