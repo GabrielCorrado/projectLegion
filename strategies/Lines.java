@@ -9,9 +9,14 @@ import gui.GUI;
 import other.SwarmAgent;
 
 public class Lines extends AbstractStrategy{
-
+	/*
+	 * Author: Zakary Gray
+	 * Description: Agent logic and layer 2 logic for an end goal of all layer 1 cells forming straight lines of black and white. The stable state for this goal is a pyramid.
+	 */
 	@Override
 	public Cell Layer2(Cell[][] layer1, int cellSize, int row, int col, GenericCell[] neighbors) {
+		//Layer 2 in this sense shows 4 colors. one for each variation of straight lines. In the final, solved state,
+		//the 4 colors indicate the 4 faces of the pyramid.
 		Cell layer2 = new Cell(0,0,0,Color.RED);
 		int[] listOfPolarities = new int[4];
 		int max = listOfPolarities[0], chosenPolarity = 0, cornerCount = 0, edgeCount = 0, vertical = 0, horizontal = 0;
@@ -54,24 +59,26 @@ public class Lines extends AbstractStrategy{
 		{
 			if(vertical>horizontal)
 			{
-				chosenPolarity = 2;
+				chosenPolarity = 2;//Top and bottom rows white and middle row black
 			}
 			else
 			{
-				chosenPolarity = 0;
+				chosenPolarity = 0;//Left and right column white and middle column black
 			}
 		}
 		else
 		{
 			if(vertical>horizontal)
 			{
-				chosenPolarity = 1;
+				chosenPolarity = 1;// Top and bottom rows black and middle row white
 			}
 			else
 			{
-				chosenPolarity = 3;
+				chosenPolarity = 3;//Left and right column black and middle column white
 			}
 		}
+		//This section is necessary to allow for the alternating colors of layer 1 to be classified as the same polarity. 
+		//For example, a black row then a white row then a black row are the same polarity, but appear opposite on a case-by-case basis
 		if(layer1[row][col].getColor()==Color.BLACK)
 		{
 			if(chosenPolarity == 0)
@@ -171,6 +178,7 @@ public class Lines extends AbstractStrategy{
 	}
 
 	@Override
+	//this is the exact same logic as the checkerboard, but with edgeCount and cornerCount flipped.
 	public void logic(SwarmAgent agent, Cell[][] layer1, Cell[][] layer2, GenericCell[] neighbors, Cell cell, int cellSize) {
 		int cornerCount = 0;
 		int edgeCount = 0;

@@ -6,7 +6,10 @@ import cells.Cell;
 import cells.GenericCell;
 import gui.GUI;
 import other.SwarmAgent;
-
+/*
+ * Author: Zakary Gray
+ * Description: Agent logic and layer 2 logic for an end goal of all layer 1 cells being black
+ */
 public class AllBlack extends AbstractStrategy{
 
 	@Override

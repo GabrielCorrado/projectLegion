@@ -75,21 +75,20 @@ public class CheckerBoard extends AbstractStrategy{
 	public void logic(SwarmAgent agent, Cell[][] layer1, Cell[][] layer2, GenericCell[] neighbors, Cell cell, int cellSize) {
 		int cornerCount = 0;
 		int edgeCount = 0;
-		//if (Math.random() < 0.1) {
 		for(int index = 0; index<neighbors.length; index++)
 		{
 			if(neighbors[index] != null)
 			{
 				if(index%2==0)
 				{
-					if (neighbors[index].getColor() == Color.BLACK){
-						cornerCount++;
+					if (neighbors[index].getColor() == Color.BLACK){//if on the corner...
+						cornerCount++;// cornerCount increases
 					}
 				}
 				else
 				{
-					if (neighbors[index].getColor() == Color.BLACK){
-						edgeCount++;
+					if (neighbors[index].getColor() == Color.BLACK){//if on the edge...
+						edgeCount++;//edgeCount in creases
 					}
 				}
 			}
@@ -98,7 +97,7 @@ public class CheckerBoard extends AbstractStrategy{
 
 			}
 		}
-		if(cornerCount>edgeCount)
+		if(cornerCount>edgeCount)//if more corners are black than edges, you should be black in the center
 		{
 			if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
 			{
@@ -113,7 +112,7 @@ public class CheckerBoard extends AbstractStrategy{
 				edgeCount = 0;
 			}
 		}
-		else if(edgeCount>cornerCount)
+		else if(edgeCount>cornerCount)//and visa versa
 		{
 			if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
 			{
@@ -130,8 +129,8 @@ public class CheckerBoard extends AbstractStrategy{
 		}
 		else
 		{
-			double flipCoin = Math.random();
-			if (flipCoin >.5)
+			double flipCoin = Math.random();// and if you are tied, like if all are black
+			if (flipCoin >.5)// flip a coin
 			{
 				layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
 				layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();

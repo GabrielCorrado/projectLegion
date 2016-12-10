@@ -649,7 +649,7 @@ public class GUI {
 			@Override public void stateChanged(ChangeEvent e) {
 				JSlider src = (JSlider) e.getSource();
 				agentSliderRate = src.getValue();
-				board.setAgentRate(agentSliderRate);
+				board.setAgentRate((int)agentSliderRate*5);
 			}
 		});
 		frmProjectLegion.getContentPane().add(sliderSwarmSpeed);

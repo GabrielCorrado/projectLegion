@@ -1,4 +1,4 @@
-package gui;
+package notWorking;
 
 /*
  *		Authors: Zakary Gray, Tim Dobeck, Nick Corrado, Gabriel Petkac
@@ -51,22 +51,22 @@ public class Board extends JPanel implements MouseInputListener {
 	private double attractorStrength = 1;
 	private int attractorMaxDistance; //distance in cells, not pixels
 	private int attractOrRepel = 1; //1 if attract, -1 if repel
-	private int tempL2D;//temporary layer 2 used in calculations
-	private int agentRate = 50;//delay between timer firing
-	public int period = 100000;
-	public Timer t;//main timer
-	public Color oldPolarity1 = Color.RED;//old polarity color is saved so that it is possible to change them to new polarity
+	private int tempL2D;
+	private int agentRate = 50;
+	public int period = 10;
+	public Timer t;
+	public Color oldPolarity1 = Color.RED;
 	public Color oldPolarity2 = Color.BLUE;
-	public Color oldPolarity3 = Color.YELLOW;
-	public Color oldPolarity4 = Color.WHITE;
-	private int blackCellCounter = 0;//info for GUI
+	private int blackCellCounter = 0;
 	private int whiteCellCounter = 0;
 	public static int currBlackCellCounter = 0;
 	public static int currWhiteCellCounter = 0;
-	private GenericCell[] neighbors = new GenericCell[8];//the 8 cells that neighbor a given cell in layer 1 are stored here
-	private AbstractStrategy strategy;//stategy that the agents and layer 2 use for their calculations given the current goal
+	private GenericCell[] neighbors = new GenericCell[8];
+	private AbstractStrategy strategy;
+	public int pheromoneStrength = 1;
+	private GenericCell pheromoneCell;
 
-	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap, Cell[][] layer1GetNeighbor) {
+	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap) {
 		strategy = new CheckerBoard();
 		//set preferred graphical dimensions of the board
 		setPreferredSize(new Dimension(width, height));
@@ -100,12 +100,6 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 
-		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
-		for (int row = 0; row < layer2.length; row++) {
-			for (int col = 0; col < layer2[row].length; col++) {
-				layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, getNeighbors(layer1, row, col));	
-			}
-		}
 		//generates the swarm and adjusts their positions
 		agents = new SwarmAgent[numAgents];
 		for (int i = 0; i < agents.length; i++) {
@@ -116,6 +110,14 @@ public class Board extends JPanel implements MouseInputListener {
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 
+		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
+		polarity = (layer1[0][0].getColor() == Color.BLACK ? Color.RED : Color.BLUE);
+
+		//layer 2 initial construction
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
+		//layer2(polarity);
+		layer2 = strategy.Layer2(layer1, polarity, cellSize);
+
 		StartTimer();
 
 		if (GUI.layer2Draw == 3)
@@ -125,6 +127,84 @@ public class Board extends JPanel implements MouseInputListener {
 
 		GUI.setLblIntBlackCells(blackCellCounter);
 		GUI.setLblIntWhiteCells(whiteCellCounter);
+	}
+
+	/**
+	 * @author zgray17
+	 * This method handles the generation of layer2. Its primary problem is that it assumes
+	 * the checkerboard condition. I have no clue how to generalize it.
+	 * @param polarity
+	 */
+	protected void layer2(Color polarity)
+	{
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
+
+		for (int row = 0; row < layer1.length; row++) {
+			for (int col = 0; col < layer1[row].length; col++) {
+
+				if(polarity == Color.RED)
+					//if the top left is black
+				{
+					if(layer1[row][col].getColor() == Color.BLACK)
+						//if the layer 1 cell is black
+					{
+						if(col%2 == row%2)
+							//if its in a spot that should be black
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+							//then you are the same polarity as cell[0][0]
+						}
+						else
+							//if its in a spot that SHOULDN'T be black
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+							//then you are in the opposite polarity than cells[0][0]
+						}
+					}
+					else
+						//if the layer 1 cell is white
+					{
+						if(col%2 == row%2)
+							//if its in a spot that SHOULDN'T be 
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+							// then its in the opposite polarity than cells[0]
+						}
+						else
+							//if its in a spot that should be white
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+							//then its in the same polarity as cells[0][0]
+						}
+					}
+				}
+				else
+				{
+					if(layer1[row][col].getColor() == Color.WHITE)
+					{
+						if(col%2 == row%2)
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+						}
+						else
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+						}
+					}
+					else
+					{
+						if(col%2 == row%2)
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
+						}
+						else
+						{
+							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public void StartTimer()
@@ -140,7 +220,7 @@ public class Board extends JPanel implements MouseInputListener {
 				t.cancel(); // cancel time
 				StartTimer();
 			}
-		}, 500-agentRate,period);
+		}, 100-agentRate,period);
 	}
 
 	protected void paintComponent(Graphics arg0) {
@@ -217,15 +297,81 @@ public class Board extends JPanel implements MouseInputListener {
 			if((int)agent.getCenterX()/cellSize<=rowMax && (int)agent.getCenterY()/cellSize<=colMax)
 			{
 				strategy.logic(agent, layer1, layer2, neighbors, layer1[((int)agent.getCenterX()/cellSize)][((int)agent.getCenterY()/cellSize)], cellSize);
-				for (int row = 0; row < layer2.length; row++) {
-					for (int col = 0; col < layer2[row].length; col++) {
-						GenericCell[] neighbors =  getNeighbors(layer1, row, col);
-						layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, neighbors);
+			}
+			/*
+			//if (Math.random() < 0.1) {
+			if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
+				for(int index = 0; index<neighbors.length; index++)
+				{
+					if(neighbors[index] != null)
+					{
+						if(index%2==0)
+						{
+							if (neighbors[index].getColor() == Color.BLACK){
+								cornerCount++;
+							}
+						}
+						else
+						{
+							if (neighbors[index].getColor() == Color.BLACK){
+								edgeCount++;
+							}
+						}
+					}
+					else
+					{
+					}
+				}
+				if(cornerCount>edgeCount)
+				{
+					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
+					{
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+					else
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+				}
+				else if(edgeCount>cornerCount)
+				{
+					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+					else
+					{
+						cornerCount = 0;
+						edgeCount = 0;
+					}
+				}
+				else
+				{
+					double flipCoin = Math.random();
+					if (flipCoin >.5)
+					{
+						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
+						cornerCount = 0;
+						edgeCount = 0;
 					}
 				}
 			}
+			//}
+			 */
+			//asdf
+//		Make the pheromone cell equal to the cell which the swarm agen is on top of.
 			
-			agent.step(cellSize);
+			
+			
+			agent.step(cellSize);//, pStrength, pDirection);
 			if (wrap) {
 				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
 				agent.setX((agent.getX()+this.getWidth())%this.getWidth());
@@ -273,12 +419,11 @@ public class Board extends JPanel implements MouseInputListener {
 	 * @param colNum
 	 * @return an array of all of the neighbors of the cell whose row and column number has been provided.
 	 */
-	public static GenericCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
+	public GenericCell[] getNeighbors(Cell[][] cells, int rowNum, int colNum) {
 		//each cell only has 8 neighbors! for now at least.... :(
 		GenericCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
 		int colMax = cells[rowMax-1].length-1;
-		//This is an attempt to use nullCell singletons on the edge of the board to handle edge cases
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
 		//		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
@@ -402,9 +547,17 @@ public class Board extends JPanel implements MouseInputListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println((int)(arg0.getX()/cellSize));
-		System.out.println((int)(arg0.getY()/cellSize));
-		System.out.println();
+//		System.out.println((int)(arg0.getX()/cellSize));
+//		System.out.println((int)(arg0.getY()/cellSize));
+//		System.out.println();
+		
+//		This code will return the Y and X coordinate for the cell which the mouse was clicked on in order to set the pheromone zone.
+		int rowClickedInt = (int) (arg0.getX()/cellSize);
+		int colClickedInt = (int) (arg0.getY()/cellSize);
+//		System.out.println(rowClickedInt);
+//		System.out.println(colClickedInt);
+//		System.out.println();
+		makePheromoneZone(pheromoneStrength,rowClickedInt,colClickedInt);
 
 
 	}
@@ -516,32 +669,6 @@ public class Board extends JPanel implements MouseInputListener {
 		oldPolarity2 = polarity2;
 	}
 
-	public void updateNewPolarityColor3(Color polarity3)
-	{
-		for (int row = 0; row < layer2.length; row++) {
-			for (int col = 0; col < layer2[row].length; col++) {
-				if(layer2[row][col].getColor() == oldPolarity3)
-				{
-					layer2[row][col].setColor(polarity3);
-				}
-			}
-		}
-		oldPolarity3 = polarity3;
-	}
-
-	public void updateNewPolarityColor4(Color polarity4)
-	{
-		for (int row = 0; row < layer2.length; row++) {
-			for (int col = 0; col < layer2[row].length; col++) {
-				if(layer2[row][col].getColor() == oldPolarity4)
-				{
-					layer2[row][col].setColor(polarity4);
-				}
-			}
-		}
-		oldPolarity4 = polarity4;
-	}
-
 	/**
 	 * @author zgray17
 	 * This method updates the color of the agents. Blah blah blah.
@@ -558,16 +685,216 @@ public class Board extends JPanel implements MouseInputListener {
 	public void updateGoalStrategy(AbstractStrategy newStrategy)
 	{
 		strategy = newStrategy;
-		for (int row = 0; row < layer2.length; row++) {
-			for (int col = 0; col < layer2[row].length; col++) {
-				GenericCell[] neighbors =  getNeighbors(layer1, row, col);
-				layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, neighbors);
-			}
-		}
 	}
 
-	public void setWrap(boolean guiWrap)
+	public void toggleWrap()
 	{
-		this.wrap = guiWrap;
+		wrap = !wrap;
 	}
+
+	//So what we are going to do here is get the x and y of where the mouse was clicked then go through the array untill you find the row and column that cell technically is in then return those two values. 
+
+	/**
+	 * @param pheromoneStrength this is passed in from a label in the GUI and will be how many "ripples" it needs to make around the cell of pheromoned cells that have directions
+	 * @param mouseX used to calculate what column the cell is in its 2D array
+	 * @param mouseY used to calculate what row the cell is in its 2D array
+	 */
+	protected void makePheromoneZone(int pheromoneStrength, int mouseX, int mouseY) {
+		//			layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize];
+
+		//This is the algorithm that gives every cell its pheromone strength and direction. Automatically starts with the upper left hand position of the base case.
+		int positionX = mouseX-1;
+		int positionY = mouseY-1;
+		int ripplePosition = 1;
+		//			This will be how long the row should be::Use at later date if you can do a whole pheromone zone
+		//			int rowLength = 3; 
+		//			This is how many diagonals are needed per line
+		int numDiagonals = 1;
+		//			This is how many direct arrows are needed per line for the vertical pheromone segments
+		int numVerticals = 0;
+		//			This is how many direct arrows are needed per line for the horizontal pheromone segments
+		int numHorizontals = 1;
+
+		while (pheromoneStrength!=0)
+		{
+//			This makes the cell selected 9 which means it was the selected one which is still random
+			layer1[positionY][positionX].setPheromoneDirection(9);
+			//				Set each cells pheromoneStrength to the current pheromone strenght because it will be reduced by 1 every time it runs through the loop
+			//				Handle top*******************************************************************
+//			System.out.println("\nPheromone Strength Layer: " + pheromoneStrength);
+//			System.out.println("\n Handle Top Side:");
+			for (int leftDiagonals=0;leftDiagonals<numDiagonals;leftDiagonals++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(4);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionX++;
+			}
+
+			for (int leftDown=0;leftDown<numVerticals;leftDown++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(5);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionX++;
+			}
+			//				
+			//				Base case of one being down has to be handled here.
+			layer1[positionY][positionX].setPheromoneDirection(5);
+			layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+			//				System.out.println(positionY + ", " + (positionX) + ", Direction: " + layer1[positionY][positionX].getDirection() + ", Center Arrow");
+			positionX++;
+			//				
+			for (int rightDown=0;rightDown<numVerticals;rightDown++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(5);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionX++;
+			}
+			for (int rightDiagonal=0;rightDiagonal<numDiagonals;rightDiagonal++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(6);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				if((rightDiagonal+1)!=numDiagonals){positionX++;};
+			}
+			//				
+			//				Handles right side************************************************************
+//			System.out.println("\n Handle Right Side:");
+			//				
+			//				
+			for (int topDiagonals=0;topDiagonals<numDiagonals;topDiagonals++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(6);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionY++;
+			}
+			for (int topDown=0;topDown<numVerticals;topDown++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(7);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionY++;
+			}
+			//				
+			//				Base case of one being left has to be handled here.
+			for(int index=0;index<numHorizontals;index++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(7);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + (positionX) + ", Direction: " + layer1[positionY][positionX].getDirection() + ", Center Arrow");
+				positionY++;
+			}
+			//				
+			for (int bottomDown=0;bottomDown<numVerticals;bottomDown++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(7);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionY++;
+			}
+			for (int bottomDiagonal=0;bottomDiagonal<numDiagonals;bottomDiagonal++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(8);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				if((bottomDiagonal+1)!=numDiagonals){positionY++;};
+			}
+			//				
+			//				Handles bottom side************************************************************
+//			System.out.println("\n Handle Bottom Side:");
+			//				
+			//	
+			for (int rightDiagonals=0;rightDiagonals<numDiagonals;rightDiagonals++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(8);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionX--;
+			}
+			for (int rightUp=0;rightUp<numVerticals;rightUp++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(1);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionX--;
+			}
+			//				
+			//				Base case of one being down has to be handled here.
+			layer1[positionY][positionX].setPheromoneDirection(1);
+			layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+			//				System.out.println(positionY + ", " + (positionX) + ", Direction: " + layer1[positionY][positionX].getDirection() + ", Center Arrow");
+			positionX--;
+			//				
+			for (int leftUp=0;leftUp<numVerticals;leftUp++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(1);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionX--;
+			}
+			for (int leftDiagonal=0;leftDiagonal<numDiagonals;leftDiagonal++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(2);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				if((leftDiagonal+1)!=numDiagonals){positionX--;};
+			}
+			//				
+			//				Handles left side************************************************************
+//			System.out.println("\n Handle Left Side:");
+			//				
+			//				
+			for (int topDiagonals=0;topDiagonals<numDiagonals;topDiagonals++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(2);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionY--;
+			}
+			for (int topDown=0;topDown<numVerticals;topDown++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(3);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionY--;
+			}
+			//				
+			//				Base case of one being left has to be handled here.
+			for(int index=0;index<numHorizontals;index++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(3);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + (positionX) + ", Direction: " + layer1[positionY][positionX].getDirection() + ", Center Arrow");
+				positionY--;
+			}
+			//				
+			for (int bottomDown=0;bottomDown<numVerticals;bottomDown++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(3);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				positionY--;
+			}
+			for (int bottomDiagonal=0;bottomDiagonal<numDiagonals;bottomDiagonal++)
+			{
+				layer1[positionY][positionX].setPheromoneDirection(4);
+				layer1[positionY][positionX].setPheromoneStrength(pheromoneStrength);
+				//					System.out.println(positionY + ", " + positionX + ", Direction: " + layer1[positionY][positionX].getDirection());
+				if((bottomDiagonal+1)!=numDiagonals){positionY--;};
+			}
+
+			//				Weaken the pheromone by one so that eventually the loop will end
+			pheromoneStrength--;
+			positionX--;
+			positionY--;
+			ripplePosition++;
+			if (ripplePosition%2==0){numDiagonals++;};
+			if (ripplePosition>2&&ripplePosition%2==1){numVerticals++;};
+		}		
+	}	
 }
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help
