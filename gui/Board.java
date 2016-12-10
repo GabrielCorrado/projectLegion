@@ -51,20 +51,20 @@ public class Board extends JPanel implements MouseInputListener {
 	private double attractorStrength = 1;
 	private int attractorMaxDistance; //distance in cells, not pixels
 	private int attractOrRepel = 1; //1 if attract, -1 if repel
-	private int tempL2D;
-	private int agentRate = 50;
-	public int period = 10;
-	public Timer t;
-	public Color oldPolarity1 = Color.RED;
+	private int tempL2D;//temporary layer 2 used in calculations
+	private int agentRate = 50;//delay between timer firing
+	public int period = 100000;
+	public Timer t;//main timer
+	public Color oldPolarity1 = Color.RED;//old polarity color is saved so that it is possible to change them to new polarity
 	public Color oldPolarity2 = Color.BLUE;
 	public Color oldPolarity3 = Color.YELLOW;
 	public Color oldPolarity4 = Color.WHITE;
-	private int blackCellCounter = 0;
+	private int blackCellCounter = 0;//info for GUI
 	private int whiteCellCounter = 0;
 	public static int currBlackCellCounter = 0;
 	public static int currWhiteCellCounter = 0;
-	private GenericCell[] neighbors = new GenericCell[8];
-	private AbstractStrategy strategy;
+	private GenericCell[] neighbors = new GenericCell[8];//the 8 cells that neighbor a given cell in layer 1 are stored here
+	private AbstractStrategy strategy;//stategy that the agents and layer 2 use for their calculations given the current goal
 
 	public Board(int width, int height, int numCellsOnSide, int numAgents, boolean wrap, Cell[][] layer1GetNeighbor) {
 		strategy = new CheckerBoard();
@@ -82,7 +82,6 @@ public class Board extends JPanel implements MouseInputListener {
 
 		//layer 1
 		layer1 = new Cell[numCellsOnSide][numCellsOnSide];
-		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
 		int rand;
 		for (int row = 0; row < layer1.length; row++) {
 			for (int col = 0; col < layer1[row].length; col++) {
@@ -101,7 +100,7 @@ public class Board extends JPanel implements MouseInputListener {
 			}
 		}
 
-		//In regards to polarity, a checker board with black in the top left is red, the other is blue.
+		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
 		for (int row = 0; row < layer2.length; row++) {
 			for (int col = 0; col < layer2[row].length; col++) {
 				layer2[row][col] = strategy.Layer2(layer1, cellSize, row, col, getNeighbors(layer1, row, col));	
@@ -128,86 +127,6 @@ public class Board extends JPanel implements MouseInputListener {
 		GUI.setLblIntWhiteCells(whiteCellCounter);
 	}
 
-	/**
-	 * @author zgray17
-	 * This method handles the generation of layer2. Its primary problem is that it assumes
-	 * the checkerboard condition. I have no clue how to generalize it.
-	 * @param polarity
-	 */
-	/*
-	protected void layer2(Color polarity)
-	{
-		layer2 = new Cell[numCellsOnSide][numCellsOnSide];
-
-		for (int row = 0; row < layer1.length; row++) {
-			for (int col = 0; col < layer1[row].length; col++) {
-
-				if(polarity == Color.RED)
-					//if the top left is black
-				{
-					if(layer1[row][col].getColor() == Color.BLACK)
-						//if the layer 1 cell is black
-					{
-						if(col%2 == row%2)
-							//if its in a spot that should be black
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
-							//then you are the same polarity as cell[0][0]
-						}
-						else
-							//if its in a spot that SHOULDN'T be black
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
-							//then you are in the opposite polarity than cells[0][0]
-						}
-					}
-					else
-						//if the layer 1 cell is white
-					{
-						if(col%2 == row%2)
-							//if its in a spot that SHOULDN'T be 
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
-							// then its in the opposite polarity than cells[0]
-						}
-						else
-							//if its in a spot that should be white
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
-							//then its in the same polarity as cells[0][0]
-						}
-					}
-				}
-				else
-				{
-					if(layer1[row][col].getColor() == Color.WHITE)
-					{
-						if(col%2 == row%2)
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
-						}
-						else
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
-						}
-					}
-					else
-					{
-						if(col%2 == row%2)
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity2());
-						}
-						else
-						{
-							layer2[row][col] = new Cell(row*cellSize, col*cellSize, cellSize, GUI.getPolarity1());
-						}
-					}
-				}
-			}
-		}
-	}
-	 */
-
 	public void StartTimer()
 	{
 		t = new Timer();
@@ -221,7 +140,7 @@ public class Board extends JPanel implements MouseInputListener {
 				t.cancel(); // cancel time
 				StartTimer();
 			}
-		}, 100-agentRate,period);
+		}, 500-agentRate,period);
 	}
 
 	protected void paintComponent(Graphics arg0) {
@@ -305,75 +224,7 @@ public class Board extends JPanel implements MouseInputListener {
 					}
 				}
 			}
-			/*
-			//if (Math.random() < 0.1) {
-			if (agent.getCenterX() >= 0 && agent.getCenterX() < this.getWidth() && agent.getCenterY() >= 0 && agent.getCenterY() < this.getHeight()) {
-				for(int index = 0; index<neighbors.length; index++)
-				{
-					if(neighbors[index] != null)
-					{
-						if(index%2==0)
-						{
-							if (neighbors[index].getColor() == Color.BLACK){
-								cornerCount++;
-							}
-						}
-						else
-						{
-							if (neighbors[index].getColor() == Color.BLACK){
-								edgeCount++;
-							}
-						}
-					}
-					else
-					{
-
-					}
-				}
-				if(cornerCount>edgeCount)
-				{
-					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
-					{
-						cornerCount = 0;
-						edgeCount = 0;
-					}
-					else
-					{
-						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-						cornerCount = 0;
-						edgeCount = 0;
-					}
-				}
-				else if(edgeCount>cornerCount)
-				{
-					if(layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].getColor() == Color.BLACK)
-					{
-						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-						cornerCount = 0;
-						edgeCount = 0;
-					}
-					else
-					{
-						cornerCount = 0;
-						edgeCount = 0;
-					}
-				}
-				else
-				{
-					double flipCoin = Math.random();
-					if (flipCoin >.5)
-					{
-						layer1[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-						layer2[(int)agent.getCenterX()/cellSize][(int)agent.getCenterY()/cellSize].flipColor();
-						cornerCount = 0;
-						edgeCount = 0;
-					}
-				}
-			}
-			//}
-			 */
+			
 			agent.step(cellSize);
 			if (wrap) {
 				//since there's no walls, this lets the agents "wrap" to the other side of the screen. this is awesome.
@@ -427,6 +278,7 @@ public class Board extends JPanel implements MouseInputListener {
 		GenericCell[] neighbors = new Cell[8];
 		int rowMax = cells.length-1;
 		int colMax = cells[rowMax-1].length-1;
+		//This is an attempt to use nullCell singletons on the edge of the board to handle edge cases
 		//makes a new board with the null cells surrounding it on all sides
 		//this does top and bottom rows, then the left and right sides
 		//		GenericCell[][] cellsWithNull = new GenericCell[numCellsOnSide+2][numCellsOnSide+2];
